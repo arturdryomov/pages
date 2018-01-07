@@ -1,9 +1,5 @@
-theme: "barebones"
-
-enableEmoji: true
-footnoteReturnLinkContents: "↩"
-
 languageCode: "en-us"
+title: "Artur Dryomov"
 
 baseUrl: "https://ming13.github.io/pages/"
 permalinks:
@@ -24,5 +20,11 @@ menu:
       url: "/index.xml"
       weight: 1
 
+theme: "barebones"
+
 googleAnalytics: "UA-123-45"
+
+disableHugoGeneratorInject: true
+enableEmoji: true
+footnoteReturnLinkContents: "↩"
 
