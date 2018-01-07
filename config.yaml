@@ -4,7 +4,8 @@ enableEmoji: true
 footnoteReturnLinkContents: "↩"
 
 languageCode: "en-us"
-baseUrl: "/"
+
+baseUrl: "https://ming13.github.io/pages/"
 permalinks:
   post: ":slug"
 
