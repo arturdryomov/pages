@@ -1,0 +1,17 @@
+{{ partial "header.html" . }}
+
+{{if not .IsHome }}
+<h1>{{ .Title }}</h1>
+{{ end }}
+
+{{ .Content }}
+
+<ul>
+  {{ range (where .Data.Pages "Section" "!=" "") }}
+  <li>
+    <a href="{{ .URL }}">{{ .Title }}</a><span>, {{ .Date.Format "January 1, 2006" }}</span>
+  </li>
+  {{ end }}
+</ul>
+
+{{ partial "footer.html" . }}

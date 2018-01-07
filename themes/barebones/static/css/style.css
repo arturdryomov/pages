@@ -1,0 +1,93 @@
+body, nav {
+  font-family: -apple-system, BlinkMacSystemFont, "Avenir Next", Avenir, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 85%;
+}
+
+body {
+  /* Maintain typography measure: https://en.wikipedia.org/wiki/Line_length */
+  max-width: 50em;
+  margin: auto;
+  line-height: 1.5em;
+  /* Provide spacing for width lesser than maximum width. */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.menu-left {
+  float: left;
+  padding-right: 1em;
+}
+
+.menu-right {
+  float: right;
+  padding-left: 1em;
+}
+
+nav {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+}
+
+nav ul, nav ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.meta {
+  margin-top: 50px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.1em;
+}
+
+a {
+  color: #006bbd;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+pre, code {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+}
+
+pre {
+  border-radius: 4px;
+  padding: 1em;
+  overflow-x: auto;
+}
+
+code {
+  border-radius: 3px;
+  padding-right: 4px;
+  padding-left: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+pre code {
+  background: none;
+  border: none;
+}
+
+main {
+  hyphens: auto;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 5px solid #ccc;
+  padding: 3px 1em 3px;
+}

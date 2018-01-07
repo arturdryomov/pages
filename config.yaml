@@ -1,0 +1,27 @@
+theme: "barebones"
+
+enableEmoji: true
+footnoteReturnLinkContents: "↩"
+
+languageCode: "en-us"
+baseUrl: "/"
+permalinks:
+  post: ":slug"
+
+menu:
+  left:
+    - name: "Posts"
+      url: "/"
+  right:
+    - name: "GitHub"
+      url: "https://github.com/ming13"
+      weight: 3
+    - name: "Twitter"
+      url: "https://twitter.com/arturdryomov"
+      weight: 2
+    - name: "RSS"
+      url: "/index.xml"
+      weight: 1
+
+googleAnalytics: "UA-123-45"
+

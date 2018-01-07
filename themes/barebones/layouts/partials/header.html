@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+  <title>{{ .Title }}</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+</head>
+
+<body>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+{{ template "_internal/google_analytics_async.html" . }}
+
+<header>
+  <nav>
+    <ul>
+      {{ range .Site.Menus.left }}
+      <li class="menu-left"><a href="{{ .URL }}">{{ .Name }}</a></li>
+      {{end}}
+      {{ range .Site.Menus.right }}
+      <li class="menu-right"><a href="{{ .URL }}">{{ .Name}}</a></li>
+      {{end}}
+    </ul>
+  </nav>
+</header>
+
+<br/>
