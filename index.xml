@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Artur Dryomov</title>
-    <link>https://ming13.github.io/pages/</link>
+    <link>http://arturdryomov.online/</link>
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 07 Jan 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://ming13.github.io/pages/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Markdown</title>
-      <link>https://ming13.github.io/pages/posts/markdown/</link>
+      <link>http://arturdryomov.online/posts/markdown/</link>
       <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://ming13.github.io/pages/posts/markdown/</guid>
+      <guid>http://arturdryomov.online/posts/markdown/</guid>
       <description> H1 H2 H3 Quote  Quote.
  Lists  one  one-one  one-one-one   two three   one  one-one  one-one-one   two three  Links GitHub
 Code interface View { val statusBar: StatusBar val backButton: BackButton }  </description>
