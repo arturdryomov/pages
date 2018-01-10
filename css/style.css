@@ -83,10 +83,6 @@ pre code {
   border: none;
 }
 
-main {
-  hyphens: auto;
-}
-
 blockquote {
   background: #f9f9f9;
   border-left: 5px solid #ccc;

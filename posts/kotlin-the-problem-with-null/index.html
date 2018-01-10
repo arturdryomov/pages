@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Kotlin: The Problem with `null`</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+</head>
+
+<body>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-112239048-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+  <nav>
+    <ul>
+      
+      <li class="menu-left"><a href="/">Posts</a></li>
+      
+      
+      <li class="menu-right"><a href="/index.xml">RSS</a></li>
+      
+      <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+      
+      <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Kotlin: The Problem with <code>null</code></span></h1>
+  <h3>January 10, 2018</h3>
+
+</div>
+
+<main>
+
+
+<p>I think almost everybody in the CS world knows about the
+<a href="https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare">Null References: The Billion Dollar Mistake</a> talk.
+However, it does not really matter if the concept of <code>null</code> references a good idea or a really bad one.
+We live in the world where we just have to deal with <code>null</code> this way or another.
+Yep, just deal with it. So let’s ask the “How” question instead of the “Why” one.</p>
+
+<h1 id="enter-kotlin">Enter Kotlin</h1>
+
+<p>The drug of choice of mine at this point in time is Kotlin,
+but you cannot forget about Java when using Kotlin.
+Well, the JVM probably can be avoided by using Kotlin Native,
+but at least on Android you are stuck with the JVM as an intermediate bytecode provider.</p>
+
+<p>Kotlin was, and is a great language.
+Backed by a team at JetBrains behind the best IDE platform available,
+reasonable and pragmatic design decisions — what else to wish for?
+And, more importantly, it brought the concept of Null Safety
+to the production table for developers.</p>
+
+<p>All Java objects are essentially implicitly can be <code>null</code>,
+when Kotlin objects have to be declared nullable explicitly,
+otherwise the type system assumes them be to be non-nullable by default.</p>
+
+<p>Finally! We can use the JVM and forget about the <code>NullPointerException</code>!
+<a href="https://en.wikipedia.org/wiki/Forgot_About_Dre">Well, not exactly</a>.</p>
+
+<p>Let’s take a look at a very short Kotlin + RxJava sample.</p>
+
+<pre><code class="language-kotlin">Observable.just(null).subscribe()
+</code></pre>
+
+<p>This code will not be highlighted by the IDE, compiler will not show
+any warnings or errors and yet it will crash <em>in runtime</em>.
+Well, at least when using RxJava 2.1.8 and Kotlin 1.2.10.</p>
+
+<p>Why? Fortunately enough, <a href="https://github.com/ReactiveX/RxJava">RxJava is open source</a>, so we can take a look ourselves.</p>
+
+<pre><code class="language-java">public static &lt;T&gt; Observable&lt;T&gt; just(T item) {
+    ObjectHelper.requireNonNull(item, &quot;The item is null&quot;);
+    return RxJavaPlugins.onAssembly(new ObservableJust&lt;T&gt;(item));
+}
+</code></pre>
+
+<p>In other words, the underlying code checks the <code>item</code> to not be <code>null</code>. And yet, Kotlin did not save us.
+The reason is quite simple. When using RxJava we are using Java bytecode which does not have enough metadata.
+To actually have it the Java code should be annotated with so-called Nullability Annotations.
+The platform itself does not have enough introspection knowledge about if a value can be <code>null</code> or not.</p>
+
+<p>OK, so now we’ve established that we need annotations in the Java code to make Kotlin happy.
+In other words, the RxJava source code should be changed to be like this.</p>
+
+<pre><code class="language-java">public static &lt;T&gt; Observable&lt;T&gt; just(@NonNull T item) {
+    ObjectHelper.requireNonNull(item, &quot;The item is null&quot;);
+    return RxJavaPlugins.onAssembly(new ObservableJust&lt;T&gt;(item));
+}
+</code></pre>
+
+<p>The difference is in the <code>@NonNull</code> annotation. The IDE will highlight the original code as an error,
+the Kotlin compiler will stop compilation&hellip; The End.</p>
+
+<p>It is totally another story about mutiple <em>different</em> Nullability Annotations artifacts
+from JetBrains, FindBugs, The Checker Framework, Lombok, Android Support Library and others,
+but <a href="https://medium.com/square-corner-blog/rolling-out-nullable-42dd823fbd89">Jesse has it covered</a>.</p>
+
+<h1 id="the-problem">The Problem</h1>
+
+<h2 id="java">Java</h2>
+
+<p>At least from my personal perspective, it is extremely naive to expect that every single Java library
+available will follow the lead of Nullability Annotations usage in their code.
+Asking people to adopt these is actually asking them to change their development culture,
+habits and even entire system designs. And sometimes the benefit is too small for the effort.</p>
+
+<p>Yes, it will help with the documentation and IDE inspections, not only with the Kotlin usage,
+but if you have a billion of public methods in a huge framework without any particular knowledge
+if a return value or an argument can be <code>null</code>&hellip;
+The situation becomes even worse with non-library and non-open source projects with deadlines and priorities.</p>
+
+<h2 id="habits">Habits</h2>
+
+<p>I’ve spent something about 1.5 years writing Kotlin-only code every single workday.
+Sometimes Python, sometimes Bash, but it does not change the picture.</p>
+
+<p>The human mindset adapts very well. Typing Kotlin code and thinking with Kotlin concepts every day
+<em>will</em> make you forget about simple things, which
+you tend to take for granted — like the one we are discussing here — Java does not have
+nullability metadata out of the box. You will expect that everything you touch actually has it
+(a classic <a href="https://en.wikipedia.org/wiki/Midas#Golden_Touch">Midas mistake</a>),
+because your shiny Kotlin codebase has it and you have a great confidence in that.</p>
+
+<p>Prepare for unforeseen consequences.</p>
+
+<h1 id="the-solution">The Solution</h1>
+
+<h2 id="the-obvious">The Obvious</h2>
+
+<p>This is a hard one since it is based on a non-automated semantics mechanism — the mind.
+It is always better to remember when you are using Java code and when you are using the Kotlin one.</p>
+
+<p>Ask more <em>strange</em> questions during a code review — <em>Are we guarded against this Java code?</em>
+It may sound dumb and people are often too lazy to check but it is better to raise a question instead of doing nothing.</p>
+
+<h2 id="upstream-changes">Upstream Changes</h2>
+
+<p>Let’s face it — a lot of code we use as libraries is open source.
+For example, the entire Android Framework is here — clone it, read it, modify it.
+Yes, it is not so easy to talk people into using nullability annotations,
+especially if your main argument is “I use Kotlin, so&hellip;”.</p>
+
+<ul>
+<li>The Kotlin argument does not work all the time and it should be the last one you have up your sleeve.
+Not so many people actually use Kotlin at this point, but there is a huge amount of Java code.</li>
+<li>Nullability annotations improve documentation and IDE support for everyone who uses the Java code,
+so it seems like a better argument.</li>
+<li>Pull Requests are always welcome!</li>
+</ul>
+
+<h2 id="abstract-the-hell-of-it">Abstract the Hell of It</h2>
+
+<p>The worst case scenario — you do not have access to the source code, maintainers are quiet for years.</p>
+
+<p>Make your own abstraction using Kotlin! Almost everything is doable,
+excluding codebases with a huge number of public methods — like RxJava.
+As a side benefit — you will make your code more testable encapsulating implementation behind an interface.</p>
+
+<p>Sample time!</p>
+
+<pre><code class="language-java">class CorporateCalculator {
+    void calculate(Argument argument) {
+        if (argument == null) throw new NullPointerException(&quot;Gotcha!&quot;);
+
+        calculateUsingCorporateBlackMagic(argument);
+    }
+}
+</code></pre>
+
+<pre><code class="language-kotlin">interface Calculator {
+    fun calculate(argument: Argument)
+
+    class CorporateImpl : Calculator {
+        override fun calculate(argument: Argument) {
+            CorporateCalculator().calculate(argument)
+        }
+    }
+}
+</code></pre>
+
+<p>As you see, we hide the <code>CorporateCalculator</code> behind a Kotlin-based abstraction
+which will save us from passing <code>null</code> to the <code>calculate</code> method.</p>
+
+<h1 id="making-a-swift-turn">Making a Swift Turn</h1>
+
+<p>The good news is — we are not alone. Like, on the planet!</p>
+
+<p>The Java and Kotlin situation is kind of similar to the Objective-C and Swift one.
+Objective-C objects are represented by pointers, which can be <code>nil</code> in Objective-C terms.
+In other words, these objects are implicitly nullable.
+On other hand, Swift requires all values to have nullability defined explicitly.</p>
+
+<p>Sounds exactly like our case, right?</p>
+
+<p>Apple provides Nullability Annotations for Objective-C as well — <code>nullable</code> and <code>nonnull</code>.
+You use them — Swift fetches them using the Objective-C and Swift bridging.
+But what happens when you don’t use annotations in your Objective-C code? This is where things are getting interesting.</p>
+
+<p>Swift declares such types as
+<a href="https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html"><em>implicitly unwrapped optionals</em></a>.
+Practically speaking Swift kind of unwraps values for you,
+but you are doing it at your own risk since it is basically an equivalent of doing unsafe unwrapping in Kotlin.
+At the same time, it gives you a benefit of the non-warning-hostile environment.</p>
+
+<p>In fact, Kotlin has a very similar concept named
+<a href="https://kotlinlang.org/docs/reference/java-interop.html#null-safety-and-platform-types"><em>platform types</em></a>,
+which is applied to Java values on a bytecode level.
+The difference with Swift is in the application &mdash; there is no syntax in Kotlin to declare
+a platform type value, so you cannot do that on your own. Swift allows that.
+At the same time, you can see the Kotlin declaration in IDE hints and error messages
+as a type with an exclamation mark (<code>String!</code>).
+Actually the same syntax is used for implicitly unwrapped optionals.</p>
+
+<h2 id="side-road-swift-optional">Side Road: Swift <code>Optional</code></h2>
+
+<p>Turns out Swift does not have <code>null</code> pointers. At all!</p>
+
+<pre><code class="language-swift">let text: String? = nil
+</code></pre>
+
+<p><code>text</code> there is not actually <code>null</code> (<code>nil</code>). Let’s change it a bit to show its true nature.</p>
+
+<pre><code class="language-swift">let text: Optional&lt;String&gt; = Optional.none
+
+enum Optional&lt;Wrapped&gt; {
+    case none
+    case some(Wrapped)
+}
+</code></pre>
+
+<p>Pretty cool, right? The Swift compiler makes all nullable values <code>Optional</code> under the hood.
+In other words, <code>?</code> and <code>nil</code> are just syntax sugar literals for
+<a href="https://developer.apple.com/documentation/swift/optional"><code>enum Optional</code></a>,
+which is extremely similar to a Kotlin <code>sealed class Optional</code>
+from third-party &mdash; you can reference
+<a href="https://github.com/gojuno/koptional">Koptional</a> as an example.
+Swift is open source so you can take a look at
+<a href="https://github.com/apple/swift/blob/master/stdlib/public/core/Optional.swift">the <code>Optional</code> implementation</a>
+yourself since I’ve simplified it drastacially at the code sample above.</p>
+
+<p>Unfortunately, it is not really possible to change Kotlin behave the same way.
+Apple uses a bridging mechanism to connect Objective-C and Swift binaries, when Kotlin
+uses the same bytecode as Java. To make a simpler mental picture,
+imagine Objective-C and Swift being connected side-by-side and
+Kotlin and Java as a stack, where Kotlin is on top.
+I presume it would be pretty challenging to provide a proper compatibility with Java,
+transforming all nullable Kotlin values to <code>Optional</code> and vice-versa,
+especially in such tight areas like Java reflection.</p>
+
+<p>From my point of view the <code>Optional</code> usage is a fundamental difference
+in <code>null</code> handling between Kotlin and Swift. Kotlin takes the compatibility
+path, providing a compile-time validation, but you are using the exact same
+<code>null</code> as you did in Java. At the same time, Swift essentially eliminates
+<code>null</code> as a concept, replacing it with <code>Optional</code> and syntax sugar on top of it.</p>
+
+<h1 id="in-retrospect">In Retrospect</h1>
+
+<p>Chris Lattner, the author of LLVM, Clang and Swift,
+has <a href="https://oleb.net/blog/2017/06/chris-lattner-wwdc-swift-panel/">a great quote about Kotlin</a>.
+I’m gonna put it right here since I deeply agree with him on the subject.</p>
+
+<blockquote>
+<p>Swift and Kotlin evolved at about the same point in time with the same contemporary
+languages around them. And so the surface-level syntax does look very similar.
+But if you go one level down below the syntax, the semantics are quite different.
+Kotlin is very reference semantics, it’s a thin layer on top of Java, and
+so it perpetuates through a lot of the Javaisms in its model.</p>
+
+<p>If we had done an analog to that for Objective-C it would be like,
+everything is an <code>NSObject</code> and it’s <code>objc_msgSend</code> everywhere,
+just with parentheses instead of square brackets. And a lot of people
+would have been happy with that for sure, but that wouldn’t
+have gotten us the functional features, that wouldn’t have gotten us value semantics,
+that wouldn’t have gotten us a lot of the safety things that are happening [in Swift].</p>
+
+<p>I think that Kotlin is a great language. I really mean that.
+Kotlin is a great language, and they’re doing great things.
+They’re just under a different set of constraints.</p>
+</blockquote>
+
+<p>Kotlin hits a nice middle ground between compatibility with the whole Java world and, at the same time,
+a set of features and abilities of a truly modern language. Unfortunately, it brings some
+caveats related to its Java roots and it is too easy to simply forget about them.
+Well, unless you shoot yourself in a foot really badly, so be carefull.</p>
+
+<hr />
+
+<p>PS Bonus points to everyone who got <a href="https://en.wikipedia.org/wiki/The_Problem_with_Popplers">the Futurama reference</a> 😉</p>
+
+<hr />
+
+<p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a>,
+<a href="https://twitter.com/sockeqwe">Hannes Dorfmann</a>
+and <a href="https://twitter.com/abekert">Alexander Bekert</a> for the review!</p>
+
+</main>
+
+</body>
+
+</html>
+

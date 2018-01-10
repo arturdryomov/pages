@@ -6,20 +6,18 @@
     <description>Recent content in Posts on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 10 Jan 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Markdown</title>
-      <link>http://arturdryomov.online/posts/markdown/</link>
-      <pubDate>Sun, 07 Jan 2018 00:00:00 +0000</pubDate>
+      <title>Kotlin: The Problem with `null`</title>
+      <link>http://arturdryomov.online/posts/kotlin-the-problem-with-null/</link>
+      <pubDate>Wed, 10 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/markdown/</guid>
-      <description> H1 H2 H3 Quote  Quote.
- Lists  one  one-one  one-one-one   two three   one  one-one  one-one-one   two three  Links GitHub
-Code interface View { val statusBar: StatusBar val backButton: BackButton }  </description>
+      <guid>http://arturdryomov.online/posts/kotlin-the-problem-with-null/</guid>
+      <description>I think almost everybody in the CS world knows about the Null References: The Billion Dollar Mistake talk. However, it does not really matter if the concept of null references a good idea or a really bad one. We live in the world where we just have to deal with null this way or another. Yep, just deal with it. So let’s ask the “How” question instead of the “Why” one.</description>
     </item>
     
   </channel>
