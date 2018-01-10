@@ -22,7 +22,7 @@ menu:
 
 theme: "barebones"
 
-googleAnalytics: "UA-123-45"
+googleAnalytics: "UA-112239048-1"
 
 disableHugoGeneratorInject: true
 enableEmoji: true
