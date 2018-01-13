@@ -11,7 +11,7 @@ body {
   /* Maintain typography measure: https://en.wikipedia.org/wiki/Line_length */
   max-width: 50em;
   margin: auto;
-  line-height: 1.5em;
+  line-height: 1.5;
   /* Provide spacing for width lesser than maximum width. */
   padding-left: 20px;
   padding-right: 20px;
@@ -31,7 +31,7 @@ body {
 nav {
   margin-top: 20px;
   margin-bottom: 20px;
-  font-size: 0.9em;
+  font-size: 90%;
 }
 
 nav ul, nav ol {
@@ -41,13 +41,13 @@ nav ul, nav ol {
 }
 
 .meta {
-  margin-top: 50px;
+  margin-top: 30px;
   margin-bottom: 30px;
   text-align: center;
 }
 
 .title {
-  font-size: 1.1em;
+  font-size: 110%;
 }
 
 a {
