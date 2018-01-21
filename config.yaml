@@ -5,6 +5,9 @@ baseUrl: "http://arturdryomov.online"
 permalinks:
   post: ":slug"
 
+params:
+  twitter: "arturdryomov"
+
 menu:
   left:
     - name: "Posts"

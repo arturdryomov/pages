@@ -9,11 +9,21 @@
   <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
 
+  <!-- Chrome for Android -->
   <meta name="theme-color" content="#1e2327">
+
+  {{ if .IsPage }}
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@{{ .Site.Params.twitter }}" />
+  <meta name="twitter:title" content="{{ .Title | markdownify }}" />
+  <meta name="twitter:description" content="{{ .Description }}" />
+  {{ end }}
 </head>
 
 <body>
 
+<!-- Syntax highlighting -->
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
