@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 10 Jan 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 18 Mar 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The Art of a Dependency Upgrade</title>
+      <link>http://arturdryomov.online/posts/art-of-a-dependency-upgrade/</link>
+      <pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/art-of-a-dependency-upgrade/</guid>
+      <description>RxJava 1.x reaches EOL on March 31, 2018, meaning no further development. That’s not surprising since the 1.x was in a bugfix-only mode since June 1, 2017.
+This is an interesting event in a software lifetime, since not so many libraries actually live and prosper long enough to produce a superior version, at the same time handling support for an older version for so long. Fortunately enough, RxJava is one of these lucky projects with maintainers actually caring about users.</description>
+    </item>
     
     <item>
       <title>Kotlin: The Problem with `null`</title>
