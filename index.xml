@@ -6,10 +6,21 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Mar 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>A Dagger to Remember</title>
+      <link>http://arturdryomov.online/posts/a-dagger-to-remember/</link>
+      <pubDate>Sun, 22 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/a-dagger-to-remember/</guid>
+      <description>Story Time! Kotlin and Java annotations have a complicated relationship. This goes from the syntax to the toolchain.
+Does anybody remember that at the beginning of time Kotlin annotations were placed in square brackets? In 2015 the syntax was changed to the current form. Before that, it was [Inject] instead of @Inject. Yep.
+The syntax is fine at this point, but kapt (Kotlin annotation processing tool) from the Kotlin toolchain can be&amp;hellip; cruel.</description>
+    </item>
     
     <item>
       <title>The Art of a Dependency Upgrade</title>
