@@ -13,28 +13,27 @@ Does anybody remember that at the beginning of time Kotlin annotations were plac
 [In 2015 the syntax was changed to the current form](https://blog.jetbrains.com/kotlin/2015/04/upcoming-change-syntax-for-annotations/).
 Before that, it was `[Inject]` instead of `@Inject`. Yep.
 
-The syntax is fine at this point, but `kapt` (Kotlin annotation processing tool) from the Kotlin toolchain
-can be... cruel.
+The syntax is fine at this point, but `kapt`
+([Kotlin annotation processing tool](https://kotlinlang.org/docs/reference/kapt.html))
+from the Kotlin toolchain can be... cruel.
 
 ## `kapt`: denial
 
-The project I’m working on started using Kotlin from the start — in 2015.
+The project I’m working on started using Kotlin from the very beginning — in 2015.
 At the beginning of 2017, there was the following situation.
 
 * There was a _kind of_ incremental Kotlin compiler. It was enabled for everyone
   [only in 1.1.1](https://kotlinlang.org/docs/reference/using-gradle.html#incremental-compilation)
   and, believe me, it was done that late for a good reason.
 * `kapt` eliminated almost every chance to make an incremental build so there was a full-rebuild
-  on each change. It was so bad that this kind of builds were jokingly called as decremental.
-  Partially Gradle is to blame since incremental annotation processing was introduced only
-  in [Gradle 4.7](https://docs.gradle.org/4.7/userguide/java_plugin.html#sec:incremental_annotation_processing).
-* At the same time, `kapt` had a chance to corrupt a compilation process completely, requiring a `clean` and, guess what,
+  on each change. It was so bad that these kind of builds were jokingly called as decremental.
+* At the same time, `kapt` had a chance to corrupt a compilation process completely, requiring a `clean` and
   a full rebuild. If you saw something like `*_MemberInjector.java: error: package does not exist`
   you know what I’m talking about.
 
 When you are working on a constantly growing codebase
 and your builds take up to 5 minutes, even if you’ve changed only a single line...
-It is a horrible experience and a plain bad development environment which leads to decreasing productivity
+It is a horrible experience and a plain bad development environment which leads to decreased productivity
 and to [potential financial losses](https://blog.gradle.com/quantifying-the-cost-of-builds/).
 
 How do you solve this? There is a nice method — throw more hardware at it!
@@ -48,7 +47,7 @@ you can at least change the environment it is being run in. Besides, the Kotlin 
 better over time, so there was a pretty good chance to get an incremental build.
 
 Unfortunately, `kapt` [struck again in Kotlin 1.2.21](https://youtrack.jetbrains.com/issue/KT-22763).
-Increasing `kapt` processing for unit tests by a magnitude of `3` was too much,
+Increasing `kapt` processing time for unit tests by a magnitude of `3` was too much,
 especially if you are running tests more often than the project executable itself.
 I’ve asked myself a million dollar question.
 
@@ -65,17 +64,27 @@ Down the rabbit hole we go.
 I’m going to talk about the [Google Dagger](https://github.com/google/dagger).
 It was forked from the [Square Dagger](https://github.com/square/dagger).
 The Square one did some lookups at runtime but generated code as well
-using the same annotation processing as the Google one. At the same time,
-the Google version does no runtime actions and generates everything beforehand.
+using the annotation processing, just like the Google one. At the same time,
+the Google version doesn’t use reflection and generates everything beforehand.
 This is actually great. No reflection usage — better runtime performance
-and compile-time `Context` (i. e. dependencies container) validation.
+and compile-time `Context` validation.
+
+> There might be a confusion among Android developers about the `Context` naming.
+I’m going to use it as a more broad term than
+[a framework class name](https://developer.android.com/reference/android/content/Context).
+The `Context` is a dependencies container (or just a container of sorts).
+You can observe this naming in different environments, such as
+[Go](https://golang.org/pkg/context/) and
+[Spring](https://spring.io/understanding/application-context).
+You can associate it with Google Dagger `@Component` or
+a Square Dagger `ObjectGraph`.
 
 There is a downside though. The Square version had a small but extensive API.
 In my opinion, it covered almost everything you need from a dependency injection.
 The Google version has grown up big and sometimes not in a good way.
 The API includes Android support module (let’s just forget about `DaggerActivity`
-which... exists), multibindings, reusable dependencies,
-components and subcomponents, modules and producer modules...
+which... [exists](https://github.com/google/dagger/blob/e1ed045d59ef8fcbbd664939a476083ac8614b32/java/dagger/android/DaggerActivity.java)),
+multibindings, reusable dependencies, components and subcomponents, modules and producer modules...
 
 The project I’m working on didn’t use anything magical. Hell, most likely Dagger was used wrong!
 
@@ -143,7 +152,7 @@ I know, I know, that’s not how you do it, but it is just a use case I have on 
 
 How do you test things using this structure? Well, it is pretty simple.
 
-* For _model_ components, you can mock or stub your dependencies and pass them, no biggie.
+* For _model_ components, you can mock or stub your dependencies and pass them to constructor, no biggie.
 * For _presentation_ components, it is possible to build your own `Context` and pass it instead.
 
 ## Decisions, Decisions
@@ -158,10 +167,10 @@ but is it worth it increasing build time for every developer on the team
 dozens of times per day? And taking into an account the fact
 that this setup worked for years without any change at all?
 
-> Do you need to keep using tools meant for different conditions?
+> Do you need to keep using tools designed for different conditions?
 
 Let’s face it — the annotation processing is a nice idea but meant
-for environments where it is basically essential.
+for special environments.
 It is too verbose to declare everything by hand using Java, so here we go,
 there is a code generator which does this for us.
 Is it a good fit if you are using Kotlin for the entire codebase?
@@ -171,11 +180,18 @@ I have no idea, it is your codebase and your call. I did mine.
 
 > Having a library isn’t cool. You know what’s cool? Not having a library.
 
-Let’s go crazy and use just Kotlin to make our own inversion of control implementation.
+Let’s go crazy and use Kotlin to make our own
+[inversion of control](https://en.wikipedia.org/wiki/Inversion_of_control) implementation.
 Not [Koin](https://github.com/Ekito/koin),
 not [Kodein](https://github.com/SalomonBrys/Kodein),
 not [Kapsule](https://github.com/traversals/kapsule) —
 just some patterns and language features.
+
+> I highly suggest reading
+[a Martin Fowler article](https://martinfowler.com/articles/injection.html)
+about inversion of control (IoC) containers.
+It contains almost everything you need to know about IoC, so I’m going to talk about practice only here.
+
 
 ### Modules
 
@@ -201,8 +217,8 @@ interface ServiceModule {
 }
 ```
 
-Notice the `lazy` function.
-It magically makes our [properties lazy](https://kotlinlang.org/docs/reference/delegated-properties.html#lazy),
+Notice the `lazy` delegate.
+It makes our [properties lazy singletons](https://kotlinlang.org/docs/reference/delegated-properties.html#lazy),
 just like Dagger would do it for you!
 In other words, creating a module would not create all dependencies in it at once,
 but will do it only on the first access.
@@ -226,6 +242,14 @@ interface Context :
 ```
 
 We are using [Kotlin delegation](https://kotlinlang.org/docs/reference/delegation.html) here.
+The `Context` will be translated to something like this to the end user.
+
+```kotlin
+interface Context {
+    val repository: Repository
+    val service: Service
+}
+```
 
 You have to create it by hand though, creating all modules first.
 Dagger would’ve done it for you, but it is no biggie.
@@ -271,10 +295,24 @@ interface RepositoryModule {
 You can define scopes using the same delegation approach as with the `Context`.
 
 ```kotlin
-interface UserContext : Context, UserModule
+interface UserContext :
+    Context,
+    UserModule {
+
+    class Impl(
+        context: Context,
+        userModule: UserModule
+    ) : UserContext,
+        Context by context,
+        UserModule by userModule
+}
 
 interface Context {
     fun plus(userModule: UserModule): UserContext
+
+    class Impl : Context {
+        override fun plus(userModule: UserModule) = UserContext.Impl(this, userModule)
+    }
 }
 ```
 
@@ -297,18 +335,18 @@ class ViewModel(context: Context) {
 
 ### Results
 
-Seems like it is possible to do IoC without Dagger, who knew?
+Seems like it is possible to do the inversion of control without Dagger, who knew?
 
 #### Pros
 
 * Inversion of control is based on your code and patterns instead of frameworks.
 * Since it is your code you can do whatever you want with it and it is extremely simple to understand how it actually works.
-* Compile-time validation (just like Dagger).
-* No annotation processing, i. e. faster builds (just like without Dagger).
+* Compile-time validation with meaningful messages.
+* No annotation processing, i. e. faster and more reliable builds.
 
 #### Cons
 
-* It is a gross service locator.
+* It is a gross [service locator](https://en.wikipedia.org/wiki/Service_locator_pattern).
    * Well, it is mostly true, but can I live with it? Certainly.
      Especially when taking into an account that the goal
      was to achieve the inversion of control and not a dependency injection.
@@ -322,6 +360,7 @@ Jokes aside though — it works in real life.
 * `kapt` removal finally brought team confidence in the Kotlin compiler.
   I haven’t heard any complaints about either performance or weird compilation errors
   for a long time, which is a good sign.
+  I’ve observed 25% reduction in build time and proper incremental builds.
 * At the same time, I’ve noticed that people start to care for the IoC-related code
   like they do for the main codebase since it is no longer a pile of dependencies
   no one understands. It is a good thing as well.
@@ -330,7 +369,7 @@ Jokes aside though — it works in real life.
 
 Since I’m trying to advocate a more broad-minded approach to the development process,
 let’s take a look at other languages and how people try to achieve
-an inversion of control in their code without using frameworks for that purpose.
+the inversion of control in their code without using frameworks for that purpose.
 
 ## Scala
 
@@ -357,7 +396,9 @@ interface Context : RepositoryModule, ServiceModule
 ```
 
 The code is not identical to the original approach though since
-we don’t have traits and self-types in Kotlin.
+we don’t have
+[traits](https://docs.scala-lang.org/tour/traits.html) and
+[self-types](https://docs.scala-lang.org/tour/self-types.html) in Kotlin.
 I think the closest true match is actually using the delegation,
 just like I’ve described above. So I guess the Kotlin approach
 is a rough adaptation of the Thin Cake pattern!
@@ -395,8 +436,8 @@ fun create() {
 }
 ```
 
-Unfortunately for it to work all child `Context` variations should be declared
-on the top-level `Context`.
+Unfortunately for this to work all child `Context` variations should be declared
+at the top-level `Context`.
 
 ```kotlin
 interface Context : RepositoryModule, ServiceModule, ViewModel.Context
@@ -413,6 +454,24 @@ to construct `Context` from singular dependencies instead of their enumerations.
 But, at the same time, it would be nice to have protocol composition
 for such cases as an alternative.
 
+# Fin
+
+Developers tend to search for _a silver bullet_ all the time.
+Do you parse JSON? You absolutely have to use the most performant
+parser available on this planet, otherwise... Have you played
+[Doom](https://en.wikipedia.org/wiki/Doom_(2016_video_game))? Well, it
+goes exactly this way. Oh, you parse it only once and it is an object with two fields?
+You need the most performant parser, remember!
+
+Don’t let a tool to become [a MacGuffin](https://en.wikipedia.org/wiki/MacGuffin) —
+pick it based on your needs and do not adapt your needs to a tool.
+We develop things to solve issues, not to create them.
+
 ---
 
 PS Bonus points to everyone who got [the Futurama reference](https://en.wikipedia.org/wiki/A_Flight_to_Remember) :wink:
+
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) and
+[Danny Preussler](https://twitter.com/PreusslerBerlin) for the review!
