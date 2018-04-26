@@ -190,7 +190,7 @@ just some patterns and language features.
 > I highly suggest reading
 [a Martin Fowler article](https://martinfowler.com/articles/injection.html)
 about inversion of control (IoC) containers.
-It contains almost everything you need to know about IoC, so I’m going to talk about practice only here.
+It contains almost everything you need to know about IoC, so I’m going to talk about practice only.
 
 
 ### Modules
