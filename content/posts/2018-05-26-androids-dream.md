@@ -8,9 +8,8 @@ slug: do-androids-dream-of-ui-testing
 Automation is a foundation stone of the software development.
 People didn’t like counting numbers themselves, so they invented calculators.
 Calculators went to be computers and here we go, waiting for AI to take over,
-[watching movies](https://en.wikipedia.org/wiki/Blade_Runner_2049) and
-[playing games](https://en.wikipedia.org/wiki/Deus_Ex:_Human_Revolution) about transhumanism
-on our way here.
+[watching movies](https://en.wikipedia.org/wiki/Blade_Runner_2049)
+about transhumanism on our way here.
 
 Automation related to UI testing seems te be a Holy Grail from that standpoint.
 Sure thing, it can replace manual QA procudures with automated ones! Like, completely!
@@ -320,11 +319,13 @@ Our collegues from the web world struggle with
 [UI tests instability](https://sqa.stackexchange.com/questions/32542/how-to-make-selenium-tests-more-stable)
 for a long time. Just ask your coworkers for a honest opinion.
 
+OK, don’t trust random people from the internet? Do you trust a huge company
+with millions of tests and the statistical data about flakiness?
+[Here we go](https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html).
+
 # Automation is a Lie?
 
-Why are we doing this to ourselves?
-
-> The bigger the trick and older the trick, the easier it is to pull, based on two principles.
+> The bigger the trick and older the trick, the easier it is to pull.
 > People think it can’t be that old and it can’t be that big for so many people to have fallen for it.
 > The more the person invests, the less chance they will turn back.
 > Eventually when one is challenged or questioned, it means its investment
@@ -370,4 +371,49 @@ Runs are slow even with a state of the art sharding. Almost everything is tested
 even the OS framework that was tested via the company which provides it.
 
 Which one would you choose?
+
+Personally I would pick a good integration test covering 70% of possible
+scenarios over any UI test covering 90%. The difference is just not worth it.
+
+* Development resources spent trying to stabilize non-controlled environments
+  is a waste.
+* Anything even remotely flaky brings the opposite of confidense to developers.
+  People just press the Restart button all over again, because at this point
+  they are sure that the issue is with the environment and not the test itself.
+
+Recently I’ve done a technical exit interview with a former coworker of mine.
+One of questions I’ve asked was about the best thing in the project
+and the worst one from the technical standpoint.
+
+* The best thing — BDD-style [Spek](https://github.com/spekframework/spek)
+  unit tests. It was a pure joy to write and read them.
+* The worst thing — UI tests. Their flakiness and constant battles
+  with environments wore the person down. _It was a useless waste of time._
+
+Fun fact. I’ve monitored UI tests for a couple of months with a goal to note
+all bugs caught by UI tests. I had zero of them in the end. The majority
+of risk code was caught by an extensive unit tests suite.
+
+# The Fall
+
+> I’ve seen things you people wouldn’t believe.
+> Attack ships on fire off the shoulder of Orion.
+> I watched C-beams glitter in the dark near the Tannhäuser Gate.
+> All those moments will be lost in time, like tears in rain.
+
+It is always hard to let go. A lot of effort was put into writing
+[a custom test runner](https://github.com/gojuno/composer),
+[a custom emulators manager](https://github.com/gojuno/swarmer),
+a mock HTTP server with SSE streaming support. A lot of time was spent
+into maintaining emulator-running nodes based on Linux and Docker.
+A lot of knowledge was put into creating a number of Espresso tests.
+Disabling UI tests from a CI pipeline was a painful experience.
+Like waving goodbye to a good friend.
+
+Do Androids Dream of Integration Testing?
+
+---
+
+Title and the ending quote are references to the [Blade Runner](https://en.wikipedia.org/wiki/Blade_Runner)
+movie and to [the original novel](https://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F).
 
