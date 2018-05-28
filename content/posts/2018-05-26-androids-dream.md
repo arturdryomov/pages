@@ -320,10 +320,54 @@ Our collegues from the web world struggle with
 [UI tests instability](https://sqa.stackexchange.com/questions/32542/how-to-make-selenium-tests-more-stable)
 for a long time. Just ask your coworkers for a honest opinion.
 
+# Automation is a Lie?
+
 Why are we doing this to ourselves?
 
 > The bigger the trick and older the trick, the easier it is to pull, based on two principles.
-> They think it can’t be that old and it can’t be that big for so many people to have fallen for it.
-> The more the victim invests, the less chance they will turn back.
-> Eventually when the opponent is challenged or questioned, it means the victim’s investment
-> and thus his intelligence is questioned. No one can accept that. Not even to themselves.
+> People think it can’t be that old and it can’t be that big for so many people to have fallen for it.
+> The more the person invests, the less chance they will turn back.
+> Eventually when one is challenged or questioned, it means its investment
+> and thus intelligence is questioned. No one can accept that. Not even to themselves.
+
+There is nothing wrong with the concept of UI testing. In theory it sounds great.
+Unfortunately, the practice breaks it easily. Taking a look at a bigger picture
+gives a reason for that.
+
+Introducing non-controlled environments does not work well in real life.
+UI tests introduce at least two of them:
+
+* remote communication — network-accessible backend API;
+* local communication — interaction with the OS.
+
+There are methods to control both of them, but the domain can be an overkill
+for small and medium teams. Not everybody is a lite backend developer
+and a Linux DevOps engineer. It is a complex work, requiring effort and precision.
+Running QEMU emulators in a Docker container on a Linux host machine —
+it is not for everyone, believe me. I’ve been there.
+
+# Integration Tests vs. UI Tests
+
+Let’s compare two things.
+
+There is an application with a lot of abstractions over everything imaginable.
+Platform-specific code is contained behind a mockable interface (remember `Bluetooth`?).
+UI-related components are behind interfaces as well (like in MVP, MVVM, MVI).
+It is possible to mock all network interfaces (like Retrofit declarations).
+In this case basically everything is a non-platform specific code
+with mockable external sources. That means there is a way to launch
+the whole application on the JVM, changing only a couple of things.
+Invoking actions from the UI? Sure. Receiving mocked data from network?
+Of course. Checking UI state? Yep.
+In other words, this is a JVM-based integration testing covering
+the majority of the application. Fast, reliable and understandable.
+It even forces good abstractions as a bonus.
+
+There is a UI tests suite. The backend is mocked locally. UI interactions
+are made in an usual manner. There is a fleet of emulators either in the cloud
+or as a local infrastructure. Sometimes it works, sometimes it doesn’t.
+Runs are slow even with a state of the art sharding. Almost everything is tested,
+even the OS framework that was tested via the company which provides it.
+
+Which one would you choose?
+
