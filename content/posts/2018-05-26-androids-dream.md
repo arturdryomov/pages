@@ -25,19 +25,28 @@ UI tests are a great pain. Let’s go over them.
 
 # Unit Tests
 
-This is a majority of tests you should have (and I hope you have a lot of them already).
-Honestly saying, almost everything can be unit-tested. You cannot test
-things you shouldn’t test in the first place — like the Android framework code.
-The OS is a black box — you give it some instructions and it does its best job
-to run them. It might be widgets rendering on a device screen, sending Bluetooth
-packages somewhere, you name it. And don’t forget that it was already tested for you.
+This is a majority of tests a project should have.
+Honestly saying, almost everything can be unit-tested.
+Things impossible to unit-test most likely shouldn’t be tested in the first place —
+like the Android framework code.
 
-If you use something from the framework and want to test
-the interaction with it, do yourself a favor and introduce some abstractions.
-More abstractions you have, easier it gets to write a maintanable testable code.
-As a bonus, if you want to have a reactive API for the framework, you can do it yourself.
-Want to use a specific thread to do the call — sure, let’s do it!
-Just don’t try to cover the whole API — your application most likely doesn’t
+The OS is a black box — it consumes instructions and does its best job
+to run them. It might be widgets rendering on a device screen, sending Bluetooth
+packages or calling `sysfs`. The whole point of the framework API is to
+shield application developers from the OS. I suggest to use this advantage.
+
+The easy thing to forget is that the framework was already tested
+by Google internally. There is no need to test an external contract.
+If there is a need to do so it is an indicator that the contract provider
+breaks it. These things should be reported to the provider, otherwise
+there will be a constant battle with the environment.
+
+If the application code references the framework there is still a way to test
+the interaction with it using abstractions.
+More abstractions available, easier it gets to write a maintanable testable code.
+As a bonus, it is possible to provide reactive API for the framework
+or the one compatible with coroutines.
+There is no need to cover the whole API — the application most likely doesn’t
 use everything anyway.
 
 ```kotlin
@@ -56,7 +65,8 @@ interface Bluetooth {
             .subscribeOn(ioScheduler)
     }
 }
-
+```
+```kotlin
 class TestBluetooth : Bluetooth {
     val supportsLeResult = PublishRelay.create<Boolean>
 
