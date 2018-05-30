@@ -16,7 +16,7 @@ Sure thing, it can replace manual QA procedures with automated ones! Like, compl
 You just need to have a local backend... And maybe disable animations.
 And... you know, somehow wait for backend responses. And don’t forget about the infrastructure.
 
-Let’s just slow down a little and go over all testing layers from
+Let’s slow down a little and go over all testing layers from
 [the testing pyramid](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html) first:
 Unit, Integration, UI. The general suggested split is
 70% (Unit), 20% (Integration) and 10% (UI). This ratio is justified by rising
@@ -32,9 +32,9 @@ like the Android framework code.
 
 The OS is a black box — it consumes instructions and does its best job
 to run them. It might be widgets rendering on a device screen, sending Bluetooth
-packages or reading [`sysfs`](https://en.wikipedia.org/wiki/Sysfs).
+packets or reading [`sysfs`](https://en.wikipedia.org/wiki/Sysfs).
 The whole point of the framework API is to
-shield application developers from the OS. I suggest using this advantage.
+shield application developers from the OS. Use this advantage.
 
 The easy thing to forget is that the framework was already tested
 by Google internally. There is no need to test an external contract.
@@ -76,9 +76,9 @@ class TestBluetooth : Bluetooth {
 ```
 
 The `Bluetooth` instance should be provided via the Inversion of Control
-implementation. `AndroidBluetooth` is for the real use and `TestBluetooth` for tests.
+implementation. `AndroidBluetooth` is for the real use and `TestBluetooth` is for tests.
 
-Regarding UI-related things — the topic was beaten
+About UI-related things — the topic was beaten
 to death over and over again. MVP, MVVM, MVI — everything works. The `V` part
 isolates framework widgets and related interactions, so it is possible to test
 everything except it. Create a `TestView`, provide `Test*`
@@ -103,11 +103,11 @@ the project codebase. Actually, the supplied code since most likely external lib
   [Truth](https://github.com/google/truth).
 * Mocks: [Mockito](https://github.com/mockito/mockito).
 
-All of these have one thing in common — they are just a JVM bytecode produced by Java and (or) Kotlin compilers.
-Since it is just a regular code pretty similar to the one from the project codebase,
+All these have one thing in common — they are a JVM bytecode produced by Java and (or) Kotlin compilers.
+Since it is a regular code pretty similar to the one from the project codebase,
 it is easy to understand it, modify it and even replace it.
 In other words, there is a total control of the environment.
-This statement might sound obvious but it is extremely precious.
+This statement might sound obvious but it is precious.
 
 # Integration Tests
 
@@ -261,7 +261,7 @@ And we have options.
   The same can be achieved with a clever blocking OkHttp `Interceptor`.
 * Replace network communication code with a mocked one.
 
-> :warning: Replacing network-related code makes your tests less honest
+> :warning: Replacing network-related code makes tests less honest
 > from the integration standpoint.
 
 Any attempt to have a separate backend implementation brings
@@ -321,7 +321,7 @@ The versioning in Android `sdkmanager`
 [is seriously messed up](https://issuetracker.google.com/issues/38045649).
 All packages have a name, i.e. `emulator`, and a revision, i.e. `4`.
 It is possible to install a package, but it is not possible to install a package
-of a certain revision. In other words, installing an `emulator` package
+of a certain revision. In other words, installing the `emulator` package
 will always install the latest revision. Since revisions break things easily,
 the only way to introduce stability in this mess is to use a Docker image.
 Unfortunately, using Docker to run emulators is a so-so idea. It actually works,
@@ -329,14 +329,14 @@ but instead of Host OS ↔ Emulator OS interaction there is a more complex one �
 Host OS ↔ Docker ↔ Emulator OS. This brings even more instability.
 As a bonus, there is a weird
 [SDK tools archive naming scheme](https://issuetracker.google.com/issues/64292349)
-you have to live with.
+we have to live with.
 Oh, have I mentioned that there are
 [multiple `emulator` binaries](https://issuetracker.google.com/issues/66886035)?
 
 One can suggest picking a stable hardware, a stable `emulator` binary,
 a stable emulator `system-image` and stick to it using a Docker image.
-Well, it doesn’t work this way. If the application you are trying to test
-uses Google Play Services package you are forced to update the emulator `system-image`
+Well, it doesn’t work this way. If the application
+uses Google Play Services package there is a need to update the emulator `system-image`
 from time to time since that package is actually bundled into it and
 cannot be updated separately.
 
@@ -403,7 +403,7 @@ or as a local infrastructure. Sometimes it works, sometimes it doesn’t.
 Runs are slow even with a state of the art sharding. Almost everything is tested,
 even the OS framework that was tested via the company which provides it.
 
-Which one would you choose?
+*Which one would you choose?*
 
 Personally, I would pick a good integration test covering 70% of possible
 scenarios over any UI test covering 90%. The difference is just not worth it.
@@ -430,8 +430,8 @@ and the worst one from the technical perspective.
   with environments wore the person down. _It was a useless waste of time._
 
 Fun fact. I’ve monitored UI tests for a couple of months with a goal to note
-all bugs caught by UI tests. I had zero of them in the end. The majority
-of risk code was caught by an extensive unit tests suite.
+all bugs caught by them. The number was zero in the end. The majority
+of risky code was caught by an extensive unit tests suite.
 
 # The Fall
 
@@ -458,3 +458,7 @@ Like waving goodbye to a good friend.
 Title is the reference to the [Blade Runner](https://en.wikipedia.org/wiki/Blade_Runner)
 movie and to [the original novel](https://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F).
 
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) and
+[Igor Gomonov](https://www.linkedin.com/in/igor-gomonov-a66903b7/) for the review!
