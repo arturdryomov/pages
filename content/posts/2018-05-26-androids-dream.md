@@ -455,8 +455,8 @@ Like waving goodbye to a good friend.
 
 ---
 
-Title is the reference to the [Blade Runner](https://en.wikipedia.org/wiki/Blade_Runner)
-movie and to [the original novel](https://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F).
+Title is a reference to [the Blade Runner movie](https://en.wikipedia.org/wiki/Blade_Runner)
+and to [the original novel](https://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F).
 
 ---
 
