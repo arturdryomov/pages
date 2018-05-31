@@ -16,12 +16,15 @@ Sure thing, it can replace manual QA procedures with automated ones! Like, compl
 You just need to have a local backend... And maybe disable animations.
 And... you know, somehow wait for backend responses. And don’t forget about the infrastructure.
 
-Let’s slow down a little and go over all testing layers from
+Actually, we’ve done all of that. A lot of UI tests, a fleet of emulators — you name it.
+It kind of worked but eventually we’ve come to a tough decision
+to remove them from the CI pipeline. This article is a _lessons learned_ kind of thing.
+
+Let’s go over all testing layers from
 [the testing pyramid](https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html) first:
 Unit, Integration, UI. The general suggested split is
 70% (Unit), 20% (Integration) and 10% (UI). This ratio is justified by rising
-maintenance cost, flakiness and run speed. Unit tests are as reliable as it gets,
-UI tests are a great pain. Let’s go over all of them.
+maintenance cost, flakiness and run speed.
 
 # Unit Tests
 
@@ -324,7 +327,7 @@ It is possible to install a package, but it is not possible to install a package
 of a certain revision. In other words, installing the `emulator` package
 will always install the latest revision. Since revisions break things easily,
 the only way to introduce stability in this mess is to use a Docker image.
-Unfortunately, using Docker to run emulators is a so-so idea. It actually works,
+Using Docker to run emulators is a great idea. It actually works,
 but instead of Host OS ↔ Emulator OS interaction there is a more complex one —
 Host OS ↔ Docker ↔ Emulator OS. This brings even more instability.
 As a bonus, there is a weird
@@ -343,7 +346,7 @@ cannot be updated separately.
 ## Forgot about ~~Dre~~ Selenium
 
 It is hard to imagine that, but we are falling into the same trap all over again.
-Our colleges from the web world struggle with
+Our colleagues from the web world struggle with
 [UI tests instability](https://sqa.stackexchange.com/questions/32542/how-to-make-selenium-tests-more-stable)
 for a long time. Just ask your coworkers for an honest opinion.
 
@@ -405,14 +408,26 @@ even the OS framework that was tested via the company which provides it.
 
 *Which one would you choose?*
 
-Personally, I would pick a good integration test covering 70% of possible
-scenarios over any UI test covering 90%. The difference is just not worth it.
+Personally, I would pick a stable JVM-based integration test covering 70% of possible
+scenarios over any UI test running on an actual OS covering 90% with a chance of flakiness.
+The difference is just not worth it.
 
 * Development resources spent trying to stabilize non-controlled environments
   is a waste.
 * Anything even remotely flaky brings the opposite of confidence to developers.
   People just press the Restart button all over again, because at this point
   they are sure that the issue is with the environment and not the test itself.
+
+There is an element of compromise with JVM-based tests of course.
+Platform-specific code would not be tested since it is out of control.
+It is necessary to keep this in mind to establish a business-logic-to-platform-specifics ratio.
+If the application has a lot of business logic comparing with platform interactions —
+most likely the test coverage should be oriented on the logic.
+At the same time abstractions can help with testing out-of-reach areas,
+such as maps, notifications, location and tricky runtime permissions interactions.
+These things are impossible to control from a UI test without hacks or
+a process restart which will kill a test run. It is trivial to test these
+using thin abstractions over the framework code though.
 
 Besides, there is a technique called _Testing in Production_. This is not a joke.
 Monitoring, feature flags, A/B experiments and more — all of these are actually
@@ -460,5 +475,6 @@ and to [the original novel](https://en.wikipedia.org/wiki/Do_Androids_Dream_of_E
 
 ---
 
-Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) and
-[Igor Gomonov](https://www.linkedin.com/in/igor-gomonov-a66903b7/) for the review!
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin),
+[Hannes Dorfmann](https://twitter.com/sockeqwe)
+and [Igor Gomonov](https://www.linkedin.com/in/igor-gomonov-a66903b7/) for the review!
