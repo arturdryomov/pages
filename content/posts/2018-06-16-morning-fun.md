@@ -15,7 +15,7 @@ Amazon not only sells things but hosts
 a significant portion of internet resources thanks to
 [Amazon Web Services](https://aws.amazon.com/). In other words,
 the company has software developers working on a massive infrastructure
-we use every day without noticing it. How do they keep it together?
+we use every day without noticing. How do they keep it together?
 There is a great phrase from Amazon CTO which we are going
 to explore.
 
@@ -25,7 +25,7 @@ Mobile developers are not as familiar with this sentence as much as backend ones
 The reason is simple — mobile does not face the underlying issue on a regular basis.
 
 In a traditional backend environment software developers work on a solution,
-then hand it to the operations team. This might not be true for small and medium teams,
+then hand it to the operations team. This might not be true for small and medium-sized teams,
 but more people you have the higher the chance it will be something like that.
 There is an issue though. Developers in this setup do not run the software
 they created, it is done by the operations team. Of course, rising issues are eventually
@@ -42,7 +42,7 @@ but to the development-QA one. If the development team does no QA procedures
 and delegates this task to the QA team it will lead to unforeseen consequences.
 The worst case scenario — developers would not test their code at all
 since in their minds it is not their duty. The best case — corner cases
-would not be checked by developers themselves,
+would not be checked by developers,
 leading to potential under-development of the scope.
 
 This is where we come back to Amazon.
@@ -85,8 +85,8 @@ At the same time, [we can do better](https://www.youtube.com/watch?v=SLILjDx0SO0
 # On-call
 
 > :book: Reading material on the topic:
-> [Testing in Production](https://medium.com/@copyconstruct/testing-in-production-the-safe-way-18ca102d0ef1) and
-> [On-call Doesn’t Have to Suck](https://medium.com/@copyconstruct/on-call-b0bd8c5ea4e0).
+> [_Testing in Production_](https://medium.com/@copyconstruct/testing-in-production-the-safe-way-18ca102d0ef1) and
+> [_On-call Doesn’t Have to Suck_](https://medium.com/@copyconstruct/on-call-b0bd8c5ea4e0).
 
 Internally we call it _Daily Duty_ because...
 
@@ -169,7 +169,7 @@ become good opportunities to discuss the long-term approach for the upgrade.
 
 # Be Involved
 
-* Don’t distance the development process from the running process.
+* Don’t distance the development process from the running one.
 * Be with the audience.
 * Make both proactive and reactive decisions.
 * Create and optimize your own routine.
