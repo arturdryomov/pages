@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 May 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 16 Jun 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mobile Developer Morning Fun</title>
+      <link>http://arturdryomov.online/posts/mobile-developer-morning-fun/</link>
+      <pubDate>Sat, 16 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/mobile-developer-morning-fun/</guid>
+      <description>Do you read this article on a phone? No? Well, I’m pretty sure you have a phone. Fun fact — I’ve bought the best phone I ever had, the Nexus 5X, from Amazon. Another fun fact — there is a pretty good chance you’ve bought something from Amazon too since it grabbed 4% of US retail sales in 2017. That’s a lot!
+Amazon not only sells things but hosts a significant portion of internet resources thanks to Amazon Web Services.</description>
+    </item>
     
     <item>
       <title>Do Androids Dream of UI Testing?</title>
