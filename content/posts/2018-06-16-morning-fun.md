@@ -99,6 +99,8 @@ Internally we call it _Daily Duty_ because...
 * The monitoring should be constant but some tasks can be done once a day.
   The morning is a perfect time for that since a person is not yet
   in the flow and is not occupied by other tasks.
+* It is up to the team to decide if the on-call should extend to working
+  hours only. It depends on the product kind and overall stability of the application.
 
 Don’t think that there is no need in picking a dedicated person since everybody is always on-call.
 That’s not true. Everybody on-call means that nobody is on-call.
@@ -167,6 +169,12 @@ should be made by the on-call person since sometimes changes
 are too major to apply immediately. Such situations
 become good opportunities to discuss the long-term approach for the upgrade.
 
+## Anything Else
+
+Each time there is something new needed to be checked every now and then —
+integrate it in the on-call procedure. Eventually it will get automated
+since developers tend to optimize their routine.
+
 # Be Involved
 
 * Don’t distance the development process from the running one.
@@ -182,3 +190,8 @@ It will not only make you a better specialist — but
 ---
 
 PS Bonus points to everyone who got [the Futurama reference](https://en.wikipedia.org/wiki/Saturday_Morning_Fun_Pit) :wink:
+
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin)
+and [Alexey Alexeev](https://www.linkedin.com/in/alexey-alexeev/) for the review!
