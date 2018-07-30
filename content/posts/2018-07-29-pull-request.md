@@ -1,39 +1,45 @@
 ---
-title: "How the Pull Request Is Built"
+title: "How the Pull Request is Built"
 description: "Not breaking the master branch with your changes."
 date: 2018-07-29
 slug: how-the-pull-request-is-built
 ---
 
-In GitHub early days a friend of mine joked that his social network of choice
-is not Facebook or Twitter but GitHub. He called it as a _hip social network_.
-At that time GitHub even had direct private messages — unfortunately the feature
-[was sunsetted in 2012](https://blog.github.com/2012-04-03-spring-cleaning/#private-messaging).
-This fact forced me to check when I had created a profile and
-[turns out it was February 2, 2010](https://api.github.com/users/ming13). Damn!
+A friend of mine contact information mentions that he doesn’t have Facebook or Twitter,
+but he is available at a _really cool_ social network — GitHub.
+Actually GitHub is a kind of a social network, it even had direct private messages
+[until April 2012](https://blog.github.com/2012-04-03-spring-cleaning/#private-messaging).
+I remember using them because I had created a profile
+[on February 2, 2010](https://api.github.com/users/ming13). Damn, that was a long time ago.
 
 The developer community should be grateful to GitHub not only for
 [awesome Octocats](https://octodex.github.com/) but for the popularizing a concept
-of pull request. The thing we take for granted now seem to be so simple we tend
+of pull requests. It is taken for granted now and we tend
 to forget that the closest thing before was sending a patch via email.
 
-Time has passed and pull requests became even better — there was a shining beacon
-of light in a form of easily accessible CI platforms such as
-[Travis](https://travis-ci.org/). Putting a YAML configuration file was
-a warp jump ahead of setting up a custom Jenkins machine — and it still is,
+The evolution continued and the development ecosystem became even better.
+A shining beacon of light became a true Helios in a form of easily accessible CI platforms such as
+[Travis](https://travis-ci.org/). Putting a YAML configuration file into a repository was
+a warp jump ahead of setting up a Jenkins machine — and it still is,
 especially for non-enterprise-level-complicated scenarios.
 
-Pull requests and CI together work extremely well. Create a branch, open a PR,
-CI starts a build, the status is posted back and voilà — reviewers are directly informed of
-an ability to merge it to a stable branch. Even better — GitHub can block
-the merging procedure until CI gives a green light.
+Pull requests and CI work extremely well together.
 
-# The Devil Is in the Detail
+1. Create a _source_ branch with necessary changes.
+1. Open a PR to a _target_ branch — usually the _stable_ branch, such as `master`.
+1. CI automagically starts a build.
+1. Build status is reported back.
+1. Voilà — PR reviewers can see if changes are buildable.
+1. Even better — GitHub can block the merge until CI gives a green light.
 
-> What exactly CI builds for a pull request?
+# The Devil is in the Detail
 
-Does it build the branch itself?
-Or the merge result? Is there a difference? Let’s use an example.
+What exactly CI builds for a pull request? Well, there are two approaches.
+
+* Build the source branch itself.
+* Build the merge result of the source branch into the target branch.
+
+Is there a difference though? Let’s take a look at the example.
 
 There is a file named `colors.xml`.
 
@@ -43,8 +49,16 @@ There is a file named `colors.xml`.
 </colors>
 ```
 
-Let’s say I need to use it at a brand new UI screen. I create a Git branch,
-create the screen file, commit it and open a pull request. But! While the PR
+Let’s say I need to use it in a brand new UI screen.
+
+```xml
+<View
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+```
+
+I create a Git branch, commit changes and open a pull request. But! While the PR
 is opened someone had merged the following change.
 
 ```diff
@@ -52,7 +66,7 @@ is opened someone had merged the following change.
 +   <color name="snow_white">#fffafa</white>
 ```
 
-This change actually does make sense — `#fffafa` indeed isn’t a white per se,
+This change actually makes sense — `#fffafa` indeed isn’t a white per se,
 but [a shade of white](https://en.wikipedia.org/wiki/Shades_of_white#Snow).
 
 Merging the PR with the new screen at this point can break the target branch,
@@ -64,7 +78,7 @@ depending on a CI configuration.
   on a target branch.
 
 The first situation can be easily resolved in a long run by introducing a _rebase rule_ —
-everything should be rebased on the target branch. In fact
+everything should be rebased on the target branch before the merge. In fact
 [it can be directly configured for GitHub repositories](https://help.github.com/articles/enabling-required-status-checks/).
 Personally I don’t really like this approach since it introduces a tedious
 manual procedure for developers.
