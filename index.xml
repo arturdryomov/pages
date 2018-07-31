@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 16 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Jul 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How the Pull Request is Built</title>
+      <link>http://arturdryomov.online/posts/how-the-pull-request-is-built/</link>
+      <pubDate>Sun, 29 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/how-the-pull-request-is-built/</guid>
+      <description>Contact information of a friend of mine mentions that he doesn’t have Facebook or Twitter accounts, but he is available at a really cool social network called&amp;hellip; GitHub. Actually, GitHub is a social network, it even had direct private messages until April 2012.
+The developer community should be grateful to GitHub not only for awesome Octocats but for the popularizing a concept of pull requests. It is taken for granted now and we tend to forget that the closest thing before was sending a patch via email.</description>
+    </item>
     
     <item>
       <title>Mobile Developer Morning Fun</title>

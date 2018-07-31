@@ -25,11 +25,15 @@
 
 
 <script>
-window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-ga('create', 'UA-112239048-1', 'auto');
-ga('send', 'pageview');
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
 </script>
-<script async src='//www.google-analytics.com/analytics.js'></script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
 
 
 <header>
@@ -68,6 +72,10 @@ programming and related mumbo-jumbo.</p>
 
 
 <ul>
+  
+  <li>
+    <a href="/posts/how-the-pull-request-is-built/">How the Pull Request is Built</a><span>, July 29, 2018</span>
+  </li>
   
   <li>
     <a href="/posts/mobile-developer-morning-fun/">Mobile Developer Morning Fun</a><span>, June 16, 2018</span>
