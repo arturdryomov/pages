@@ -87,7 +87,7 @@ will not be protected from ongoing changes on the target branch. Opening a PR
 triggers a successful build, after that someone changes the target branch,
 whoomp, here it is — it is possible to break the target branch via merging.
 This situation might happen because Travis (and CI platforms in general)
-[do not rebuild source branches on changes to the target branch](https://github.com/travis-ci/travis-ci/issues/1620#issuecomment-28622720).
+[does not rebuild source branches on changes to the target branch](https://github.com/travis-ci/travis-ci/issues/1620#issuecomment-28622720).
 
 # Merging on CI
 
@@ -115,7 +115,7 @@ Just to be sure I’ve contacted GitHub support and received a direct confirmati
 > This remains an undocumented feature and shouldn’t be relied on since it is subject to change at anytime.
 
 Moreover, [merge references are created in an async manner](https://developer.github.com/v3/pulls/#get-a-single-pull-request)
-and can be not available when a CI platform needs it:
+and can be unavailable when a CI platform needs it:
 
 > The value of the `mergeable` attribute can be `true`, `false`, or `null`.
 > If the value is `null`, then GitHub has started a background job to compute the mergeability.
@@ -192,3 +192,6 @@ closing eyes to broken stable branches. Be better!
 PS Title is not really a Futurama reference, but
 let’s call it [an inspiration](https://en.wikipedia.org/wiki/Where_the_Buggalo_Roam) :wink:
 
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) for the review!
