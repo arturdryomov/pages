@@ -24,7 +24,7 @@ especially for non-enterprise-level-complicated scenarios.
 Pull requests combined with CI provide a great collaborative experience.
 
 1. Create a _source_ branch with necessary changes.
-1. Open a PR to a _target_ branch — usually the _stable_ branch, such as `master`.
+1. Open a PR to a _target_ branch — usually the _stable_ one, such as `master`.
 1. CI automagically starts a build, the status is reported back.
 1. Voilà — PR reviewers can see if changes are buildable.
 1. Even better — GitHub can block the merge until CI gives a green light.
@@ -38,7 +38,7 @@ What exactly does the CI build for a pull request? Well, there are two approache
 
 Is there a difference though? Let’s take a look at the example.
 
-There is a file named `colors.xml` with a color resource named `white`.
+There is a color resource named `white`.
 
 ```xml
 <colors>
@@ -91,15 +91,15 @@ This situation might happen because Travis (and CI platforms in general)
 
 # Merging on CI
 
-This is where things start to get really interesting. Turns out Travis
+Turns out Travis
 [does not merge source branches to target branches on its own](https://docs.travis-ci.com/user/pull-requests/#my-pull-request-isnt-being-built):
 
 > We rely on the merge commit that GitHub transparently creates between the changes
 > in the source branch and the upstream branch the pull request is sent against.
 
-This special reference has a format of `+refs/pull/PR_NUMBER/merge`
+This special reference has a format of `refs/pull/PR_NUMBER/merge`
 and can be fetched by anyone. This is great since
-CI platforms can easily use this reference instead of merging branches on its own.
+CI platforms can use this reference instead of merging branches on their own.
 
 Unfortunately, GitHub considers it as
 [an undocumented feature](https://discourse.drone.io/t/github-claims-that-merge-refs-are-undocumented-feature/1100):
@@ -123,8 +123,7 @@ and can be unavailable when a CI platform needs it:
 > you will see a non-`null` value for the `mergeable` attribute in the response.
 
 Since Travis directly mentions these references in the documentation but, at the same time,
-GitHub declares those as unsupported and unreliable I’ve decided to contact Travis and
-received a reply with a confirmation of awareness of this dichotomy:
+GitHub declares those as unsupported and unreliable I’ve decided to contact Travis:
 
 > Regarding this type of reference being unsupported by GitHub,
 > you are quite right to notice an implication in the discrepancy between GitHub’s response to you,
@@ -152,7 +151,7 @@ Yes, it is.
 Two thoughts come to mind.
 
 * How on Earth does it work for so many people without breaking stable branches all the time?
-* I guess the _rebase rule_ is not so bad, eh?
+* I guess the _rebase rule_ is not so bad.
 
 # Conclusions
 
