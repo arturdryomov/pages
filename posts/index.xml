@@ -6,10 +6,21 @@
     <description>Recent content in Posts on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Jul 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 26 Aug 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reactive Abstractions in Android World</title>
+      <link>http://arturdryomov.online/posts/reactive-abstractions-in-android-world/</link>
+      <pubDate>Sun, 26 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/reactive-abstractions-in-android-world/</guid>
+      <description>Who knows how many test suites were not created because of a classic parry.
+ It cannot be tested — it uses a platform call!
+ Well, it is not actually true all the time. Unit testing something that only a human eye and neural networks can catch — like animations — doesn’t make sense. On the other hand, retrying a network request on a re-established connection can and should be tested.</description>
+    </item>
     
     <item>
       <title>How the Pull Request is Built</title>

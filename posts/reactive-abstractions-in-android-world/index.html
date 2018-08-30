@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Reactive Abstractions in Android World</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arturdryomov" />
+  <meta name="twitter:title" content="Reactive Abstractions in Android World" />
+  <meta name="twitter:description" content="Abstracting and testing platform interactions." />
+  
+</head>
+
+<body>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+  <nav>
+    <ul>
+      
+      <li class="menu-left"><a href="/">Posts</a></li>
+      
+      
+      <li class="menu-right"><a href="/index.xml">RSS</a></li>
+      
+      <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+      
+      <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Reactive Abstractions in Android World</span></h1>
+  <h3>August 26, 2018</h3>
+
+</div>
+
+<main>
+
+
+<p>Who knows how many test suites were not created because of a classic parry.</p>
+
+<blockquote>
+<p>It cannot be tested — it uses a platform call!</p>
+</blockquote>
+
+<p>Well, it is not actually true all the time.
+Unit testing something that only a human eye and neural networks
+can catch — like animations — doesn’t make sense.
+On the other hand, retrying a network request on a re-established connection
+can and should be tested. As a bonus, it is possible to gain a couple of perks.</p>
+
+<h1 id="theory">Theory</h1>
+
+<p>The main advice I can give Android developers about testing —
+start thinking about the codebase as a platform-agnostic environment.
+Not in a ridiculous way but in a more pragmatic one — otherwise, it is too
+easy to slip on a dark cross-platform path. Associating the codebase
+with the JVM platform and not specifically Android is a better idea.
+Framework-related interactions can be plugged-in as composable blocks.</p>
+
+<p>Another advice — embrace abstractions available on hand.
+Samples in this article are based on RxJava but it is possible to replace it
+with <code>Future</code>, <code>Promise</code> or Kotlin coroutines.
+This is especially useful with <code>async</code> + <code>await</code> type of interactions.
+Believe me, it is not wise to do everything from scratch if there is a good tech
+available. Moreover, it is easier to maintain consistency
+in the codebase if each component speaks using the same constructs.
+Do not repeat the <a href="https://en.wikipedia.org/wiki/Tower_of_Babel">Tower of Babel</a> fall.</p>
+
+<h1 id="practice">Practice</h1>
+
+<p>Lke it or not — platform interactions leak into the business logic.
+It is understandable — the environment capabilities should be embraced.</p>
+
+<p>At the same time, it is essential to test the logic of the final product —
+otherwise, there will be no product at all, only issues and undefined behavior.</p>
+
+<p>Fortunately enough, the mankind have dealt with such issues for a while.
+Let’s use a weight measurement example. How much does a brick weight?
+Well, certainly less than a space station and more than an atom.
+That characteristic does not really help when it is necessary to transport
+a number of bricks. Will a car break under a million bricks?
+That’s why humanity created <em>abstractions</em>, such as grams, kilograms and tons.
+It is possible to take this completely (but collectively) made up measurement unit
+and apply it everywhere. Well, except
+<a href="http://mentalfloss.com/article/55895/countries-havent-adopted-metric-system">three countries</a>
+that do not use <a href="https://en.wikipedia.org/wiki/Metric_system">metric system</a>.</p>
+
+<p>Software development provides means to create abstractions easy-as.
+It is not necessary to create
+an <a href="https://www.iso.org/">ISO</a> committee to create one — a programming language is enough.
+Android is not an exception — and it never was.</p>
+
+<h2 id="connectivity">Connectivity</h2>
+
+<p>It can be useful to retry stalled network requests when OS reconnects
+to a network access point. In fact,
+<a href="https://developer.android.com/reference/android/net/ConnectivityManager"><code>ConnectivityManager</code></a>
+was there for centuries:</p>
+
+<blockquote>
+<p>The primary responsibilities of this class are to:
+monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
+</blockquote>
+
+<p>The usage of the potential abstraction looks like this.</p>
+
+<pre><code class="language-kotlin">disposable += connectivity.available.subscribe(refresh)
+</code></pre>
+
+<p>Seems like a single stream will be enough. Let’s do it!</p>
+
+<pre><code class="language-kotlin">interface Connectivity {
+
+    val available: Observable&lt;Unit&gt;
+
+    class AndroidConnectivity(context: AndroidContext) : Connectivity {
+
+        private val manager = context.systemService&lt;ConnectivityManager&gt;()
+
+        override val available = Observable.merge(current, updates)
+
+        private val current = Observable
+            .fromCallable { manager.isDefaultNetworkActive() }
+            .filter { it == true }
+            .map { Unit }
+
+        private val updates = Observable.create&lt;Unit&gt; { emitter -&gt;
+            val listener = OnNetworkActiveListener { emitter.onNext(Unit) }
+
+            manager.addDefaultNetworkActiveListener(listener)
+            emitter.setCancellable { manager.removeDefaultNetworkActiveListener(listener) }
+        }
+    }
+}
+</code></pre>
+
+<p>Marvelous! A couple of things to notice here.</p>
+
+<p>The <code>Observable</code> itself handles proper <code>Listener</code> setting on subscription and
+unsetting on unsubscription. It uses the
+<a href="https://en.wikipedia.org/wiki/Dispose_pattern">Dispose pattern</a>,
+i. e. the RxJava <code>Disposable</code>. Since all <code>Observable</code> behave the same
+the end-user of the <code>Connectivity</code> will work with it as with any other
+<code>Observable</code>.</p>
+
+<p>Since there is an <code>interface</code> it is easy to provide a <code>Test*</code> implementation
+for unit tests. Just a single call to simulate the real-world behavior and that’s it —
+it is possible to test code which works with the platform framework.</p>
+
+<pre><code class="language-kotlin">class TestConnectivity : Connectivity {
+    override val available = PublishSubject.create&lt;Unit&gt;()
+}
+</code></pre>
+
+<pre><code class="language-kotlin">context(&quot;connectivity becomes available&quot;) {
+
+    beforeEach {
+        connectivity.available.onNext(Unit)
+    }
+
+    it(&quot;refreshes&quot;) {
+        verify(refresh).run()
+    }
+}
+</code></pre>
+
+<h2 id="launching">Launching</h2>
+
+<p>What about starting something via <code>Intent</code>? The operation itself is trivial,
+but it is necessary to keep in mind that there might be an <code>ActivityNotFoundException</code>.
+This exception is being thrown when nobody can handle our intention.</p>
+
+<pre><code class="language-kotlin">disposable += launcher.launch(Request.ShareText(&quot;Ping!&quot;))
+    .observeOn(mainThread)
+    .subscribe {
+        when (result) {
+            Result.Success -&gt; view.showSuccessAlert()
+            Result.Failure -&gt; view.showFailureAlert()
+        }
+    }
+</code></pre>
+
+<p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
+Doing so will hide the complexity and will help to avoid a copy-paste
+of the same <code>Intent</code> building over and over again.</p>
+
+<pre><code class="language-kotlin">interface Launcher {
+
+    sealed class Request {
+        data class ShareText(val text: String) : Request()
+    }
+
+    enum class Result { Success, Failure }
+
+    fun launch(request: Request): Single&lt;Result&gt;
+
+    class AndroidLauncher(
+            private val application: Application,
+            private val mainScheduler: Scheduler
+    ) : Launcher {
+
+        override fun launch(request: Request) = application.currentActivity
+                .take(1)
+                .singleOrError()
+                .map { activity -&gt;
+                    try {
+                        activity.startActivity(createIntent(request))
+                        Result.Success
+                    } catch (e: ActivityNotFoundException) {
+                        Result.Failure
+                    }
+                }
+                .subscribeOn(mainScheduler)
+
+        private inline fun createIntent(request: Request) = when (request) {
+            is Request.ShareText -&gt; {
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    type = &quot;text/plain&quot;
+                    putExtra(Intent.EXTRA_TEXT, request.text)
+                }
+
+                Intent.createChooser(intent, /* chooser title */ null)
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>We are controlling the thread under the hood so the consumer does not need to know
+implementation details.</p>
+
+<p>An attentive reader might notice that we are using
+another abstraction — <code>Application#currentActivity</code>. It is trivial to implement using
+<a href="https://developer.android.com/reference/android/app/Application.ActivityLifecycleCallbacks"><code>ActivityLifecycleCallbacks</code></a> and
+<code>Connectivity</code>-like approach to listeners and callbacks.</p>
+
+<p>Of course, we can test the behavior.</p>
+
+<pre><code class="language-kotlin">class TestLauncher: Launcher {
+    val result = SingleSubject.create&lt;Result&gt;()
+
+    override fun launch(request: Request) = result
+}
+</code></pre>
+
+<pre><code class="language-kotlin">context(&quot;launch result is success&quot;) {
+
+    beforeEach {
+        launcher.result.onSuccess(Result.Success)
+    }
+
+    it(&quot;shows success alert&quot;) {
+        verify(view).showSuccessAlert()
+    }
+}
+
+context(&quot;launch result is failure&quot;) {
+
+    beforeEach {
+        launcher.result.onSuccess(Result.Failure)
+    }
+
+    it(&quot;shows failure alert&quot;) {
+        verify(view).showFailureAlert()
+    }
+}
+</code></pre>
+
+<h2 id="google-play-services">Google Play Services</h2>
+
+<p>The concept works well not only with the platform
+but with all third-party information sources — such as various SDK.
+In such cases, it is possible to improve the external API — for example,
+provide proper nullability handling if the SDK is not annotated with <code>@Nullable</code> and <code>@NonNull</code>.</p>
+
+<p>Let’s say it is necessary to show a warning if Google Play Services
+is not installed.</p>
+
+<pre><code class="language-kotlin">disposable += googlePlayServices.available
+    .filter { it == false }
+    .observeOn(mainThread)
+    .subscribe(view::showGooglePlayServicesWarningAlert)
+</code></pre>
+
+<p>Implementation:</p>
+
+<pre><code class="language-kotlin">interface GooglePlayServices {
+
+    val available: Single&lt;Boolean&gt;
+
+    class PackagedGooglePlayServices(
+        context: AndroidContext,
+        ioScheduler: Scheduler
+    ) : GooglePlayServices {
+
+        override val available = Single
+            .fromCallable { GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) }
+            .map { it == ConnectionResult.SUCCESS }
+            .subscribeOn(ioScheduler)
+    }
+}
+</code></pre>
+
+<p>The work is done on IO thread since retrieving the information can take an undefined amount of time.</p>
+
+<p>As always, it is possible to test the behavior without mocking static
+<code>GoogleApiAvailability</code> <code>getInstance()</code> method.</p>
+
+<pre><code class="language-kotlin">class TestGooglePlayServices : GooglePlayServices {
+    override val available = SingleSubject.create&lt;Boolean&gt;()
+}
+</code></pre>
+
+<pre><code class="language-kotlin">context(&quot;Google Play Services is available&quot;) {
+
+    beforeEach {
+        googlePlayServices.available.onSuccess(true)
+    }
+
+    it(&quot;does not show warning alert&quot;) {
+        verifyNever(view).showGooglePlayServicesWarningAlert()
+    }
+}
+
+context(&quot;Google Play Services is not available&quot;) {
+
+    beforeEach {
+        googlePlayServices.available.onSuccess(false)
+    }
+
+    it(&quot;shows warning alert&quot;) {
+        verify(view).showGooglePlayServicesWarningAlert()
+    }
+}
+</code></pre>
+
+<h1 id="retrospective">Retrospective</h1>
+
+<p>The beautiful thing about abstractions is that the idea is universal and can be applied everywhere:</p>
+
+<ul>
+<li>Runtime permissions.</li>
+<li>Requesting data via <code>startActivityForResult</code>.</li>
+<li>Notifications and push messages processing.</li>
+<li>Location updates, accessibility, battery and Bluetooth checks&hellip;</li>
+</ul>
+
+<p>At the same time, using a high-level abstraction — like the reactive approach
+(RxJava in particular) — brings a couple of benefits.</p>
+
+<ul>
+<li>Proper multi-threading maintained by producers.</li>
+<li>Ease of testing via producer-consumer components such as <code>Subject</code>.</li>
+</ul>
+
+<p>The ironic thing about abstractions is that developers create them all the time
+for their own domain. But&hellip; tend to avoid it for external sources.
+Do not make this mistake.</p>
+
+<hr />
+
+<p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a> for the review!</p>
+
+</main>
+
+</body>
+
+</html>
+
