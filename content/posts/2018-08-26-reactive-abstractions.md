@@ -36,19 +36,21 @@ Do not repeat the [Tower of Babel](https://en.wikipedia.org/wiki/Tower_of_Babel)
 # Practice
 
 Lke it or not — platform interactions leak into the business logic.
-It is understandable — the environment capabilities should be utilized and not ignored.
+It is understandable — the environment capabilities should be embraced.
 
-At the same time it is essential to test the logic of the final product —
+At the same time, it is essential to test the logic of the final product —
 otherwise, there will be no product at all, only issues and undefined behavior.
 
-Fortunately enough, the mankind deals with such issues for a while.
+Fortunately enough, the mankind have dealt with such issues for a while.
 Let’s use a weight measurement example. How much does a brick weight?
 Well, certainly less than a space station and more than an atom.
 That characteristic does not really help when it is necessary to transport
 a number of bricks. Will a car break under a million bricks?
 That’s why humanity created _abstractions_, such as grams, kilograms and tons.
 It is possible to take this completely (but collectively) made up measurement unit
-and apply it everywhere.
+and apply it everywhere. Well, except
+[three countries](http://mentalfloss.com/article/55895/countries-havent-adopted-metric-system)
+that do not use [metric system](https://en.wikipedia.org/wiki/Metric_system).
 
 Software development provides means to create abstractions easy-as.
 It is not necessary to create
@@ -60,7 +62,7 @@ Android is not an exception — and it never was.
 It can be useful to retry stalled network requests when OS reconnects
 to a network access point. In fact,
 [`ConnectivityManager`](https://developer.android.com/reference/android/net/ConnectivityManager)
-was there for centuries and can help with this issue:
+was there for centuries:
 
 > The primary responsibilities of this class are to:
 > monitor network connections (Wi-Fi, GPRS, UMTS, etc)...
@@ -82,7 +84,14 @@ interface Connectivity {
 
         private val manager = context.systemService<ConnectivityManager>()
 
-        override val available = Observable.create<Unit> { emitter ->
+        override val available = Observable.merge(current, updates)
+
+        private val current = Observable
+            .fromCallable { manager.isDefaultNetworkActive() }
+            .filter { it == true }
+            .map { Unit }
+
+        private val updates = Observable.create<Unit> { emitter ->
             val listener = OnNetworkActiveListener { emitter.onNext(Unit) }
 
             manager.addDefaultNetworkActiveListener(listener)
@@ -103,7 +112,7 @@ the end-user of the `Connectivity` will work with it as with any other
 
 Since there is an `interface` it is easy to provide a `Test*` implementation
 for unit tests. Just a single call to simulate the real-world behavior and that’s it —
-it is possible to test a code which works with the platform framework.
+it is possible to test code which works with the platform framework.
 
 ```kotlin
 class TestConnectivity : Connectivity {
@@ -269,26 +278,59 @@ interface GooglePlayServices {
 ```
 
 The work is done on IO thread since retrieving the information can take an undefined amount of time.
-Since the RxJava is used all multi-threading mumbo-jumbo is handled automagically.
 
-And of course, it is possible to test the behavior without mocking static
+As always, it is possible to test the behavior without mocking static
 `GoogleApiAvailability` `getInstance()` method.
+
+```kotlin
+class TestGooglePlayServices : GooglePlayServices {
+    override val available = SingleSubject.create<Boolean>()
+}
+```
+
+```kotlin
+context("Google Play Services is available") {
+
+    beforeEach {
+        googlePlayServices.available.onSuccess(true)
+    }
+
+    it("does not show warning alert") {
+        verifyNever(view).showGooglePlayServicesWarningAlert()
+    }
+}
+
+context("Google Play Services is not available") {
+
+    beforeEach {
+        googlePlayServices.available.onSuccess(false)
+    }
+
+    it("shows warning alert") {
+        verify(view).showGooglePlayServicesWarningAlert()
+    }
+}
+```
 
 # Retrospective
 
-The beautiful thing about abstractions is that they are universal and can be applied everywhere.
+The beautiful thing about abstractions is that the idea is universal and can be applied everywhere:
 
 * Runtime permissions.
-* Requesting data from other applications via `startActivityForResult`.
+* Requesting data via `startActivityForResult`.
 * Notifications and push messages processing.
-* Location updates, accessibility, battery checks and more.
+* Location updates, accessibility, battery and Bluetooth checks...
 
-At the same time, using a high-level abstraction — like a reactive approach and
-RxJava in particular — brings a couple of benefits.
+At the same time, using a high-level abstraction — like the reactive approach
+(RxJava in particular) — brings a couple of benefits.
 
-* Proper multi-threading maintained via producers.
+* Proper multi-threading maintained by producers.
 * Ease of testing via producer-consumer components such as `Subject`.
 
 The ironic thing about abstractions is that developers create them all the time
-for their own domain but tend to avoid creating them for external sources.
+for their own domain. But... tend to avoid it for external sources.
 Do not make this mistake.
+
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) for the review!
