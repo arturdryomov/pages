@@ -5,22 +5,19 @@ date: 2018-09-09
 slug: optimizing-android-vector-images
 ---
 
-Developers like tools. A good tool is worth of countless saved
-hours or improved experience. For example, it is more than enough
-to use `git log`, but why do that when [`tig`](https://jonas.github.io/tig/)
-is around? I guess this constant need of better tools goes from our nature
-and serves as a moving force behind the civilization progress —
-but that’s another story.
+Developers like tools. A good tool can save hours of work or improve the workflow experience.
+For example, it is possible to use `git log`, but why do that when [`tig`](https://jonas.github.io/tig/)
+is around?
 
 An average working day of an Android developer involves doing something with UI.
-Pushing widgets around, changing text and images — both raster and vector ones.
-Turns out, the colleges of mine use one of these SVG to `VectorDrawable` converters
-and I use Android Studio directly. Is there any difference though?
-Is it worth switching to another tool? Let’s find out!
+Pushing widgets around, changing text and images.
+Turns out, the colleges of mine convert SVG images to `VectorDrawable` via
+a specific converter and I use Android Studio directly. Is there any difference though?
+What does the job better? Let’s find out!
 
 # Tools
 
-Converters (include optimizations):
+Converters (do optimizations under the hood):
 
 * Android Studio.
 * [`svg2android`](http://inloop.github.io/svg2android/) — website,
@@ -38,14 +35,14 @@ Optimizers:
 [Octicons](https://octicons.github.com/).
 These are examples of semi-complicated web icons.
 Image sizes are unconventional — more than `1024` `dp`.
-It is advisable to not use vector images of such size,
+[It is not advisable to use vector images of such size](https://developer.android.com/studio/write/vector-asset-studio#when),
 but let’s look at it as a push-to-the-limit approach.
 
 * [`octicon-octoface`](https://octicons.github.com/icon/octoface/)
 * [`octicon-repo`](https://octicons.github.com/icon/repo/)
 
 [Material](https://material.io/tools/icons/).
-I can only suspect that these icons are designed with mobile in mind
+I suspect that these icons were designed with mobile in mind
 and were pre-optimized for mobile rendering, but that might be completely false.
 Both of them are conventionally sized to `24` `dp`.
 
