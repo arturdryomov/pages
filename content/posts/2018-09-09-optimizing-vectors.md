@@ -12,8 +12,8 @@ is around?
 An average working day of an Android developer involves doing something with UI.
 Pushing widgets around, changing text and images.
 Turns out, the colleges of mine convert SVG images to `VectorDrawable` via
-a specific converter and I use Android Studio directly. Is there any difference though?
-What does the job better? Let’s find out!
+a specific converter and I use Android Studio directly.
+Which tool does the job better? Let’s find out!
 
 # Tools
 
@@ -30,9 +30,14 @@ Optimizers:
 * [Avocado](https://github.com/alexjlockwood/avocado/) — command line tool, optimizes `VectorDrawable` XML files.
 * [SVGO](https://github.com/svg/svgo) — command line tool, optimizes SVG files.
 
+> :bulb: Zeplin exports SVG assets
+> [using SVGO under the hood](https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin),
+> i. e. SVG files are already optimized.
+
 # Sample Images
 
-[Octicons](https://octicons.github.com/).
+## [Octicons](https://octicons.github.com/)
+
 These are examples of semi-complicated web icons.
 Image sizes are unconventional — more than `1024` `dp`.
 [It is not advisable to use vector images of such size](https://developer.android.com/studio/write/vector-asset-studio#when),
@@ -41,7 +46,8 @@ but let’s look at it as a push-to-the-limit approach.
 * [`octicon-octoface`](https://octicons.github.com/icon/octoface/)
 * [`octicon-repo`](https://octicons.github.com/icon/repo/)
 
-[Material](https://material.io/tools/icons/).
+## [Material](https://material.io/tools/icons/)
+
 I suspect that these icons were designed with mobile in mind
 and were pre-optimized for mobile rendering, but that might be completely false.
 Both of them are conventionally sized to `24` `dp`.
@@ -53,12 +59,12 @@ Both of them are conventionally sized to `24` `dp`.
 
 ## XML
 
-It is not surprising, but resulting files look different.
+It is not surprising, but files made by different tools look different.
 Especially when it comes to the most important thing — `android:pathData`.
 This `<path>` attribute serves as an instructions set in terms
 of _go there, paint this_. It reminds me of the very first programming language
 I’ve used — [Logo](https://en.wikipedia.org/wiki/Logo_(programming_language)).
-It was a great way to teach a 5th grader basic programming concepts
+It was a great way to teach a 5th-grader basic programming concepts
 using so called [turtle graphics](https://en.wikipedia.org/wiki/Turtle_graphics).
 
 > :book: `android:pathData` uses the exact same format as `d` attribute in SVG files.
@@ -93,13 +99,42 @@ Let’s see how it looks in action.
     M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
     ```
 
-SVGO example here is not the best one since it haven’t optimized anything
-and looks identical to Android Studio. It doesn’t hold true with other icons.
+    Not the best example since SVGO haven’t optimized anything
+    and looks identical to Android Studio. It doesn’t hold true with other icons.
+
+The SVG specification does not really care about separators, so commas can be replaced
+with spaces and vice-versa.
+
+> Superfluous white space and separators (such as commas) may be eliminated.
+> For instance, the following contains unnecessary spaces: `M 100 100 L 200 200`.
+> It may be expressed more compactly as: `M100 100L200 200`.
+>
+> — [_W3C_](https://www.w3.org/TR/SVG/paths.html#PathDataGeneralInformation)
+
+In other words, `M20,4L4,4` from Android Studio is exactly the same as
+`M20 4L4 4` from `svg2vector`.
+
+Taking separators out of the picture, further changes go to squashing
+and replacing operations. For example, `L4,4 4,6` is the same as `L4,4 v2` —
+the _pencil_ draws line to `4, 4` and another one to `4, 6`.
+`L` draws a line to parameter point and `v` draws
+a vertical line using the parameter shift, which is `6 - 4 = 2` in our case.
+
+Operations squashing helps with optimizing drawing performance. Less commands
+means more efficient execution. Actually, Android Lint
+[has a `VectorPath` check](http://tools.android.com/tips/lint-checks)
+for such cases.
+
+> :book: The maximum instructions count for Lint currently is `800`.
+> [The source code](https://android.googlesource.com/platform/tools/base/+/studio-master-dev/lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/VectorPathDetector.java)
+> contains more details.
 
 Besides `pathData` differences there are some minor deviations as well.
 
-* `svg2android` keeps useless `<path>` — ones that do not draw anything.
-* `svg2vector` keeps `<group>` containers, other merge it with inner `<path>` when possible.
+* `svg2android` tends to keep useless `<path>` — ones that draw nothing, i. e. color-less lines.
+  Other tools remove them.
+* `svg2vector` tends to keep `<group>` containers.
+  Other tools merge it with inner `<path>` when possible.
 
 ## Performance
 
@@ -163,13 +198,10 @@ private fun measureRenderMillis(@DrawableRes drawableRes: Int): Long {
 ### Environment
 
 * MacBook Pro: Intel Core i5 @ 2.7 GHz, 8 GB 1867 MHz DDR3.
-* Emulator: Nexus 4.
-* Iterations count: `30 000`.
+* Emulator: Nexus 4, API 26.
+* Iterations count: 30 000.
 
 ### Results
-
-The data was collected using
-instance of Nexus 4 emulator on MacBook Pro without running anything else.
 
 #### `octicon-octoface`
 
@@ -226,10 +258,6 @@ Android Studio shows good results with small icons and SVGO helps with
 huge web images. It is understandable — SVG is a mature standard
 with known optimization techniques. Knowing that `android:pathData` is basically
 SVG `path.d` it is obvious that relying on a more mature optimizer makes more sense.
-
-> :bulb: Zeplin exports SVG assets
-> [using SVGO under the hood](https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin),
-> i. e. SVG files are already optimized.
 
 In other words, Android Studio is _good enough_, at least from my point of view.
 Besides, it makes the SVG import easy-as — just open it in IDE and that’s it.
