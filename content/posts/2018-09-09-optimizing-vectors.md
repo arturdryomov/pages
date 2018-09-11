@@ -19,9 +19,9 @@ Which tool does the job better? Let’s find out!
 
 Converters (do optimizations under the hood):
 
-* Android Studio.
+* Android Studio — IDE.
 * [`svg2android`](http://inloop.github.io/svg2android/) — website,
-  [`@Deprecated`](https://github.com/inloop/svg2android/commit/4c2312ad376e6c81f0673121b7978768cd94c595)
+  [deprecated](https://github.com/inloop/svg2android/commit/4c2312ad376e6c81f0673121b7978768cd94c595)
   in favor of Android Studio.
 * [`svg2vector`](http://a-student.github.io/SvgToVectorDrawableConverter.Web/) — website.
 
@@ -110,7 +110,7 @@ In other words, `M20,4L4,4` from Android Studio is exactly the same as `M20 4L4 
 Taking separators out of the picture, further changes go to squashing
 and replacing operations. For example, `L4,4 4,6` from `svg2android`
 is the same as `L4,4 v2` from Android Studio — it draws a line to `4, 4` and another one to `4, 6`.
-`L` draws a line to point and `v` draws a vertical line using the shift, which is `6 - 4 = 2` in our case.
+`L` draws a line to the point and `v` draws a vertical line using the shift, which is `6 - 4 = 2` in our case.
 
 Operations squashing helps with optimizing drawing performance. Fewer commands
 mean more efficient execution. Actually, Android Lint
