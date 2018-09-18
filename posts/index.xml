@@ -6,10 +6,22 @@
     <description>Recent content in Posts on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Aug 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 18 Sep 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Optimizing Android Vector Images. Or Not?</title>
+      <link>http://arturdryomov.online/posts/optimizing-android-vector-images/</link>
+      <pubDate>Tue, 18 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/optimizing-android-vector-images/</guid>
+      <description>An average working day of an Android developer involves doing something with UI. Pushing widgets around, changing text and images&amp;hellip;
+The colleges of mine convert SVG images to VectorDrawable via a specific converter and I use Android Studio. Which tool does the job better? Let’s find out!
+Tools Converters (do optimizations under the hood):
+ Android Studio (3.1.4) — IDE. svg2android — website, deprecated in favor of Android Studio. svg2vector — website.</description>
+    </item>
     
     <item>
       <title>Reactive Abstractions in Android World</title>
