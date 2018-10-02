@@ -19,6 +19,10 @@
   <meta name="twitter:title" content="{{ .Title | markdownify }}" />
   <meta name="twitter:description" content="{{ .Description }}" />
   {{ end }}
+
+  {{ if .IsHome }}
+  <meta name="google-site-verification" content="{{ .Site.Params.googleSearchCode }}" />
+  {{ end }}
 </head>
 
 <body>
