@@ -7,18 +7,17 @@ slug: reactive-state-mutations
 
 State-state-state. It surrounds us. Think hard enough and everything around
 will become either a state or a state mutation.
-The current time is a state and each passing second is a state mutation,
-which increments the current value.
+The current time is a state and each passing second is a state mutation.
 A tree can be represented by a state and each drop of rain mutates it,
-increasing the water supply level and applying the pressure on leafs.
+increasing the water supply level and applying the pressure on leaves.
 
-The concept is not new, but sometimes it becomes so hard to manage it.
+The concept is not new, but sometimes it becomes too hard to manage it.
 Even in software development, which was basically created to represent
 the world around us in strict terms.
 
-# Real Life
+# Real Life Example
 
-There is a brand new project which will provide book recommendations.
+There is a brand-new project which will provide book recommendations.
 The very first step is getting a list of books from a backend.
 This is enough _forever and ever_. Sounds good.
 
@@ -34,42 +33,36 @@ All right.
 
 ```kotlin
 interface BookService {
-    enum class BookCreateResult { Success, Failure }
-
     fun getBooks(): Single<List<Book>>
-    fun createBook(book: Book): Single<BookCreateResult>
+    fun createBook(book: Book): Single<Unit>
 }
 ```
 
-New features, new screens! Unfortunately for us it means that
+New features, new screens! Unfortunately, it means that
 the books fetching progress should be preserved across screens.
-I guess a public property should do the trick...
+A property should do the trick...
 
 ```kotlin
 interface BookService {
-    enum class BookCreateResult { Success, Failure }
-
     fun getBooks(): Single<List<Book>>
     val getBooksProgress: Observable<Boolean>
 
-    fun createBook(book: Book): Single<BookCreateResult>
+    fun createBook(book: Book): Single<Unit>
 }
 ```
 
 Damn, the QA team brought up an issue at the very last minute before the release.
-Fetching books might fail and we need to show it on all screens
+Fetching books might fail, and we need to show it on all screens
 to give the ability to re-fetch them. Just a sec, another property
 and here we go.
 
 ```kotlin
 interface BookService {
-    enum class BookCreateResult { Success, Failure }
-
     fun getBooks(): Single<List<Book>>
     val getBooksProgress: Observable<Boolean>
     val getBooksFailure: Observable<Boolean>
 
-    fun createBook(book: Book): Single<BookCreateResult>
+    fun createBook(book: Book): Single<Unit>
 }
 ```
 
@@ -80,22 +73,16 @@ but [some would say it is the reverse](https://www.youtube.com/watch?v=2YTLtG4LM
 
 ```kotlin
 interface BookService {
-    enum class BookCreateResult { Success, Failure }
-    enum class BookDeleteResult { Success, Failure }
-
     fun getBooks(): Single<List<Book>>
     val getBooksProgress: Observable<Boolean>
     val getBooksFailure: Observable<Boolean>
 
-    fun createBook(book: Book): Single<BookCreateResult>
-    fun deleteBook(book: Book): Single<BookDeleteResult>
+    fun createBook(book: Book): Single<Unit>
+    fun deleteBook(book: Book): Single<Unit>
 }
 ```
 
-This is how it’s done folks! When asked on an interview to show the finest
-piece of code I’ll show this one.
-
-And then someone brings up that the `BookService` should work offline...
+And then someone brings up that the `BookService` should cache books...
 
 # This is Bad
 
@@ -109,9 +96,9 @@ on `BookCreateResult.Success` and not on `BookCreateResult.Failure`.
 The same goes to the delete operation.
 Most likely this logic will be distributed and copy-pasted across the client code.
 
-Another distinct feature is how easily `BookService` transformed from being
-stateless to being stateful. Essentially a pure `getBooks` produced
-`getBooksProgress` and `getBooksFailure` side-effects. It is understandable —
+Another distinct feature is how easily the `BookService` transformed from being
+stateless to be stateful. Essentially a pure `getBooks` produced
+`getBooksProgress` and `getBooksFailure` side effects. It is understandable —
 requirements have been changed, but the mistake is still there.
 The change in nature hadn’t been followed by the change in design.
 The burden of complications was transitioned to clients.
@@ -123,21 +110,21 @@ Forget about proper thread-safety — at this point it is on clients shoulders 
 The requirement to cache data (at least in memory) will complicate things even more.
 
 Do not forget that the evolution above seems to be rapid but in reality these
-changes are applied gradually. Since no one has time to do a proper refactoring
+changes are applied gradually. Since no one has time to do a proper refactoring,
 the `BookService` has a pretty good chance to stay this way forever.
-Just like dinosaurs. Until the meteorit nuked them. You know how it goes.
+Just like dinosaurs. Until the meteorite nuked them. You know how it goes.
 
 # CQRS
 
-Every time I think there is something smart and fresh, a careful research
+Each time I think there is something smart and fresh, a careful research
 reveals that the concept was there for years. CQRS is one of them.
 
 CQRS stands for Command Query Responsibility Segregation.
 It is a variety of CQS — Command-Query Separation.
-Usually it is connected to Event Sourcing, but it is a different story.
+Usually, it is connected to Event Sourcing, but it is a different story.
 
 > :book: This article will narrow down the concept.
-> For further explanation I suggest to read [the Martin Fowler peace](https://martinfowler.com/bliki/CQRS.html)
+> For further explanation I suggest reading [the Martin Fowler peace](https://martinfowler.com/bliki/CQRS.html)
 > and [the Microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs).
 
 Basically saying, CQRS replaces [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)-like
@@ -156,6 +143,8 @@ This brings a couple of benefits on the table.
 # The Grand Refactoring
 
 Let’s take CQRS, mix it with the reactive approach and apply it to the `BookService`.
+
+## API
 
 First of all, we now know that the `BookService` is not stateless but stateful.
 The clear state representation will make the API much more explicit.
@@ -191,10 +180,13 @@ sealed class Command {
 val command: Consumer<Command>
 ```
 
+Notice the `Refresh` command which explicitly declares
+the re-fetch action instead of an implicit `getBooks` behavior.
+
 This is a bit idealistic API though. In the future we might want
 to receive a command result outside of the `State` —
 which will become handy for error handling.
-It can be solved with a syntax sugar.
+Potentially it can be solved with a syntax sugar.
 
 ```kotlin
 interface BookService {
@@ -215,7 +207,7 @@ interface BookService {
 }
 ```
 
-The API is pretty much done. What about the implementation?
+## Implementation
 
 First of all, we’ll need stateless commands stream and stateful state one.
 
@@ -285,9 +277,6 @@ disposable += Observable
 
 Done!
 
-<details>
-  <summary>_Click to expand the complete code._</summary>
-
 ```kotlin
 interface BookService {
 
@@ -348,8 +337,6 @@ interface BookService {
         }
     }
 }
-```
-</details>
 
 # Lessons Learned
 
@@ -358,8 +345,8 @@ CQRS-like reactive APIs for state mutations can be very useful.
 * The API is clear and declarative.
 * The API forces right concepts (states and state mutations) both on the outside and on the inside.
 * The API is reactive, directly representing the producer-consumer pair.
-* The implementation is error-prone-less since the design enforces single state of truth for both states and state mutations.
+* The implementation is error-prone-less since the design enforces a single state of truth for both states and state mutations.
 * The implementation is thread-safe since commands are handled consequentially, one-by-one.
 
-It isn’t a silver bullet, but I can definetly suggest it when dealing with state.
+It isn’t a silver bullet, but I can definetly suggest it when dealing with the state.
 
