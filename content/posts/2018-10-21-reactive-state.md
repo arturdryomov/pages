@@ -354,3 +354,6 @@ CQRS-like reactive APIs for state mutations can be very useful.
 
 It isn’t a silver bullet, but I can definetly suggest it when dealing with the state.
 
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) for the review!
