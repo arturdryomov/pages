@@ -17,7 +17,7 @@ the world around us in strict terms.
 
 # Real Life Example
 
-There is a brand-new project which will provide book recommendations.
+There is a brand-new project for book recommendations.
 The very first step is getting a list of books from a backend.
 This is enough _forever and ever_. Sounds good.
 
@@ -34,7 +34,7 @@ All right.
 ```kotlin
 interface BookService {
     fun getBooks(): Single<List<Book>>
-    fun createBook(book: Book): Single<Unit>
+    fun createBook(book: Book): Completable
 }
 ```
 
@@ -47,7 +47,7 @@ interface BookService {
     fun getBooks(): Single<List<Book>>
     val getBooksProgress: Observable<Boolean>
 
-    fun createBook(book: Book): Single<Unit>
+    fun createBook(book: Book): Completable
 }
 ```
 
@@ -62,12 +62,12 @@ interface BookService {
     val getBooksProgress: Observable<Boolean>
     val getBooksFailure: Observable<Boolean>
 
-    fun createBook(book: Book): Single<Unit>
+    fun createBook(book: Book): Completable
 }
 ```
 
 The project hit the production! It works all right, but
-the very first customer had a complaint that the book was created wrong
+the very first customer has a complaint that the book the one created has a wrong name
 and there is no way to delete it. Sounds like creating a book,
 but [some would say it is the reverse](https://www.youtube.com/watch?v=2YTLtG4LMsM)...
 
@@ -77,8 +77,8 @@ interface BookService {
     val getBooksProgress: Observable<Boolean>
     val getBooksFailure: Observable<Boolean>
 
-    fun createBook(book: Book): Single<Unit>
-    fun deleteBook(book: Book): Single<Unit>
+    fun createBook(book: Book): Completable
+    fun deleteBook(book: Book): Completable
 }
 ```
 
@@ -191,10 +191,13 @@ Potentially it can be solved with a syntax sugar.
 ```kotlin
 interface BookService {
 
+    enum class ResultCreate { Success, Failure }
+    enum class ResultDelete { Success, Failure }
+
     val refresh: Action
 
-    fun create(book: Book): Single<Unit>
-    fun delete(book: Book): Single<Unit>
+    fun create(book: Book): Single<ResultCreate>
+    fun delete(book: Book): Single<ResultDelete>
 
     class Impl : BookService {
 
