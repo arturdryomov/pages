@@ -18,10 +18,16 @@
   <meta name="twitter:site" content="@{{ .Site.Params.twitter }}" />
   <meta name="twitter:title" content="{{ .Title | markdownify }}" />
   <meta name="twitter:description" content="{{ .Description }}" />
+
+  <!-- Search -->
+  <meta name="description" content="{{ .Description }}" />
   {{ end }}
 
   {{ if .IsHome }}
   <meta name="google-site-verification" content="{{ .Site.Params.googleSearchCode }}" />
+
+  <!-- Search -->
+  <meta name="description" content="{{ .Site.Params.description }}" />
   {{ end }}
 </head>
 
