@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 21 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 07 Nov 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reactive Pipelines in Action</title>
+      <link>http://arturdryomov.online/posts/reactive-pipelines/</link>
+      <pubDate>Wed, 07 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/reactive-pipelines/</guid>
+      <description>Human beings are reactive by nature — fortunately or not. The reason is mostly physiology. The dopamine hormone helps us to feel comfortable and secure while we do familiar things. Eating a sandwich sounds and feels far better than gardening, doesn’t it? Essentially it is a fight between psychology (the mind, proactive actions) and physiology (the body, reactive actions).
+The same thing happens in CS. Object-oriented programming (OOP) is the king of the hill and functional programming (FP) is on the outskirts.</description>
+    </item>
     
     <item>
       <title>Reactive State Mutations via CQRS</title>

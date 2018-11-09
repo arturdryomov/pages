@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://arturdryomov.online/posts/reactive-pipelines/</loc>
+    <lastmod>2018-11-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://arturdryomov.online/posts/reactive-state-mutations/</loc>
     <lastmod>2018-10-21T00:00:00+00:00</lastmod>
   </url>
@@ -49,7 +54,7 @@
   
   <url>
     <loc>http://arturdryomov.online/</loc>
-    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -59,7 +64,7 @@
   
   <url>
     <loc>http://arturdryomov.online/posts/</loc>
-    <lastmod>2018-10-21T00:00:00+00:00</lastmod>
+    <lastmod>2018-11-07T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
