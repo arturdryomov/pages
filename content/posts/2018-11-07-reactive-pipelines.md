@@ -27,8 +27,8 @@ Let’s see how it might look and decide.
 
 Don’t worry, I’m not going to explain FP and FRP all over again. We’ll need only two terms.
 
-* Producer. Produces events, an output: `Observable`, `Flowable`, `Single`, `Maybe`.
-* Consumer. Consumes events, an input: `Consumer`, `Action`.
+* Producer. Produces events, an output: `Observable<T>`, `Flowable<T>`, `Single<T>`, `Completable`, `Maybe<T>`.
+* Consumer. Consumes events, an input: `Consumer<T>`, `Action<T>`.
 
 The success of our enterprise
 (not to be confused with [the USS one](https://en.wikipedia.org/wiki/Starship_Enterprise))
@@ -43,9 +43,9 @@ satisfying in understanding that a complete flow can be tracked via a single
 stream from a producer to a consumer.
 
 * A connectivity change restarts a stalled network request,
-  which mutates a current data state, which triggers a UI redraw.
+  which produces a new data state, which triggers a UI redraw.
 * Clicking a refresh button triggers a data refresh,
-  which starts a network request, which again mutates a current data state,
+  which starts a network request, which again produces a new data state,
   which triggers a UI redraw.
 
 These actions are done without ad-hoc solutions and concepts. The flow is consistent.
@@ -66,8 +66,7 @@ These actions are done without ad-hoc solutions and concepts. The flow is consis
 
 Network-related data sources (especially on Android) most likely use
 [Retrofit](https://github.com/square/retrofit) or something similar.
-However, I don’t associate raw API interfaces with data providers since
-in most cases there is an in-house handling for common tasks.
+However, often there is an in-house handling for common tasks.
 
 * Connectivity. Restart requests on re-established network connections.
 * Retries. Restart requests `N` times or (and) transform error responses
@@ -102,8 +101,8 @@ Storage-related data sources are easier.
 
 ```kotlin
 interface BooksStorageSource {
-    fun getBooksPageSize: Single<Int>
-    fun setBooksPageSize: Single<Unit>
+    fun getBooksPageSize(): Single<Int>
+    fun setBooksPageSize(size: Int): Completable
 
     class Impl(
         private val context: AndroidContext,
@@ -112,9 +111,9 @@ interface BooksStorageSource {
 }
 ```
 
-Notice that `setBooksPageSize` is a `Single` and not a `Consumer`.
+Notice that `setBooksPageSize` is a `Completable` and not a `Consumer`.
 A `Consumer` makes more sense as an interaction — it is an input after all.
-In real life it needs to be async to not block user interactions.
+In real life it needs to be async to not block the caller (most likely UI) thread.
 There are use cases when it is necessary to ensure that changes were applied
 before proceeding with another action. A classic example is a sign out procedure —
 everything needs to be cleaned up before a different account is being signed in.
@@ -168,63 +167,61 @@ Notice that the service does not receive a `Scheduler`.
 
 ## Presentation
 
-MVWhatever will do the trick, but I highly suggest giving MVI a shot.
+MVWhatever will do the trick, but I highly suggest giving
+[MVI](https://cycle.js.org/model-view-intent.html) a shot.
 
 I see presentation components as consumers, but it will be ignorant
 to forget that user actions are actually producers. This is not a bad thing
 because embracing the reactive approach makes this a benefit.
 
 ```kotlin
-interface BooksScreen {
+interface View {
+    enum class State { Progress, Content, Error }
 
-    interface View {
-        enum class State { Progress, Content, Error }
+    val stateSwitcher: ViewAnimator<State>
+    val refreshButton: Button
+    val errorRefreshButton: Button
 
-        val stateSwitcher: ViewAnimator<State>
-        val refreshButton: Button
-        val errorRefreshButton: Button
-
-        val books: Consumer<Book>
-    }
-
-    class ViewModel(
-        private val booksService: BooksService,
-        private val mainScheduler: Scheduler
-    ) {
-        private val disposable = CompositeDisposable()
-
-        fun bind(view: View) {
-            disposable += Observable
-                .merge(
-                    view.refreshButton.clicks,
-                    view.errorRefreshButton.clicks
-                )
-                .map { BooksService.Command.Refresh }
-                .subscribe(booksService.command)
-
-            disposable += booksService.state
-                .map {
-                    when (it) {
-                        is BooksService.State.Progress -> View.State.Progress
-                        is BooksService.State.Content -> View.State.Content
-                        is BooksService.State.Error -> View.State.Error
-                    }
-                }
-                .observeOn(mainScheduler)
-                .subscribe(view.stateSwitcher.state)
-
-            disposable += booksService.state
-                .ofType<BooksService.State.Content>
-                .map { it.books }
-                .observeOn(mainScheduler)
-                .subscribe(view.books)
-        }
-
-        fun unbind() = disposable.clear()
-    }
-
-    class ViewImpl(view: AndroidView) : View { /* ... */ }
+    val books: Consumer<Book>
 }
+
+class ViewModel(
+    private val booksService: BooksService,
+    private val mainScheduler: Scheduler
+) {
+    private val disposable = CompositeDisposable()
+
+    fun bind(view: View) {
+        disposable += Observable
+            .merge(
+                view.refreshButton.clicks,
+                view.errorRefreshButton.clicks
+            )
+            .map { BooksService.Command.Refresh }
+            .subscribe(booksService.command)
+
+        disposable += booksService.state
+            .map {
+                when (it) {
+                    is BooksService.State.Progress -> View.State.Progress
+                    is BooksService.State.Content -> View.State.Content
+                    is BooksService.State.Error -> View.State.Error
+                }
+            }
+            .observeOn(mainScheduler)
+            .subscribe(view.stateSwitcher.state)
+
+        disposable += booksService.state
+            .ofType<BooksService.State.Content>
+            .map { it.books }
+            .observeOn(mainScheduler)
+            .subscribe(view.books)
+    }
+
+    fun unbind() = disposable.clear()
+}
+
+class ViewImpl(view: AndroidView) : View { /* ... */ }
 ```
 
 * The `Scheduler` is being passed as an argument for inversion of control purposes.
@@ -248,18 +245,17 @@ What have we got as a result?
 
 # Is It Worth It?
 
-I cannot say for everyone, but my answer is definitive Yes.
+I cannot say for everyone, but my answer is a definitive Yes.
 
-Thinking about reproducing the same interactions as above on callbacks and listeners
+Thinking about reproducing the same interactions as above using callbacks and listeners
 cause a headache. Replicating a reactive feedback without reactive approach
-most likely will lead to an unscalable mess. Nobody on the team will eventually know
+most likely will lead to an unscalable mess. Nobody on a team will eventually know
 what is going on.
 
-There is a number of concepts FRP brings on a table which are hard to beat or even replace.
+There is a number of concepts FRP brings on a table which are hard to beat or just replace.
 
 * Declarative scalable API. Operators mutate the state from the input and provide
-  the output. No side-effects, no unpredictable behavior. The process is streamlined,
-  easily readable and stable.
+  the output. No side-effects, no unpredictable behavior. The process is streamlined.
 * Ridiculously easy multi-threading. Since there are no side-effects each operator
   can perform on a particular thread. Even better — since switching a thread
   is an operator it is a part of the same awesome declarative API.
@@ -275,3 +271,6 @@ as developers and human beings?
 
 _Be proactive about being reactive!_
 
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) for the review!
