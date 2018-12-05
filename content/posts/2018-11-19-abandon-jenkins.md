@@ -34,3 +34,55 @@ a [Linux kernel feature](https://lkml.org/lkml/2018/11/19/37) or a SSD failure.
 Sounds fun, right? Don’t get me started on how much time these things consume.
 Imagine a weird code issue which consumes hour after hour and multiply
 it by a factor of uncontrolled external tools and environments.
+
+> :warning: I have to note this explicitly — I’m describing a situation related to small teams.
+> Big companies have separate teams to manage all of this and not a single person.
+
+Some people might think it is cool to be that person — the only one who knows
+how the toolchain works. Well, it is really not.
+
+* From a personal perspective it is either a direct ego booster or
+  a line into the depression zone (since not a lot of people understand
+  the work you do).
+* From a team perspective this situation is
+  [a bus factor](https://en.wikipedia.org/wiki/Bus_factor) at least.
+  More importantly — a developer occupied by the infrastructure
+  is a developer not working on improving the product directly and
+  sometimes it is more important than maintaining tech.
+
+I was this person and it felt... strange. One day I’ve caught myself
+on a realization that I hadn’t wrote a single line of product-related code
+for a week. That’s when I’ve started to question myself and the work I do.
+Does it really matter for the product or for my coworkers productivity?
+What is the point of all this? Can it be optimized without losing benefits?
+
+The first part of the solution was
+[rethinking UI tests]({{< ref "2018-05-26-androids-dream.md" >}}).
+The second one was related to...
+
+# Jenkins
+
+Is is perfect for environments that need to be scaled. OSS, flexible
+plugin system, both declarative and GUI configuration, artifacts storage,
+battle-tested, familiar across the board and so much more.
+
+There is a catch though — someone has to maintain it. Even the simplest
+setup — with only a Git and Pipeline plugins — will eventually fail and break
+(after a minor version changes of course).
+
+* Some Unicode characters in a Git branch name might break a workspace cleanup
+  procedure for all jobs since weird internal Java methods do that instead
+  of `rm`.
+* Long pull request description might break the cloning procedure because
+  _argument list is too long_ or whatever.
+* Fetching a specific Git `refspec` might stop working since `git fetch`
+  is done in a weird way.
+
+Basically each plugin update might break something. At the same time
+it is hard to ignore them because of _Security Issue_ warnings.
+Jenkins is a DYI product — it is the main strength and the main weakness
+at the same time.
+
+Oh, and do not forget that Jenkins needs to be run somewhere.
+Amazon AWS helps but still — someone has to maintain it.
+
