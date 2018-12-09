@@ -1,7 +1,7 @@
 ---
 title: "Abandon Jenkins for Great Good!"
 description: "Reducing CI cost (both in time and money) with Bitrise (or anything)."
-date: 2018-11-19
+date: 2018-12-09
 slug: abandon-jenkins
 ---
 
