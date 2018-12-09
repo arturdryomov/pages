@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
 
   
   <meta name="theme-color" content="#1e2327">
@@ -27,12 +27,6 @@
 </head>
 
 <body>
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 
 
 <script type="application/javascript">
@@ -156,23 +150,20 @@ However, often there is an in-house handling for common tasks.</p>
 to manually-retryable actions.</li>
 <li>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</li>
 </ul>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">BookResponse</span> <span class="p">{</span>
+    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
+    <span class="k">object</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
+<span class="p">}</span>
 
-<pre><code class="language-kotlin">sealed class BookResponse {
-    data class Success(val books: List&lt;Book&gt;) : BookResponse()
-    object Failure : BookResponse()
-}
+<span class="k">interface</span> <span class="nc">BooksNetworkSource</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">(</span><span class="n">pageSize</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">BooksResponse</span><span class="p">&gt;</span>
+    <span class="k">fun</span> <span class="nf">getBookReviews</span><span class="p">():</span> <span class="n">Flowable</span><span class="p">&lt;</span><span class="n">BookReview</span><span class="p">&gt;</span>
 
-interface BooksNetworkSource {
-    fun getBooks(pageSize: Int): Observable&lt;BooksResponse&gt;
-    fun getBookReviews(): Flowable&lt;BookReview&gt;
-
-    class Impl(
-        private val api: BooksApi,
-        private val ioScheduler: Scheduler
-    ) { /* ... */ }
-}
-</code></pre>
-
+    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">,</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+    <span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <ul>
 <li><code>getBooks</code> method returns an <code>Observable</code> and not a <code>Single</code> since the request
 is automatically resubmitted on an available network if it wasn’t available
@@ -183,18 +174,15 @@ It is up to a consumer to decide how to manage it based on current needs.</li>
 </ul>
 
 <p>Storage-related data sources are easier.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorageSource</span> <span class="p">{</span>
+    <span class="k">fun</span> <span class="nf">getBooksPageSize</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
+    <span class="k">fun</span> <span class="nf">setBooksPageSize</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Completable</span>
 
-<pre><code class="language-kotlin">interface BooksStorageSource {
-    fun getBooksPageSize(): Single&lt;Int&gt;
-    fun setBooksPageSize(size: Int): Completable
-
-    class Impl(
-        private val context: AndroidContext,
-        private val ioScheduler: Scheduler
-    ) { /* ... */ }
-}
-</code></pre>
-
+    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">,</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+    <span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <p>Notice that <code>setBooksPageSize</code> is a <code>Completable</code> and not a <code>Consumer</code>.
 A <code>Consumer</code> makes more sense as an interaction — it is an input after all.
 In real life it needs to be async to not block the caller (most likely UI) thread.
@@ -224,29 +212,26 @@ between the data and the presentation. Business-related decisions are done here.
 <p>📖 Suggestions about state mutations are available in
 <a href="http://arturdryomov.online/posts/reactive-state-mutations/">Reactive State Mutations via CQRS</a>.</p>
 </blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksService</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">interface BooksService {
+    <span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>
+        <span class="k">object</span> <span class="nc">Progress</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
+        <span class="k">data</span> <span class="k">class</span> <span class="nc">Content</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
+        <span class="k">object</span> <span class="nc">Error</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
+    <span class="p">}</span>
 
-    sealed class State {
-        object Progress : State()
-        data class Content(val books: List&lt;Book&gt;) : State()
-        object Error : State()
-    }
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">Command</span> <span class="p">{</span>
+        <span class="n">Refresh</span>
+    <span class="p">}</span>
 
-    enum class Command {
-        Refresh
-    }
+    <span class="k">val</span> <span class="py">state</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;</span>
+    <span class="k">val</span> <span class="py">command</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">&gt;</span>
 
-    val state: Observable&lt;State&gt;
-    val command: Consumer&lt;Command&gt;
-
-    class Impl(
-        private val networkSource: BooksNetworkSource,
-        private val storageSource: BooksStorageSource
-    ): BooksService { /* ... */ }
-}
-</code></pre>
-
+    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">networkSource</span><span class="p">:</span> <span class="n">BooksNetworkSource</span><span class="p">,</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">storageSource</span><span class="p">:</span> <span class="n">BooksStorageSource</span>
+    <span class="p">):</span> <span class="n">BooksService</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <p>Notice that the service does not receive a <code>Scheduler</code>.</p>
 
 <ul>
@@ -262,56 +247,53 @@ between the data and the presentation. Business-related decisions are done here.
 <p>I see presentation components as consumers, but it will be ignorant
 to forget that user actions are actually producers. This is not a bad thing
 because embracing the reactive approach makes this a benefit.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">View</span> <span class="p">{</span>
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">Content</span><span class="p">,</span> <span class="n">Error</span> <span class="p">}</span>
 
-<pre><code class="language-kotlin">interface View {
-    enum class State { Progress, Content, Error }
+    <span class="k">val</span> <span class="py">stateSwitcher</span><span class="p">:</span> <span class="n">ViewAnimator</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;</span>
+    <span class="k">val</span> <span class="py">refreshButton</span><span class="p">:</span> <span class="n">Button</span>
+    <span class="k">val</span> <span class="py">errorRefreshButton</span><span class="p">:</span> <span class="n">Button</span>
 
-    val stateSwitcher: ViewAnimator&lt;State&gt;
-    val refreshButton: Button
-    val errorRefreshButton: Button
+    <span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;</span>
+<span class="p">}</span>
 
-    val books: Consumer&lt;Book&gt;
-}
+<span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">val</span> <span class="py">booksService</span><span class="p">:</span> <span class="n">BooksService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">val</span> <span class="py">mainScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+<span class="p">)</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">val</span> <span class="py">disposable</span> <span class="p">=</span> <span class="n">CompositeDisposable</span><span class="p">()</span>
 
-class ViewModel(
-    private val booksService: BooksService,
-    private val mainScheduler: Scheduler
-) {
-    private val disposable = CompositeDisposable()
+    <span class="k">fun</span> <span class="nf">bind</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+            <span class="p">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">view</span><span class="p">.</span><span class="n">refreshButton</span><span class="p">.</span><span class="n">clicks</span><span class="p">,</span>
+                <span class="n">view</span><span class="p">.</span><span class="n">errorRefreshButton</span><span class="p">.</span><span class="n">clicks</span>
+            <span class="p">)</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">booksService</span><span class="p">.</span><span class="n">command</span><span class="p">)</span>
 
-    fun bind(view: View) {
-        disposable += Observable
-            .merge(
-                view.refreshButton.clicks,
-                view.errorRefreshButton.clicks
-            )
-            .map { BooksService.Command.Refresh }
-            .subscribe(booksService.command)
+        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span>
+                <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">stateSwitcher</span><span class="p">.</span><span class="n">state</span><span class="p">)</span>
 
-        disposable += booksService.state
-            .map {
-                when (it) {
-                    is BooksService.State.Progress -&gt; View.State.Progress
-                    is BooksService.State.Content -&gt; View.State.Content
-                    is BooksService.State.Error -&gt; View.State.Error
-                }
-            }
-            .observeOn(mainScheduler)
-            .subscribe(view.stateSwitcher.state)
+        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
+            <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">&gt;</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">books</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
+    <span class="p">}</span>
 
-        disposable += booksService.state
-            .ofType&lt;BooksService.State.Content&gt;
-            .map { it.books }
-            .observeOn(mainScheduler)
-            .subscribe(view.books)
-    }
+    <span class="k">fun</span> <span class="nf">unbind</span><span class="p">()</span> <span class="p">=</span> <span class="n">disposable</span><span class="p">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="p">}</span>
 
-    fun unbind() = disposable.clear()
-}
-
-class ViewImpl(view: AndroidView) : View { /* ... */ }
-</code></pre>
-
+<span class="k">class</span> <span class="nc">ViewImpl</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="n">AndroidView</span><span class="p">)</span> <span class="p">:</span> <span class="n">View</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span></code></pre></div>
 <ul>
 <li>The <code>Scheduler</code> is being passed as an argument for inversion of control purposes.
 Also, the presentation components know best what should be executed on the UI thread.

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
 
   
   <meta name="theme-color" content="#1e2327">
@@ -27,12 +27,6 @@
 </head>
 
 <body>
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 
 
 <script type="application/javascript">
@@ -144,37 +138,31 @@ monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
 </blockquote>
 
 <p>The usage of the potential abstraction looks like this.</p>
-
-<pre><code class="language-kotlin">disposable += connectivity.available.subscribe(refresh)
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span></code></pre></div>
 <p>Seems like a single stream will be enough. Let’s do it!</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Connectivity</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">interface Connectivity {
+    <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span>
 
-    val available: Observable&lt;Unit&gt;
+    <span class="k">class</span> <span class="nc">AndroidConnectivity</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">)</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
 
-    class AndroidConnectivity(context: AndroidContext) : Connectivity {
+        <span class="k">private</span> <span class="k">val</span> <span class="py">manager</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">systemService</span><span class="p">&lt;</span><span class="n">ConnectivityManager</span><span class="p">&gt;()</span>
 
-        private val manager = context.systemService&lt;ConnectivityManager&gt;()
+        <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span>
 
-        override val available = Observable.merge(current, updates)
+        <span class="k">private</span> <span class="k">val</span> <span class="py">current</span> <span class="p">=</span> <span class="n">Observable</span>
+            <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">isDefaultNetworkActive</span><span class="p">()</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="k">true</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">Unit</span> <span class="p">}</span>
 
-        private val current = Observable
-            .fromCallable { manager.isDefaultNetworkActive() }
-            .filter { it == true }
-            .map { Unit }
+        <span class="k">private</span> <span class="k">val</span> <span class="py">updates</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">emitter</span> <span class="p">-&gt;</span>
+            <span class="k">val</span> <span class="py">listener</span> <span class="p">=</span> <span class="n">OnNetworkActiveListener</span> <span class="p">{</span> <span class="n">emitter</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span>
 
-        private val updates = Observable.create&lt;Unit&gt; { emitter -&gt;
-            val listener = OnNetworkActiveListener { emitter.onNext(Unit) }
-
-            manager.addDefaultNetworkActiveListener(listener)
-            emitter.setCancellable { manager.removeDefaultNetworkActiveListener(listener) }
-        }
-    }
-}
-</code></pre>
-
+            <span class="n">manager</span><span class="p">.</span><span class="n">addDefaultNetworkActiveListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+            <span class="n">emitter</span><span class="p">.</span><span class="n">setCancellable</span> <span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">removeDefaultNetworkActiveListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span> <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <p>Marvelous! A couple of things to notice here.</p>
 
 <p>The <code>Observable</code> itself handles proper <code>Listener</code> setting on subscription and
@@ -187,87 +175,75 @@ the end-user of the <code>Connectivity</code> will work with it as with any othe
 <p>Since there is an <code>interface</code> it is easy to provide a <code>Test*</code> implementation
 for unit tests. Just a single call to simulate the real-world behavior and that’s it —
 it is possible to test code which works with the platform framework.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestConnectivity</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;()</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">class TestConnectivity : Connectivity {
-    override val available = PublishSubject.create&lt;Unit&gt;()
-}
-</code></pre>
+    <span class="n">beforeEach</span> <span class="p">{</span>
+        <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span>
+    <span class="p">}</span>
 
-<pre><code class="language-kotlin">context(&quot;connectivity becomes available&quot;) {
-
-    beforeEach {
-        connectivity.available.onNext(Unit)
-    }
-
-    it(&quot;refreshes&quot;) {
-        verify(refresh).run()
-    }
-}
-</code></pre>
-
+    <span class="n">it</span><span class="p">(</span><span class="s">&#34;refreshes&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">refresh</span><span class="p">).</span><span class="n">run</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <h2 id="launching">Launching</h2>
 
 <p>What about starting something via <code>Intent</code>? The operation itself is trivial,
 but it is necessary to keep in mind that there might be an <code>ActivityNotFoundException</code>.
 This exception is being thrown when nobody can handle our intention.</p>
-
-<pre><code class="language-kotlin">disposable += launcher.launch(Request.ShareText(&quot;Ping!&quot;))
-    .observeOn(mainThread)
-    .subscribe {
-        when (result) {
-            Result.Success -&gt; view.showSuccessAlert()
-            Result.Failure -&gt; view.showFailureAlert()
-        }
-    }
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">launcher</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span><span class="p">(</span><span class="s">&#34;Ping!&#34;</span><span class="p">))</span>
+    <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">subscribe</span> <span class="p">{</span>
+        <span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">Result</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showSuccessAlert</span><span class="p">()</span>
+            <span class="n">Result</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showFailureAlert</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre></div>
 <p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
 Doing so will hide the complexity and will help to avoid a copy-paste
 of the same <code>Intent</code> building over and over again.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Launcher</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">interface Launcher {
+    <span class="k">sealed</span> <span class="k">class</span> <span class="nc">Request</span> <span class="p">{</span>
+        <span class="k">data</span> <span class="k">class</span> <span class="nc">ShareText</span><span class="p">(</span><span class="k">val</span> <span class="py">text</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">:</span> <span class="n">Request</span><span class="p">()</span>
+    <span class="p">}</span>
 
-    sealed class Request {
-        data class ShareText(val text: String) : Request()
-    }
+    <span class="k">enum</span> <span class="k">class</span> <span class="nc">Result</span> <span class="p">{</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span> <span class="p">}</span>
 
-    enum class Result { Success, Failure }
+    <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;</span>
 
-    fun launch(request: Request): Single&lt;Result&gt;
+    <span class="k">class</span> <span class="nc">AndroidLauncher</span><span class="p">(</span>
+            <span class="k">private</span> <span class="k">val</span> <span class="py">application</span><span class="p">:</span> <span class="n">Application</span><span class="p">,</span>
+            <span class="k">private</span> <span class="k">val</span> <span class="py">mainScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+    <span class="p">)</span> <span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
 
-    class AndroidLauncher(
-            private val application: Application,
-            private val mainScheduler: Scheduler
-    ) : Launcher {
+        <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">application</span><span class="p">.</span><span class="n">currentActivity</span>
+                <span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">singleOrError</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">activity</span> <span class="p">-&gt;</span>
+                    <span class="k">try</span> <span class="p">{</span>
+                        <span class="n">activity</span><span class="p">.</span><span class="n">startActivity</span><span class="p">(</span><span class="n">createIntent</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+                        <span class="n">Result</span><span class="p">.</span><span class="n">Success</span>
+                    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">ActivityNotFoundException</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">Result</span><span class="p">.</span><span class="n">Failure</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
 
-        override fun launch(request: Request) = application.currentActivity
-                .take(1)
-                .singleOrError()
-                .map { activity -&gt;
-                    try {
-                        activity.startActivity(createIntent(request))
-                        Result.Success
-                    } catch (e: ActivityNotFoundException) {
-                        Result.Failure
-                    }
-                }
-                .subscribeOn(mainScheduler)
+        <span class="k">private</span> <span class="k">inline</span> <span class="k">fun</span> <span class="nf">createIntent</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">is</span> <span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span> <span class="p">-&gt;</span> <span class="p">{</span>
+                <span class="k">val</span> <span class="py">intent</span> <span class="p">=</span> <span class="n">Intent</span><span class="p">(</span><span class="n">Intent</span><span class="p">.</span><span class="n">ACTION_SEND</span><span class="p">).</span><span class="n">apply</span> <span class="p">{</span>
+                    <span class="n">flags</span> <span class="p">=</span> <span class="n">Intent</span><span class="p">.</span><span class="n">FLAG_ACTIVITY_NEW_TASK</span>
+                    <span class="n">type</span> <span class="p">=</span> <span class="s">&#34;text/plain&#34;</span>
+                    <span class="n">putExtra</span><span class="p">(</span><span class="n">Intent</span><span class="p">.</span><span class="n">EXTRA_TEXT</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="p">}</span>
 
-        private inline fun createIntent(request: Request) = when (request) {
-            is Request.ShareText -&gt; {
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    type = &quot;text/plain&quot;
-                    putExtra(Intent.EXTRA_TEXT, request.text)
-                }
-
-                Intent.createChooser(intent, /* chooser title */ null)
-            }
-        }
-    }
-}
-</code></pre>
-
+                <span class="n">Intent</span><span class="p">.</span><span class="n">createChooser</span><span class="p">(</span><span class="n">intent</span><span class="p">,</span> <span class="cm">/* chooser title */</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <p>We are controlling the thread under the hood so the consumer does not need to know
 implementation details.</p>
 
@@ -277,37 +253,31 @@ another abstraction — <code>Application#currentActivity</code>. It is trivial
 <code>Connectivity</code>-like approach to listeners and callbacks.</p>
 
 <p>Of course, we can test the behavior.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestLauncher</span><span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
+    <span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;()</span>
 
-<pre><code class="language-kotlin">class TestLauncher: Launcher {
-    val result = SingleSubject.create&lt;Result&gt;()
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">result</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
 
-    override fun launch(request: Request) = result
-}
-</code></pre>
+    <span class="n">beforeEach</span> <span class="p">{</span>
+        <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
+    <span class="p">}</span>
 
-<pre><code class="language-kotlin">context(&quot;launch result is success&quot;) {
+    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows success alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showSuccessAlert</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-    beforeEach {
-        launcher.result.onSuccess(Result.Success)
-    }
+<span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is failure&#34;</span><span class="p">)</span> <span class="p">{</span>
 
-    it(&quot;shows success alert&quot;) {
-        verify(view).showSuccessAlert()
-    }
-}
+    <span class="n">beforeEach</span> <span class="p">{</span>
+        <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Failure</span><span class="p">)</span>
+    <span class="p">}</span>
 
-context(&quot;launch result is failure&quot;) {
-
-    beforeEach {
-        launcher.result.onSuccess(Result.Failure)
-    }
-
-    it(&quot;shows failure alert&quot;) {
-        verify(view).showFailureAlert()
-    }
-}
-</code></pre>
-
+    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows failure alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showFailureAlert</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <h2 id="google-play-services">Google Play Services</h2>
 
 <p>The concept works well not only with the platform
@@ -317,65 +287,53 @@ provide proper nullability handling if the SDK is not annotated with <code>@Null
 
 <p>Let’s say it is necessary to show a warning if Google Play Services
 is not installed.</p>
-
-<pre><code class="language-kotlin">disposable += googlePlayServices.available
-    .filter { it == false }
-    .observeOn(mainThread)
-    .subscribe(view::showGooglePlayServicesWarningAlert)
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
+    <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="k">false</span> <span class="p">}</span>
+    <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="o">::</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">)</span></code></pre></div>
 <p>Implementation:</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">GooglePlayServices</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">interface GooglePlayServices {
+    <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
 
-    val available: Single&lt;Boolean&gt;
+    <span class="k">class</span> <span class="nc">PackagedGooglePlayServices</span><span class="p">(</span>
+        <span class="n">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">,</span>
+        <span class="n">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+    <span class="p">)</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
 
-    class PackagedGooglePlayServices(
-        context: AndroidContext,
-        ioScheduler: Scheduler
-    ) : GooglePlayServices {
-
-        override val available = Single
-            .fromCallable { GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) }
-            .map { it == ConnectionResult.SUCCESS }
-            .subscribeOn(ioScheduler)
-    }
-}
-</code></pre>
-
+        <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">Single</span>
+            <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">GoogleApiAvailability</span><span class="p">.</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isGooglePlayServicesAvailable</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="n">ConnectionResult</span><span class="p">.</span><span class="n">SUCCESS</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <p>The work is done on IO thread since retrieving the information can take an undefined amount of time.</p>
 
 <p>As always, it is possible to test the behavior without mocking static
 <code>GoogleApiAvailability</code> <code>getInstance()</code> method.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestGooglePlayServices</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;()</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
-<pre><code class="language-kotlin">class TestGooglePlayServices : GooglePlayServices {
-    override val available = SingleSubject.create&lt;Boolean&gt;()
-}
-</code></pre>
+    <span class="n">beforeEach</span> <span class="p">{</span>
+        <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+    <span class="p">}</span>
 
-<pre><code class="language-kotlin">context(&quot;Google Play Services is available&quot;) {
+    <span class="n">it</span><span class="p">(</span><span class="s">&#34;does not show warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">verifyNever</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-    beforeEach {
-        googlePlayServices.available.onSuccess(true)
-    }
+<span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is not available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
-    it(&quot;does not show warning alert&quot;) {
-        verifyNever(view).showGooglePlayServicesWarningAlert()
-    }
-}
+    <span class="n">beforeEach</span> <span class="p">{</span>
+        <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
+    <span class="p">}</span>
 
-context(&quot;Google Play Services is not available&quot;) {
-
-    beforeEach {
-        googlePlayServices.available.onSuccess(false)
-    }
-
-    it(&quot;shows warning alert&quot;) {
-        verify(view).showGooglePlayServicesWarningAlert()
-    }
-}
-</code></pre>
-
+    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 <h1 id="retrospective">Retrospective</h1>
 
 <p>The beautiful thing about abstractions is that the idea is universal and can be applied everywhere:</p>

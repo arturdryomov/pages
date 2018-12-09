@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
 
   
   <meta name="theme-color" content="#1e2327">
@@ -27,12 +27,6 @@
 </head>
 
 <body>
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 
 
 <script type="application/javascript">
@@ -157,30 +151,19 @@ for it with neat samples.</p>
 
 <ul>
 <li><p>Android Studio:</p>
-
-<pre><code class="language-text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
-</code></pre></li>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z</code></pre></div></li>
 
 <li><p><code>svg2android</code>:</p>
-
-<pre><code class="language-text">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z
-</code></pre></li>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z</code></pre></div></li>
 
 <li><p><code>svg2vector</code>:</p>
-
-<pre><code class="language-text">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z
-</code></pre></li>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z</code></pre></div></li>
 
 <li><p>Android Studio + Avocado:</p>
-
-<pre><code class="language-text">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z
-</code></pre></li>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z</code></pre></div></li>
 
 <li><p>SVGO + Android Studio:</p>
-
-<pre><code class="language-text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z</code></pre></div>
 <p>Not the best example since SVGO hadn’t optimized anything
 and looks identical to Android Studio. It doesn’t hold true with other icons.</p></li>
 </ul>
@@ -232,68 +215,65 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 
 <p><details>
   <summary><em>Click to expand the benchmark code.</em></summary></p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
+<span class="p">}</span>
 
-<pre><code class="language-kotlin">companion object {
-    private const val ITERATIONS_COUNT = 10_000
-}
+<span class="k">private</span> <span class="k">val</span> <span class="py">random</span> <span class="p">=</span> <span class="n">Random</span><span class="p">()</span>
 
-private val random = Random()
+<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">listOf</span><span class="p">(</span>
+            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio</span><span class="p">,</span>
+            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2android</span><span class="p">,</span>
+            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2vector</span><span class="p">,</span>
+            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio_and_avocado</span><span class="p">,</span>
+            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svgo_and_android_studio</span>
+    <span class="p">).</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">drawableRes</span> <span class="p">-&gt;</span>
 
-private fun measure() {
-    listOf(
-            R.drawable.android_studio,
-            R.drawable.svg2android,
-            R.drawable.svg2vector,
-            R.drawable.android_studio_and_avocado,
-            R.drawable.svgo_and_android_studio
-    ).forEach { drawableRes -&gt;
+        <span class="k">val</span> <span class="py">drawableName</span> <span class="p">=</span> <span class="n">resources</span><span class="p">.</span><span class="n">getResourceEntryName</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
 
-        val drawableName = resources.getResourceEntryName(drawableRes)
+        <span class="k">val</span> <span class="py">measurements</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span> <span class="n">until</span> <span class="n">ITERATIONS_COUNT</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">measure</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span> <span class="p">}</span>
 
-        val measurements = (0 until ITERATIONS_COUNT)
-            .map { measure(drawableRes) }
+        <span class="k">val</span> <span class="py">averageParseMillis</span> <span class="p">=</span> <span class="n">measurements</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">parseTimeMillis</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
+        <span class="k">val</span> <span class="py">averageRenderMillis</span> <span class="p">=</span> <span class="n">measurements</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">renderTimeMillis</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
 
-        val averageParseMillis = measurements
-            .map { it.parseTimeMillis }
-            .average()
-        val averageRenderMillis = measurements
-            .map { it.renderTimeMillis }
-            .average()
+        <span class="n">println</span><span class="p">(</span><span class="s">&#34;:: [$drawableName]. Parse: $averageParseMillis ms. Render: $averageRenderMillis ms.&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-        println(&quot;:: [$drawableName]. Parse: $averageParseMillis ms. Render: $averageRenderMillis ms.&quot;)
-    }
-}
+<span class="k">private</span> <span class="k">data</span> <span class="k">class</span> <span class="nc">Measurement</span><span class="p">(</span><span class="k">val</span> <span class="py">parseTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">,</span> <span class="k">val</span> <span class="py">renderTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">)</span>
 
-private data class Measurement(val parseTimeMillis: Long, val renderTimeMillis: Long)
+<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">(</span><span class="n">@DrawableRes</span> <span class="n">drawableRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Measurement</span> <span class="p">{</span>
+    <span class="k">lateinit</span> <span class="k">var</span> <span class="py">drawable</span><span class="p">:</span> <span class="n">Drawable</span>
 
-private fun measure(@DrawableRes drawableRes: Int): Measurement {
-    lateinit var drawable: Drawable
+    <span class="k">val</span> <span class="py">parseTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+        <span class="c1">// Unfortunately it seems to be impossible to disable internal caching.
+</span><span class="c1"></span>        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
+    <span class="p">}</span>
 
-    val parseTime = measureTimeMillis {
-        // Unfortunately it seems to be impossible to disable internal caching.
-        drawable = getDrawable(drawableRes)
-    }
+    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="p">!</span><span class="k">is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s">&#34;Drawable is supposed to be VectorDrawable.&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
 
-    if (drawable !is VectorDrawable) {
-        throw IllegalArgumentException(&quot;Drawable is supposed to be VectorDrawable.&quot;)
-    }
+    <span class="c1">// Change tint to prevent internal render internal caching.
+</span><span class="c1"></span>    <span class="n">drawable</span><span class="p">.</span><span class="n">setTint</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">nextInt</span><span class="p">())</span>
 
-    // Change tint to prevent internal render internal caching.
-    drawable.setTint(random.nextInt())
+    <span class="k">val</span> <span class="py">bitmap</span> <span class="p">=</span> <span class="n">Bitmap</span><span class="p">.</span><span class="n">createBitmap</span><span class="p">(</span><span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicWidth</span><span class="p">,</span> <span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicHeight</span><span class="p">,</span> <span class="n">Bitmap</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ARGB_8888</span><span class="p">)</span>
+    <span class="k">val</span> <span class="py">canvas</span> <span class="p">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">bitmap</span><span class="p">)</span>
 
-    val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
+    <span class="n">drawable</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">height</span><span class="p">)</span>
 
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    <span class="k">val</span> <span class="py">renderTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+        <span class="n">drawable</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
+    <span class="p">}</span>
 
-    val renderTime = measureTimeMillis {
-        drawable.draw(canvas)
-    }
-
-    return Measurement(parseTime, renderTime)
-}
-</code></pre>
-
+    <span class="k">return</span> <span class="n">Measurement</span><span class="p">(</span><span class="n">parseTime</span><span class="p">,</span> <span class="n">renderTime</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
 <p></details></p>
 
 <h3 id="environment">Environment</h3>

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="/css/style.css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
 
   
   <meta name="theme-color" content="#1e2327">
@@ -27,12 +27,6 @@
 </head>
 
 <body>
-
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
 
 
 <script type="application/javascript">
@@ -115,27 +109,19 @@ especially for non-enterprise-level-complicated scenarios.</p>
 <p>Is there a difference though? Let’s take a look at the example.</p>
 
 <p>There is a color resource named <code>white</code>.</p>
-
-<pre><code class="language-xml">&lt;colors&gt;
-    &lt;color name=&quot;white&quot;&gt;#fffafa&lt;/white&gt;
-&lt;/colors&gt;
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;colors&gt;</span>
+    <span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;white&#34;</span><span class="nt">&gt;</span>#fffafa<span class="nt">&lt;/white&gt;</span>
+<span class="nt">&lt;/colors&gt;</span></code></pre></div>
 <p>Let’s say I need to use it in a brand-new screen.</p>
-
-<pre><code class="language-xml">&lt;View
-    android:background=&quot;@color/white&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;/&gt;
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;View</span>
+    <span class="na">android:background=</span><span class="s">&#34;@color/white&#34;</span>
+    <span class="na">android:layout_width=</span><span class="s">&#34;match_parent&#34;</span>
+    <span class="na">android:layout_height=</span><span class="s">&#34;match_parent&#34;</span><span class="nt">/&gt;</span></code></pre></div>
 <p>I create a Git branch, commit changes and open a pull request. But! When the PR
 was being prepared someone had merged the following change.</p>
-
-<pre><code class="language-diff">-   &lt;color name=&quot;white&quot;&gt;#fffafa&lt;/white&gt;
-+   &lt;color name=&quot;snow_white&quot;&gt;#fffafa&lt;/white&gt;
-</code></pre>
-
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">-   &lt;color name=&#34;white&#34;&gt;#fffafa&lt;/white&gt;
+</span><span class="gd"></span><span class="gi">+   &lt;color name=&#34;snow_white&#34;&gt;#fffafa&lt;/white&gt;
+</span><span class="gi"></span></code></pre></div>
 <p>It actually makes sense — <code>#fffafa</code> isn’t a white per se,
 but <a href="https://en.wikipedia.org/wiki/Shades_of_white#Snow">a shade of white</a>.</p>
 
