@@ -164,7 +164,7 @@ workflows:
     - script:
         title: "Run."
         inputs:
-        - content: 'bash ci/jobs/release.sh'
+        - content: "bash ci/jobs/release.sh"
     - deploy-to-bitrise-io:
         title: "Attach artifacts."
         is_always_run: true
