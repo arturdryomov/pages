@@ -33,3 +33,5 @@ disableHugoGeneratorInject: true
 enableEmoji: true
 footnoteReturnLinkContents: "↩"
 
+pygmentsCodeFences: true
+pygmentsUseClasses: true
