@@ -170,7 +170,7 @@ workflows:
         is_always_run: true
         inputs:
         - deploy_path: "artifacts/"
-        - is_enable_public_page: "false"
+        - is_enable_public_page: false
 ```
 
 The transition from Jenkins to Bitrise was seamless. For a while we used
