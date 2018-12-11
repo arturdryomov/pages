@@ -132,11 +132,11 @@ It is possible because Bitrise components are [open source](https://github.com/b
 
 [Pricing is reasonable](https://www.bitrise.io/pricing). I like that
 the hardware configuration is not hidden away from customers.
-At the same time there is an opt-in for Elite machines with better specs.
+At the same time there is an opt-in for machines with better specs.
 For some reason a lot of services hide that kind of information and do not
 allow to upgrade the hardware. I was told that Linux machines are provided
 via Google Compute Engine. Amazon instances for Jenkins costed us $1000
-a month, Bitrise Elite costs $360 for basically the same hardware.
+a month, Bitrise costs $360 for basically the same hardware.
 Plus no human resources to support Jenkins!
 
 Since Bitrise people understand that caching is important for shorter
@@ -190,3 +190,7 @@ the best workflow for the team?
 
 Title is a reference to the wonderful
 [Lean You a Haskell for Great Good!](http://learnyouahaskell.com/).
+
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin) for the review!
