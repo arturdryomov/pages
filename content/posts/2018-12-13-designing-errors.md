@@ -8,8 +8,8 @@ slug: designing-errors-with-kotlin
 Fun fact — the area of
 [the Java island](https://en.wikipedia.org/wiki/Java) is 138 793 km²,
 [the Kotlin island](https://en.wikipedia.org/wiki/Kotlin_Island) occupies 15 km².
-Of course it is blanatly incorrect to compare languages based on same-named island areas.
-At the same time it brings things in perspective. Java is the cornerstone
+Of course, it is blatantly incorrect to compare languages based on same-named island areas.
+At the same time, it brings things in perspective. Java is the cornerstone
 of the JVM platform. The platform itself overshadows everything it hosts:
 Groovy, Ceylon, Scala, Clojure and Kotlin. It is the foundation and it brings
 a lot to the table — error handling is no exception (pun intended).
@@ -21,20 +21,21 @@ can learn from. Let’s dive in!
 
 # Java
 
-This is straightforward. There are checked and unchecked exceptions.
+There are checked and unchecked exceptions.
 Checked ones are not favored among developers since their handling
 is forced by the method signature and the compiler.
-I think the root of the checked exceptions... discontent
+I think the root of the checked exceptions discontent
 is the duality of method calls. The caller is forced to
-work with not only the return result of the method, but with
+work with not only the return result of the method but with
 the possible exception as well. This creates a lot of friction in practice.
 At the same time, checked exceptions are quite useful to enforce
-desired checks.
+desired behavior. From that perspective, unchecked exceptions are actually
+worse than checked ones since they are implicit and easy to miss.
 
 Another option is to return `null` or magic values when something went wrong.
 It can be called either a C-style or a documentation-driven error handling —
 the caller is expected (but not enforced) to check the return value of a method
-for a special case. The case itself is either documented or not — in this case
+for a special case. The case itself is either documented or not — in such situations
 the process transforms into a goose chase for implicit errors.
 From that perspective checked exceptions are far better.
 
@@ -44,7 +45,14 @@ Errors in Swift resemble scope-checked exceptions in Java terms.
 Error-throwing functions are required to be annotated with the `throws` keyword.
 
 ```swift
-func function() throws -> String
+func open(filename: String) throws -> File
+```
+```swift
+do {
+    try open("file.txt")
+} catch {
+    print("Gotta catch them all!")
+}
 ```
 
 The neat part is that only throwing functions are allowed to `throw`.
@@ -56,7 +64,7 @@ Another neat detail — there are no exceptions in Swift. In fact,
 is very careful to not mention exceptions and use the Error term instead.
 `throws` and `throw` keywords are just a syntax sugar for adding another return
 value handler. `throw` writes an error to a register and `try` reads it.
-Essentially it is like returning a `Pair` or `Either` values.
+Essentially it is like returning a `Pair` or an `Either`.
 
 > :book: Technical details are explained in
 > [the excellent article](https://www.mikeash.com/pyblog/friday-qa-2017-08-25-swift-error-handling-implementation.html)
@@ -90,7 +98,7 @@ if err != nil {
     // Process the error.
 }
 ```
-Basically every function which might result in an error returns a pair
+Basically, every function which might result in an error returns a pair
 of a value itself and an error. That’s it! Reminds a C-style error
 handling, but at least it is explicit and type-safe. This style
 is verbose, but it works surprisingly good due to the universal application.
@@ -101,7 +109,7 @@ is verbose, but it works surprisingly good due to the universal application.
 There is a `panic` function though which might look like a Java-like
 unchecked exception. Enough hacks and it is even possible to catch them
 but it is considered non-idiomatic.
-`panic` is the last call for help, when things got really, really bad.
+`panic` is the last call for help when things got really, really bad.
 
 # Rust
 
@@ -139,12 +147,12 @@ mostly for Java-Kotlin interop purposes.
 
 ```kotlin
 @Throws(IOException::class)
-fun open() {
+fun open(filename: String): File {
     throw IOException("This is a checked, checked world.")
 }
 ```
 
-Since Kotlin runs on the JVM platform there are exceptions — no surprises here.
+Since Kotlin runs on the JVM platform, there are exceptions — no surprises here.
 However, Kotlin is not Java and does have a couple of benefits.
 Specifically — it is possible to use `sealed class` and pattern matching
 to return a union of values and use it. Yes, I’m talking about the `Result` type.
@@ -169,7 +177,7 @@ when (result) {
 
 In fact, there is [an accepted proposal](https://github.com/Kotlin/KEEP/blob/master/proposals/stdlib/result.md)
 to include a similar type in the standard library, but it is a bit weird
-and is scoped to coroutines only. Not to worry! It is still possible to introduce
+since it is scoped to coroutines. Not to worry! It is still possible to introduce
 a project-specific one. Even better — create `sealed class` for domain-specific
 tasks, which might include more than two states.
 
@@ -186,27 +194,47 @@ sealed class Result {
 fun download(url: HttpUrl): Result
 ```
 
-Unfortunately there are no ways to ban the `catch` keyword and
+Unfortunately, there are no ways to ban the `catch` keyword and
 mentally map it to the `panic` invocation. It is still possible
-to control this in a scope of a codebase, but it doesn’t scale
+to control this in the scope of a codebase, but it doesn’t scale
 with the number of developers.
 
-After diving in different languages I see a clear benefit
+# Bonus: RxJava
+
+[The Observable Contract](http://reactivex.io/documentation/contract.html)
+introduces three basis notifications: `onNext`, `onComplete` and `onError`.
+Unfortunately, the `onError` notification gets easily abused by a domain-related
+error handling. This behavior introduces the result handling duality.
+The solution is obvious if Kotlin is used — use result types instead.
+
+```kotlin
+fun download(url: HttpUrl): Observable<Result>
+```
+
+This approach simplifies interactions by a huge margin.
+`onError` becomes a reactive `panic` — a way to notify the caller
+about significant system failures that require developer attention.
+
+> :bulb: Use [`Relay`](https://github.com/JakeWharton/RxRelay)
+> instead of `Subject` to stop thinking about `onError` and `onComplete`.
+
+# `Result`s
+
+I see a clear benefit
 in using result-driven error handling and a strict Rust-inspired
 recoverable-unrecoverable paradigm.
 
-* Implicit exceptions happenning in spontaneous places are effectively
+* Implicit exceptions happening in spontaneous places are effectively
   eliminated. It is still possible to `panic` (or `throw`),
   but it is preserved for exceptional conditions (pun intended).
   The API is always explicit and straightforward.
 * There is no duality either of exception-result or checked-unchecked.
   A function receives input values as arguments and returns output values
-  as results. That’s it. In a way, it helps with avoiding side-effects.
+  as results. That’s it. In a way, it helps with avoiding side effects.
 
-> :book: Talking side-effects and functional programming —
+> :book: Talking side effects and functional programming —
 > [Haskell follows a similar approach](http://book.realworldhaskell.org/read/error-handling.html)
-> of avoiding exceptions in favor of result types.
+> to avoid exceptions in favor of result types.
 
-Exceptions provide an easy way to deal with errors.
-Not necessary the simple way.
-[Think deeply about the difference](https://www.infoq.com/presentations/Simple-Made-Easy).
+Exceptions provide an easy way to deal with errors. Not necessary
+[the simple one](https://www.infoq.com/presentations/Simple-Made-Easy).
