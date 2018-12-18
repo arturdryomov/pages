@@ -6,7 +6,7 @@
     <description>Recent content in Posts on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 18 Dec 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/posts/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Designing Errors with Kotlin</title>
       <link>http://arturdryomov.online/posts/designing-errors-with-kotlin/</link>
-      <pubDate>Thu, 13 Dec 2018 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 18 Dec 2018 00:00:00 +0000</pubDate>
       
       <guid>http://arturdryomov.online/posts/designing-errors-with-kotlin/</guid>
       <description>Fun fact — the area of the Java island is 138 793 km², the Kotlin island occupies 15 km². Of course, it is blatantly incorrect to compare languages based on same-named island areas. At the same time, it brings things in perspective. Java is the cornerstone of the JVM platform. The platform itself overshadows everything it hosts: Groovy, Ceylon, Scala, Clojure and Kotlin. It brings a lot to the table — error handling is no exception (pun intended).</description>
