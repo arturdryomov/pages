@@ -2,7 +2,7 @@ language: shell
 
 env:
   global:
-    - HUGO_VERSION="0.41"
+    - HUGO_VERSION="0.52"
     - HUGO_PACKAGE="hugo.tar.gz"
     - HUGO_DIRECTORY="hugo"
     - HUGO_BINARY="hugo"
