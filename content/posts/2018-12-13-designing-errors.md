@@ -108,9 +108,13 @@ Basically, each function which might result in an error returns a pair
 of a value and an error. That’s it! Looks like a C-style error
 handling, but at least it is explicit and type-safe. The style
 is verbose, but it works surprisingly good due to the universal application.
+Plus, Go 2.0 most likely will introduce
+[syntax sugar for error handling](https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling.md).
 
-> :book: There is [a great article](https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance)
-> on coping with Go error handling by Sergey Alexandrovich.
+```go
+handle err { println("YARRR!") }
+file := check open("file.txt")
+```
 
 There is a `panic` function which might look like a Java
 unchecked exception. Using enough hacks makes it possible to catch `panic` errors
@@ -120,6 +124,9 @@ but it is considered non-idiomatic.
 ```go
 panic("on the streets of London")
 ```
+
+> :book: There is [a great article](https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance)
+> on coping with Go error handling by Sergey Alexandrovich.
 
 # Rust
 
@@ -137,7 +144,8 @@ That’s what I like about Rust — the straightforward declaration of principl
 
 * There are no exceptions — neither Java-like or Swift-like.
 * There is a `panic!` macros — but there are no ways to recover.
-* There is a `Result` type with a number of helper functions on top.
+* There is a `Result` type with a number of helper functions on top
+  with [plans](https://www.ncameron.org/blog/rust-in-2022/) to make it less verbose.
 
 ```rust
 panic!("at the Disco")
@@ -168,7 +176,7 @@ fun open(filename: String): File {
 
 Since Kotlin runs on the JVM platform, there are unchecked exceptions.
 However, Kotlin is not Java — it has a couple of benefits.
-Specifically — it is possible to use `sealed class` and pattern matching
+Specifically — it is possible to use `sealed class`
 to return a union of values and use it. Yep, just like the `Result` type.
 
 ```kotlin
@@ -211,7 +219,7 @@ fun download(url: HttpUrl): Result
 Unfortunately, there are no ways to ban the `catch` keyword and
 mentally map it to the `panic` invocation. It is still possible
 to control this in the scope of a codebase, but it doesn’t scale
-well with the growing number of developers.
+well with the growing number of developers. In-house Lint checks might help.
 
 # Bonus: RxJava
 
@@ -254,3 +262,7 @@ recoverable-unrecoverable paradigm.
 Exceptions provide an easy way to deal with errors. Not necessary
 [the simple one](https://www.infoq.com/presentations/Simple-Made-Easy).
 
+---
+
+Thanks to [Artem Zinnatullin](https://twitter.com/artem_zin)
+and [Igor Gomonov](https://www.linkedin.com/in/igor-gomonov-a66903b7/) for the review!
