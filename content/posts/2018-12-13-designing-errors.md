@@ -33,6 +33,10 @@ a desired behavior. From that perspective, unchecked exceptions are actually
 worse — unchecked ones are implicit and easy to miss, checked ones
 are explicit and defined in the declaration.
 
+```java
+File open(String filename) throws IOException
+```
+
 Another option is to return `null` or magic values when something went wrong.
 It can be called either a C-style or a documentation-driven error handling —
 the caller is expected (but not enforced) to check the function result
@@ -250,10 +254,3 @@ recoverable-unrecoverable paradigm.
 Exceptions provide an easy way to deal with errors. Not necessary
 [the simple one](https://www.infoq.com/presentations/Simple-Made-Easy).
 
----
-
-### References
-
-* `print("Gotta catch them all!")` — [Pokémon](https://en.wikipedia.org/wiki/Gotta_Catch_%27Em_All)
-* `panic("on the streets of London")` — [The Smiths song](https://en.wikipedia.org/wiki/Panic_(The_Smiths_song))
-* `panic!("at the Disco")` — [Panic! at the Disco](https://en.wikipedia.org/wiki/Panic!_at_the_Disco)
