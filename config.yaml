@@ -33,5 +33,9 @@ disableHugoGeneratorInject: true
 enableEmoji: true
 footnoteReturnLinkContents: "↩"
 
+disableKinds:
+  - taxonomy
+  - taxonomyTerm
+
 pygmentsCodeFences: true
 pygmentsUseClasses: true
