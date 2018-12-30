@@ -29,4 +29,4 @@ git add --all
 git commit --message "Publish Hugo-generated contents."
 
 echo ":: Pushing..."
-#git push origin "${PUBLISH_BRANCH}"
+git push origin "${PUBLISH_BRANCH}"
