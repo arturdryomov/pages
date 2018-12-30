@@ -36,6 +36,7 @@ footnoteReturnLinkContents: "↩"
 disableKinds:
   - taxonomy
   - taxonomyTerm
+  - section
 
 pygmentsCodeFences: true
 pygmentsUseClasses: true
