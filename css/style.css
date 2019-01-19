@@ -115,3 +115,6 @@ tr:nth-child(even) {
   background: #f6f8fa;
 }
 
+footer {
+  margin-bottom: 64px;
+}
