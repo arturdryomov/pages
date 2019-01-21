@@ -1,4 +1,4 @@
 language: shell
 
 script:
-  - bash ci/assemble.sh
+  - bash scripts/assemble.sh
