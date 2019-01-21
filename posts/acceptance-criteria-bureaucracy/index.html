@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Acceptance Criteria Bureaucracy</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arturdryomov" />
+  <meta name="twitter:title" content="Acceptance Criteria Bureaucracy" />
+  <meta name="twitter:description" content="Organizing the development process with a sweet boring documentation." />
+
+  
+  <meta name="description" content="Organizing the development process with a sweet boring documentation." />
+  
+
+  
+</head>
+
+<body>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Acceptance Criteria Bureaucracy</span></h1>
+  <h3>January 20, 2019</h3>
+
+</div>
+
+<main>
+
+
+<p>Cooperation! It sure sounds better than bureaucracy.
+A released product is a result of cooperation between the Business and the Tech.
+There is an obvious issue though. Both sides have different mindsets.
+The misunderstanding is inevitable. How do we solve this?
+Well, there are still wars on the planet so apparently humanity wasn’t able to find a solution.</p>
+
+<p>What about establishing not world peace
+but a good communication channel? Agile methodologies establish such artifact as
+Acceptance Criteria (AC). AC is a specification for how the product should work.
+Sounds good and the motivation is solid, but there is a catch —
+there are no explicit requirements. AC can consist of memes and be distributed by birds —
+the sky is the limit (literally). Let’s take a look at the evolution and
+trace our path to the bureaucracy nirvana.</p>
+
+<h1 id="stone-age">Stone Age</h1>
+
+<p>AC are exchanged as a bunch of text.
+Let’s face it — a lot of teams deal with this on a regular basis.
+The file format might be as basic as <code>.txt</code> or as fancy as <code>.pdf</code> —
+it doesn’t change the picture.
+This is ridiculous but it actually works.
+At the same time, it is sad that so many people are forced
+to work with this format.</p>
+
+<p>The multiplier for everything bad
+related to this approach is a potential lack of a centralized
+source of truth. Email messages might be used instead.
+A nightmare, but it is workable.</p>
+
+<pre><code>There is the Infinity Gauntlet. It requires Infinity Gems to work.
+
+* 5 gems are in place: it is possible to erase half of the universe via finger snapping.
+* 1—4 gems are in place: the behavior is inherited from available gems.
+* 0 gems are in place: nothing happens.
+</code></pre>
+
+<p>Believe it or not, this is a pretty good AC. It is possible to start the development using it.</p>
+
+<h1 id="bronze-age-formalization">Bronze Age: Formalization</h1>
+
+<p>AC tend to grow. Just like flowers. Or global nuclear arsenal. Your pick.</p>
+
+<p>Organizing a good amount of text is never easy. This is where
+<a href="https://en.wikipedia.org/wiki/Formal_specification#Software_tools">formal specifications</a>
+come into play. There is a number of methods to transform a wall of text
+into a step-by-step guide. I’ve heard about:</p>
+
+<ul>
+<li>writing conventions (do not scale with a number of people involved);</li>
+<li>syntax and DSL (usefulness depends on discipline);</li>
+<li>block diagrams (awesome but might not be practical);</li>
+<li>nothing (anarchy at its core).</li>
+</ul>
+
+<p>The middle ground is defining a syntax
+and following it. This way non-technical people are able to read and write
+AC and technical people feel more comfortable since it looks and feels like
+a barbaric programming language. Fortunately enough <a href="https://cucumber.io/">Cucumber</a>
+already defined such syntax named <a href="https://docs.cucumber.io/gherkin/reference/">Gherkin</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-gherkin" data-lang="gherkin">Feature: Infinity Gauntlet
+
+  Given 5 gems are in place
+  When fingers are snapped
+  Then erase half of the universe
+
+  Given 1—4 gems are in place
+  When gem-specific intent is performed
+  Then perform gem-specific action
+
+  Given 0 gems are in place
+  When any intent is performed
+  Then do nothing</code></pre></div>
+<p>Much better. Attentive readers might notice that the declaration enforced us
+to explicitly describe when actions are actually performed. This was missed
+in the original text-based AC. Actually, I’m thinking right now what should be done
+on non-snap when 5 gems are in place&hellip;</p>
+
+<h1 id="iron-age-sharing">Iron Age: Sharing</h1>
+
+<p>Hopefully, at some point people involved in the process start to understand
+that email-based sharing is a no-go.
+<a href="https://www.atlassian.com/software/jira">Jira</a> is the obvious replacement.
+It even has <a href="https://www.atlassian.com/blog/jira-software/8-steps-to-a-definition-of-done-in-jira">a dedicated input field for AC</a>!</p>
+
+<p>Jira is far better than exchanging emails but it falls short in a couple of areas.</p>
+
+<ul>
+<li>Duplication. There are products available on two or more platforms
+(Android, iOS, web). Ideally, AC on all of these should be
+more or less the same excluding platform-specific behavior.
+Since each platform most likely has its own Jira project —
+the copy-pasting is inevitable. It gets worse with following
+updates and corrections — AC should be re-copy-pasted everywhere again and again.</li>
+<li>Discussion. Jira does not support inline comments. There is no comment tree as well.
+As a result, multiple conversations transform into a shouting across a room
+full of different people.
+Honestly saying it is email exchanging all over again, just with a bit
+of centralized storage for the discussion topic.</li>
+</ul>
+
+<p>There is another product from Atlassian which can be used to mitigate
+the Jira pain — <a href="https://www.atlassian.com/software/confluence">Confluence</a>.</p>
+
+<ul>
+<li>Inline comments are fully supported, including resolving when the comments thread is no longer relevant.</li>
+
+<li><p>Nesting is available so it is possible to group AC by feature or screen.</p>
+
+<pre><code>.
+├── Fighting
+│   ├── Mjölnir
+│   └── Stormbreaker
+└── Universe Destruction
+    ├── Infinity Gauntlet
+    └── The Ultimate Nullifier
+</code></pre></li>
+</ul>
+
+<p>Using Confluence instead of Jira actually makes more sense.
+The purpose of Jira issues, as I understand it, is to introduce changes
+and track their implementation progress. Jira was never intended to be
+a knowledge base (it is completely terrible at that).</p>
+
+<h1 id="the-future">The Future</h1>
+
+<p>Effective AC management is a good step in achieving confidence in the overall
+development process. Both business-oriented and tech-oriented people
+should have a unified view on the future of the product. This future
+is a combination of changes. These changes, in their turn, are defined by AC.</p>
+
+<p>I think the most important factor is collaboration. It is achieved via unidirectional
+knowledge sharing about the product and the technology standing behind it.
+At the same time, this knowledge should be kept in sync using explicit
+declarations without implicit behavior. It is achieved via formalization
+and centralized knowledge storage.</p>
+
+<p>In ideal world, AC should be an input for automated testing.
+Gherkin is the missing link between AC and full-blown
+<a href="https://en.wikipedia.org/wiki/Acceptance_testing">acceptance testing</a>,
+but there is still a gap in the social aspect (implementation details
+are unavoidable) and the tech one (integration tests are tricky).
+Just imagine the following:</p>
+
+<ol>
+<li>Business people create AC using Gherkin.</li>
+<li>AC introduction is done via a pull request.</li>
+<li>The pull request gets reviewed by tech people.</li>
+<li>The adjusted pull request gets merged.</li>
+<li>AC is treated as an acceptance test.</li>
+</ol>
+
+<p>Sounds awesome, isn’t it? A bit utopian, but let’s see how it goes 😉</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+

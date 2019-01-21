@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 18 Dec 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 20 Jan 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Acceptance Criteria Bureaucracy</title>
+      <link>http://arturdryomov.online/posts/acceptance-criteria-bureaucracy/</link>
+      <pubDate>Sun, 20 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/acceptance-criteria-bureaucracy/</guid>
+      <description>Cooperation! It sure sounds better than bureaucracy. A released product is a result of cooperation between the Business and the Tech. There is an obvious issue though. Both sides have different mindsets. The misunderstanding is inevitable. How do we solve this? Well, there are still wars on the planet so apparently humanity wasn’t able to find a solution.
+What about establishing not world peace but a good communication channel? Agile methodologies establish such artifact as Acceptance Criteria (AC).</description>
+    </item>
     
     <item>
       <title>Designing Errors with Kotlin</title>

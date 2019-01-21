@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://arturdryomov.online/posts/acceptance-criteria-bureaucracy/</loc>
+    <lastmod>2019-01-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://arturdryomov.online/posts/designing-errors-with-kotlin/</loc>
     <lastmod>2018-12-18T00:00:00+00:00</lastmod>
   </url>
@@ -64,7 +69,7 @@
   
   <url>
     <loc>http://arturdryomov.online/</loc>
-    <lastmod>2018-12-18T00:00:00+00:00</lastmod>
+    <lastmod>2019-01-20T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>
