@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Jan 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 27 Jan 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Superior Testing: Stop Stopping</title>
+      <link>http://arturdryomov.online/posts/superior-testing-stop-stopping/</link>
+      <pubDate>Sun, 27 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/superior-testing-stop-stopping/</guid>
+      <description>Let’s start with confessions. The initial idea to kick-off a series of articles about testing was the shortest article ever. A single phrase. Just do it. I mean, isn’t it obvious that testing is awesome and useful?
+Unfortunately, after talking to dozens of developers I’ve come to the shocking fact that most of them don’t write tests. Our customer doesn’t pay for tests. We don’t have time. The codebase is impossible to test.</description>
+    </item>
     
     <item>
       <title>Acceptance Criteria Bureaucracy</title>

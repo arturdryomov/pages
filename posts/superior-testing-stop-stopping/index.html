@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Superior Testing: Stop Stopping</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arturdryomov" />
+  <meta name="twitter:title" content="Superior Testing: Stop Stopping" />
+  <meta name="twitter:description" content="The introduction to the series of articles about testing. Unfortunately, the required one." />
+
+  
+  <meta name="description" content="The introduction to the series of articles about testing. Unfortunately, the required one." />
+  
+
+  
+</head>
+
+<body>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Superior Testing: Stop Stopping</span></h1>
+  <h3>January 27, 2019</h3>
+
+</div>
+
+<main>
+
+
+<p>Let’s start with confessions. The initial idea to kick-off a series of articles
+about testing was the shortest article ever. A single phrase. <em>Just do it</em>.
+I mean, isn’t it obvious that testing is awesome and useful?</p>
+
+<p>Unfortunately, after talking to dozens of developers
+I’ve come to the shocking fact that most of them don’t write tests.
+<em>Our customer doesn’t pay for tests</em>. <em>We don’t have time</em>.
+<em>The codebase is impossible to test</em>. I’ve heard
+<a href="https://www.youtube.com/watch?v=EvycNBSQ798">these words</a> over and over again.</p>
+
+<p>At the same time, I realized that both <a href="https://en.wikipedia.org/wiki/Just_Do_It">Nike</a> and
+<a href="https://knowyourmeme.com/memes/shia-labeouf-s-intense-motivational-speech-just-do-it">Shia LaBeouf</a>
+failed to inspire humanity with the <em>Just do it</em> phrase — who am I to make it happen?
+I’ll make arguments instead — ideological and pragmatical.</p>
+
+<h1 id="ideology">Ideology</h1>
+
+<h2 id="magic">Magic</h2>
+
+<p>This article forced me to remember the first test suite I wrote.
+I think it was a Java practice session at the university.
+The task was semi-complex so I decided to struggle with setting up
+JUnit instead of running the program again and again to check
+its correctness. I’ve spent like half an hour with Maven
+(Gradle wasn’t cool then) but in the end
+it led to a miracle. I wrote the code, the test, run it in IDE
+and&hellip; I still remember the picture of the test tree with green dots.
+It felt like magic.</p>
+
+<blockquote>
+<p>Any sufficiently advanced technology is indistinguishable from magic.</p>
+
+<p>— <a href="https://en.wikipedia.org/wiki/Clarke%27s_three_laws"><em>Arthur C. Clarke</em></a></p>
+</blockquote>
+
+<p>At the end of the session I knew that the code I wrote was correct and
+I can check it at any time using tests.
+The magic transformed into the confidence. This feeling cannot be bought.</p>
+
+<h2 id="empathy">Empathy</h2>
+
+<p>There is <a href="https://vimeo.com/293912618/5ccecc85d4">a great talk by Michael Feathers called <em>Empathy is Code Deep</em></a>.
+Please watch it, then come back and continue reading because I’m going to spoil it otherwise.</p>
+
+<p>All right, welcome back! The closing words of the talk are extremely
+important for every developer.</p>
+
+<blockquote>
+<ul>
+<li>Code is a way you treat your coworkers.</li>
+<li>We interact through the things we make.</li>
+</ul>
+</blockquote>
+
+<p>What is better — having a test or not having a test? The answer is obvious —
+any test is better than no tests at all. I think everybody came to this conclusion
+eventually, especially being in a need to change a tricky piece of code.
+It is certainly not desirable to break something along the way — tests help to avoid that.
+Let’s be honest — we are pleased to know that tests are available.</p>
+
+<p>What is the reason behind not writing tests then? Isn’t it opposite of empathy?
+It is like not washing dishes — the tableware is still in place but the next person
+using it will feel disgusted. Is it really a way people would like to interact with each other?
+This makes no sense.</p>
+
+<h1 id="pragmatism">Pragmatism</h1>
+
+<h2 id="time">Time</h2>
+
+<p>Not gonna lie — there are no terabytes of raw data to prove this,
+but I’m certain that tests save development time.
+This includes both long-term metrics like maintenance and short-term like code-compile-run.</p>
+
+<p>Long-term benefits are obvious. More checks available — less time stumbling in the dark.
+Savings grow exponentially with the code complexity. Just imagine a newbie
+taking a grip on the codebase. Is it safer to ask him to make changes
+in a component with tests or in another one without them?
+I guess this is a rhetorical question&hellip;
+At the same time, a new person would adapt better when tests are available —
+tests improve confidence in the ability to not break things.</p>
+
+<p>Short-term benefits are arguable, but let’s do the math with hypothetical numbers
+for Android platform.</p>
+
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Application</th>
+<th>Test</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Assemble</td>
+<td>1 minute</td>
+<td>40 seconds</td>
+<td>Tests don’t need DEX files.</td>
+</tr>
+
+<tr>
+<td>Install</td>
+<td>10 seconds</td>
+<td>1 second</td>
+<td>Tests don’t need APK transfer and installation.</td>
+</tr>
+
+<tr>
+<td>Check</td>
+<td>30 seconds</td>
+<td>1 second</td>
+<td>Tests don’t need manual clicking and comparison.</td>
+</tr>
+</tbody>
+</table>
+
+<p>140 vs. 42 seconds. I. e. manual checks consume ×3.3 more time than tests.
+Let’s multiply it by an approximate number of changes a developer makes daily — like, 50.
+Tests might save 1 hour 20 minutes a day! Crazy, right? Yep, I know numbers are from my head,
+but I can vouch that savings are real.</p>
+
+<h2 id="maintenance">Maintenance</h2>
+
+<p>I’m going to cheat and avoid explaining how it is possible to fight
+the codebase to make it testable. Why? Because it is a solved problem.</p>
+
+<p>Michael Feathers (the author of the talk I’ve mentioned earlier)
+wrote a wonderful book called
+<a href="https://www.amazon.com/dp/0131177052"><em>Working Effectively with Legacy Code</em></a>.
+Don’t let the name fool you. The book is actually about maintaining all codebases,
+primarily focusing on tests. It is named this way because the author calls legacy code
+a code without tests.</p>
+
+<p>I wish everyone reads this book at the beginning of a software developer career.
+Take a look at this piece:</p>
+
+<blockquote>
+<p>Well, here’s a news flash: requirements change.
+Designs that cannot tolerate changing requirements are poor designs to begin with.
+It is the goal of every competent software developer to create designs that tolerate change.</p>
+
+<p>&hellip;</p>
+
+<p>Code without tests is bad code. It doesn’t matter how well written it is;
+it doesn’t matter how pretty or object-oriented or well-encapsulated it is.
+With tests, we can change the behavior of our code quickly and verifiably.
+Without them, we really don’t know if our code is getting better or worse.</p>
+</blockquote>
+
+<p>The book covers every topic related to <em>I cannot write tests because&hellip;</em>
+Take a look at <a href="https://www.oreilly.com/library/view/working-effectively-with/0131177052/#toc-start">the TOC</a> —
+chapter names are direct pointers to solutions:</p>
+
+<ul>
+<li>Dependencies on Libraries Are Killing Me;</li>
+<li>I Need to Change a Monster Method and I Can’t Write Tests for It;</li>
+<li>We Feel Overwhelmed. It Isn’t Going to Get Any Better.</li>
+</ul>
+
+<p>Seriously, almost every technical issue related to making things testable is covered in the book.</p>
+
+<h2 id="money">Money</h2>
+
+<p>All right, this is a hard one. The most popular excuse I’ve heard is simple
+and insanely forgiving for all participants. <em>The customer doesn’t pay for tests</em>.
+What is the silver bullet for asking a customer for permission to write tests?
+Prepare for the hard truth. There isn’t one. In fact, the question should not
+be even asked in the first place.</p>
+
+<p>Customers ask providers for a quality product. I don’t know a single person
+who wants a crappy product. <em>Give me a glass of your crappiest wine, please</em>.
+Sure. We, as providers of software, should provide a quality product.
+The quality is controlled by expected behavior which should be checked, i. e. tested.
+<a href="https://wiki.teamfortress.com/wiki/Meet_the_Sniper">Professionals have standards</a>.</p>
+
+<h1 id="reality">Reality</h1>
+
+<p>I’ve spent a lot of time writing tests. I do it every day. Honestly saying,
+it is one of these things that keep me going. Tests are a way to automate our
+actions. Not every industry allows to do that — it is either expensive or unreal.
+We have it at our disposal and yet we tend to forget about it.
+Testing brings magic, confidence and empathy. It saves time and money.
+Just do it.</p>
+
+<hr />
+
+<p>Superior in the name of the series is a reference to
+<a href="https://marvel.fandom.com/wiki/Superior_Iron_Man_Vol_1_1">Superior Iron Man</a>
+and
+<a href="https://marvel.fandom.com/wiki/Superior_Spider-Man">Superior Spider-Man</a> series.</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+
