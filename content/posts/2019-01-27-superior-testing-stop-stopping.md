@@ -89,9 +89,9 @@ Assemble      | 1 minute    | 40 seconds | Tests don’t need DEX files.
 Install       | 10 seconds  | 1 second   | Tests don’t need APK transfer and installation.
 Check         | 30 seconds  | 1 second   | Tests don’t need manual clicking and comparison.
 
-140 vs. 42 seconds. I. e. manual checks consume ×3.3 more time than tests.
+100 vs. 42 seconds. I. e. manual checks consume ×2.3 more time than tests.
 Let’s multiply it by an approximate number of changes a developer makes daily — like, 50.
-Tests might save 1 hour 20 minutes a day! Crazy, right? Yep, I know numbers are from my head,
+Tests might save 48 minutes a day! Crazy, right? Yep, I know numbers are from my head,
 but I can vouch that savings are real.
 
 ## Maintenance
