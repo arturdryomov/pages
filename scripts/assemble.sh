@@ -1,11 +1,29 @@
 #!/bin/bash
 
-HUGO_VERSION="0.53"
-HUGO_PACKAGE="hugo.tar.gz"
-HUGO_DIRECTORY="hugo"
-HUGO_BINARY="hugo"
+VERSION="0.54.0"
+PACKAGE="hugo.tar.gz"
+DIRECTORY="hugo"
+BINARY="hugo"
 
-curl --location "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" --output "${HUGO_PACKAGE}"
-mkdir -p "${HUGO_DIRECTORY}" && tar -xzf "${HUGO_PACKAGE}" -C "${HUGO_DIRECTORY}"
+case "${OSTYPE}" in
+  darwin*) OS="macOS" ;;
+  linux*)  OS="Linux" ;;
+  *)       exit 1 ;;
+esac
 
-"./${HUGO_DIRECTORY}/${HUGO_BINARY}"
+trap 'rm -rf "${PACKAGE}" "${DIRECTORY}"' EXIT
+
+echo ":: Downloading..."
+curl \
+  --silent \
+  --fail \
+  --show-error \
+  --retry 3 \
+  --location "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_${OS}-64bit.tar.gz" \
+  --output "${PACKAGE}"
+
+echo ":: Extracting..."
+mkdir -p "${DIRECTORY}" && tar -xzf "${PACKAGE}" -C "${DIRECTORY}"
+
+echo ":: Generating..."
+"${DIRECTORY}/${BINARY}"

@@ -1,32 +1,34 @@
 #!/bin/bash
 
-HUGO_DIRECTORY="public"
-PUBLISH_BRANCH="gh-pages"
+DIRECTORY="public"
+BRANCH="gh-pages"
 
-if [[ $(git status --short) ]]; then
-  echo "Please commit pending changes."
-  exit 1
-fi
+echo ":: Removing [${DIRECTORY}]."
+rm -rf "${DIRECTORY}"
 
-echo ":: Removing [${HUGO_DIRECTORY}]."
-rm -rf "${HUGO_DIRECTORY}"
+echo ":: Removing [${DIRECTORY}] working tree."
+git worktree remove "${DIRECTORY}"
 
-echo ":: Removing [${HUGO_DIRECTORY}] working tree."
-git worktree remove "${HUGO_DIRECTORY}"
+echo ":: Re-creating [${DIRECTORY}] working tree."
+git worktree add -B "${BRANCH}" "${DIRECTORY}" origin/"${BRANCH}"
 
-echo ":: Making [${HUGO_DIRECTORY}] working tree."
-git worktree add -B "${PUBLISH_BRANCH}" "${HUGO_DIRECTORY}" origin/"${PUBLISH_BRANCH}"
+echo ":: Removing [${DIRECTORY}] working tree contents."
+rm -rf "${DIRECTORY}"/*
 
-echo ":: Removing [${HUGO_DIRECTORY}] working tree contents."
-rm -rf "${HUGO_DIRECTORY}"/*
-
-echo ":: Generating..."
-hugo
+bash "scripts/assemble.sh"
 
 echo ":: Committing generated contents."
-cd "${HUGO_DIRECTORY}"
+cd "${DIRECTORY}"
 git add --all
 git commit --message "Publish Hugo-generated contents."
 
 echo ":: Pushing..."
-git push origin "${PUBLISH_BRANCH}"
+if [[ -z "${TRAVIS_REPO_SLUG}" || -z "${GITHUB_TOKEN}" ]]; then
+  git push origin "${BRANCH}"
+else
+  git config --global user.name "Publisher"
+  git config --global user.email "publisher@localhost"
+
+  git push --quiet "https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${TRAVIS_REPO_SLUG}.git" "${BRANCH}"
+fi
+
