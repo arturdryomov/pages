@@ -1,5 +1,8 @@
 language: shell
 
+git:
+  depth: false
+
 script:
   - bash scripts/assemble.sh
 
