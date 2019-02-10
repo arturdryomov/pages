@@ -2,3 +2,10 @@ language: shell
 
 script:
   - bash scripts/assemble.sh
+
+deploy:
+  provider: script
+  script:
+  - bash scripts/publish.sh
+  on:
+    branch: master
