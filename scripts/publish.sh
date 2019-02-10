@@ -20,15 +20,18 @@ bash "scripts/assemble.sh"
 echo ":: Committing generated contents."
 cd "${DIRECTORY}"
 git add --all
+
+if [[ -n "${TRAVIS}" ]]; then
+  git config user.name "Publisher"
+  git config user.email "publisher@localhost"
+fi
+
 git commit --message "Publish Hugo-generated contents."
 
 echo ":: Pushing..."
 if [[ -z "${TRAVIS_REPO_SLUG}" || -z "${GITHUB_TOKEN}" ]]; then
   git push origin "${BRANCH}"
 else
-  git config --global user.name "Publisher"
-  git config --global user.email "publisher@localhost"
-
   git push --quiet "https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${TRAVIS_REPO_SLUG}.git" "${BRANCH}"
 fi
 
