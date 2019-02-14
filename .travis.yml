@@ -12,3 +12,6 @@ deploy:
   - bash scripts/publish.sh
   on:
     branch: master
+
+notifications:
+  email: false
