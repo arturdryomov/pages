@@ -48,10 +48,10 @@ It is bundled into Google Play Services and seems to be available on all recent 
 There is a nice dialog suggesting to store credentials in Google storage and
 another one to pick credentials from an enumeration if there are multiple.
 Even better — there is an option for an instant sign in if there is a single
-credentials value. In this case Google will show a banner informing a user what happened.
+credentials value. In this case Google will show a banner informing a user about what happened.
 
 The interaction is good from both sides. Users see a familiar Google branding
-across different applications, developers don’t need to implement interactions
+across applications, developers don’t need to implement interactions
 over and over again.
 
 The sweet part is the multi-platform availability.
@@ -105,11 +105,14 @@ _huge company too many teams_ problem. Let’s look at the timeline.
 Illuminati... confirmed?
 
 Autofill is limited to Android version, OpenYOLO can be used anywhere.
-Autofill is platform-specific, OpenYOLO is platform-agnostic. What the hell happenned?
+Autofill is platform-specific, OpenYOLO is platform-agnostic.
+And the cherry on top — it is possible to use them side-by-side but the experience
+is confusing. There are still no recommendations what to prefer and when.
+[The discussion about the dichotomy between Autofill and OpenYOLO](https://github.com/openid/OpenYOLO-Android/issues/127)
+stopped — guess when — in October, 2017.
 
 I can feel the confusion of password manager developers who spent time
-working on OpenYOLO then being informed that there is a same-same but different Autofill
-which needs a different approach.
+working on OpenYOLO then being informed that there is a same-same but different Autofill.
 
 ## [Google Credentials](https://developers.google.com/android/reference/com/google/android/gms/auth/api/credentials/package-summary)
 
@@ -119,7 +122,7 @@ for sign in and sign up forms. There are pickers for accounts and phone numbers
 which do not require additional system permissions to operate.
 
 Requesting a phone number is obvious, but requesting a Google account will result
-in email address, first and last names and even a photo URL! This is very useful
+in an email address, a name and even a photo URL! This is very useful
 for sign up forms. Not sure about sign in ones though.
 
 # Decisions, Decisions
