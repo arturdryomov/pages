@@ -107,12 +107,19 @@ Illuminati... confirmed?
 Autofill is limited to Android version, OpenYOLO can be used anywhere.
 Autofill is platform-specific, OpenYOLO is platform-agnostic.
 And the cherry on top — it is possible to use them side-by-side but the experience
-is confusing. There are still no recommendations what to prefer and when.
+is confusing, it is like having both Smart Lock and OpenYOLO at the same time.
+There are still no recommendations what to prefer and when.
 [The discussion about the dichotomy between Autofill and OpenYOLO](https://github.com/openid/OpenYOLO-Android/issues/127)
 stopped — guess when — in October, 2017.
 
 I can feel the confusion of password manager developers who spent time
 working on OpenYOLO then being informed that there is a same-same but different Autofill.
+
+Don’t get me wrong — Autofill is a nice thing for users and developers.
+It brings basically zero-effort password managing —
+mark an `EditText` with proper `inputType` or `autofillHints` and everything
+will be done automagically, including filling and saving afterwards.
+It is just confusing to see it appear after OpenYOLO started to gain its momentum.
 
 ## [Google Credentials](https://developers.google.com/android/reference/com/google/android/gms/auth/api/credentials/package-summary)
 
@@ -126,3 +133,22 @@ in an email address, a name and even a photo URL! This is very useful
 for sign up forms. Not sure about sign in ones though.
 
 # Decisions, Decisions
+
+## Sign Up
+
+Use Google Credentials all the time. From my experiments seems like
+Autofill is able to fill the current device phone number but only
+when Google is the Autofill provider.
+
+## Sign In
+
+* The application is targetting Oreo or higher.
+  Use Autofill, but be aware that not everyone sets up an Autofill provider.
+  It might be a good idea to collect usage analytics beforehand
+  using [`AutofillManager.autofillServiceComponentName`](https://developer.android.com/reference/android/view/autofill/AutofillManager#getAutofillServiceComponentName()).
+* The application is not targetting Oreo.
+  Take a look at OpenYOLO, but honestly saying — it might be better to use
+  Smart Lock in terms of stability and support. Sad but true.
+
+Well, I guess it wasn’t hard to choose after all!
+And now you have a good story about OpenYOLO :wink:
