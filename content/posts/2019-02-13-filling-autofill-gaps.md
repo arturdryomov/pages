@@ -13,20 +13,20 @@ All humans tend to forget things. Important and useless, smart and dumb, beautif
 it does not matter, any thought or information can disappear.
 Precious credentials for applications we work on are no exception.
 
-Fortunately enough there are things serving as a backup storage for the brain.
+Fortunately enough there are things serving as backup storage for the brain.
 Like a password manager. Everybody should use one. We don’t use a single key
 for all doors and leave it in the open, right? The digital world should be no different.
 
 Enter Android. I’ve been following the password managing scene here for a while.
 Honestly saying, it looks... Let’s say complicated. Google Smart Lock, Android Autofill,
 Google Credentials, OpenYOLO. Which one should be used and when?
-Let’s explore.
+Let’s explore!
 
 # Options
 
 ## `SharedPreferences`
 
-Technically it is possible to store credentials as a plain text in `SharedPreferences`.
+Technically it is possible to store credentials as plain text in `SharedPreferences`.
 Even better — it can be synced across devices!
 [`SharedPreferencesBackupHelper`](https://developer.android.com/reference/android/app/backup/SharedPreferencesBackupHelper)
 was around since Android 2.2 and [is well documented](https://developer.android.com/guide/topics/data/keyvaluebackup).
@@ -35,8 +35,8 @@ with minimal developer interaction.
 
 Sounds good, but this is what we call in our business _a bad idea_.
 `SharedPreferences` are not encrypted and can be read as-is with `root`
-privilegies. This is what I would call an analogue to sticky notes with passwords
-stiched to a monitor.
+privileges. This is what I would call an analog to sticky notes with passwords
+stitched to a monitor.
 
 ## [Google Smart Lock](https://developers.google.com/identity/smartlock-passwords/android/)
 
@@ -48,7 +48,7 @@ It is bundled into Google Play Services and seems to be available on all recent 
 There is a nice dialog suggesting to store credentials in Google storage and
 another one to pick credentials from an enumeration if there are multiple.
 Even better — there is an option for an instant sign in if there is a single
-credentials value. In this case Google will show a banner informing a user about what happened.
+credentials value. In this case, Google will show a banner informing a user about what happened.
 
 The interaction is good from both sides. Users see a familiar Google branding
 across applications, developers don’t need to implement interactions
@@ -56,11 +56,11 @@ over and over again.
 
 The sweet part is the multi-platform availability.
 Since credentials are stored by Google it becomes possible
-to use same credentials in Chrome. This is useful for services that have both
-mobile and web presense.
+to use the same credentials in Chrome. This is useful for services that have both
+mobile and web presence.
 
 The meh part is vendor lock-in. All passwords are stored at Google servers
-and [can be viewed as a plain text online](https://passwords.google.com/).
+and [can be viewed as plain text online](https://passwords.google.com/).
 There are no sources stating how the data is stored and how secure the method is.
 Not a lot of people hacked Google but technically there are no limitations.
 
@@ -79,7 +79,7 @@ It went so well that password managers actually implemented it, including 1Passw
 Google Smart Lock! Seems like there are no reasons to use Smart Lock directly, right?
 There is a good abstraction on top of it to use user-installed applications instead.
 
-Unfortunately the project is half-dead. There are no updates for over a year,
+Unfortunately, the project is half-dead. There are no updates for over a year,
 [the tech lead no longer works at Google](https://www.linkedin.com/in/iainmcgin/)
 and something happened that ruined the adaptation completely. This thing is called...
 
@@ -87,14 +87,14 @@ and something happened that ruined the adaptation completely. This thing is call
 
 The same year OpenYOLO was released and password managers boarded the ship,
 Google decided to open a cannon fire and sink it. Autofill, introduced in Android Oreo,
-solves basically same issues as OpenYOLO. Users can change autofill providers —
+solves basically the same issues as OpenYOLO. Users can change autofill providers —
 including 1Password, Dashlane, LastPass and friends. The OS will ask the current provider
-for credentials or will suggest to store them using the same provider.
+for credentials or will suggest storing them using the same provider.
 
 Sounds like a good thing, but why do we need this when OpenYOLO was alive and well?
-Why not to use the spec under the hood of the autofill?
-I have no idea what happened here. For an observer like me it looks like a classic
-_huge company too many teams_ problem. Let’s look at the timeline.
+Why not use the spec under the hood of the autofill?
+I have no idea what happened here. For an observer like me, it looks like a classic
+_huge company too many teams_ problem. Let’s take a look at the timeline.
 
 * August 4, 2016. [OpenYOLO initiative is announced](https://blog.dashlane.com/dashlane-google-open-source-api/).
 * March 21, 2017. [Android O is announced](https://android-developers.googleblog.com/2017/03/first-preview-of-android-o.html).
@@ -108,28 +108,29 @@ Autofill is limited to Android version, OpenYOLO can be used anywhere.
 Autofill is platform-specific, OpenYOLO is platform-agnostic.
 And the cherry on top — it is possible to use them side-by-side but the experience
 is confusing, it is like having both Smart Lock and OpenYOLO at the same time.
-There are still no recommendations what to prefer and when.
+There are still no recommendations on what to prefer and when.
 [The discussion about the dichotomy between Autofill and OpenYOLO](https://github.com/openid/OpenYOLO-Android/issues/127)
-stopped — guess when — in October, 2017.
+stopped — guess when — October 2017.
 
 I can feel the confusion of password manager developers who spent time
-working on OpenYOLO then being informed that there is a same-same but different Autofill.
+working on OpenYOLO then being informed that there is
+a [same-same but different](https://youtu.be/6uAmMfsfeAA?t=34) Autofill.
 
 Don’t get me wrong — Autofill is a nice thing for users and developers.
-It brings basically zero-effort password managing —
+It brings basically zero-effort password management —
 mark an `EditText` with proper `inputType` or `autofillHints` and everything
-will be done automagically, including filling and saving afterwards.
+will be done automagically, including filling and saving afterward.
 It is just confusing to see it appear after OpenYOLO started to gain its momentum.
 
 ## [Google Credentials](https://developers.google.com/android/reference/com/google/android/gms/auth/api/credentials/package-summary)
 
-Don’t worry, this is not another SDK solving same issues in its own way.
+Don’t worry, this is not another SDK solving the same issues in its own way.
 Its purpose is [to provide hints](https://developers.google.com/identity/smartlock-passwords/android/retrieve-hints)
 for sign in and sign up forms. There are pickers for accounts and phone numbers
 which do not require additional system permissions to operate.
 
 Requesting a phone number is obvious, but requesting a Google account will result
-in an email address, a name and even a photo URL! This is very useful
+in an email address, a name, and even a photo URL! This is very useful
 for sign up forms. Not sure about sign in ones though.
 
 # Decisions, Decisions
@@ -138,17 +139,17 @@ for sign up forms. Not sure about sign in ones though.
 
 Use Google Credentials all the time. From my experiments seems like
 Autofill is able to fill the current device phone number but only
-when Google is the Autofill provider.
+when Google is the Autofill provider. The same applies to emails and names.
 
 ## Sign In
 
-* The application is targetting Oreo or higher.
+* The application is targeting Oreo or higher.
   Use Autofill, but be aware that not everyone sets up an Autofill provider.
   It might be a good idea to collect usage analytics beforehand
   using [`AutofillManager.autofillServiceComponentName`](https://developer.android.com/reference/android/view/autofill/AutofillManager#getAutofillServiceComponentName()).
-* The application is not targetting Oreo.
+* The application is not targeting Oreo.
   Take a look at OpenYOLO, but honestly saying — it might be better to use
   Smart Lock in terms of stability and support. Sad but true.
 
 Well, I guess it wasn’t hard to choose after all!
-And now you have a good story about OpenYOLO :wink:
+And now you have a good story to tell about OpenYOLO :wink:
