@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 VERSION="0.54.0"
 PACKAGE="hugo.tar.gz"

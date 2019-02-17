@@ -1,4 +1,7 @@
 #!/bin/bash
+set -eu
+
+GENERATOR="${1}"
 
 DIRECTORY="public"
 BRANCH="gh-pages"
@@ -15,7 +18,7 @@ git worktree add -B "${BRANCH}" "${DIRECTORY}" origin/"${BRANCH}"
 echo ":: Removing [${DIRECTORY}] working tree contents."
 rm -rf "${DIRECTORY}"/*
 
-bash "scripts/assemble.sh"
+eval "${GENERATOR}"
 
 echo ":: Committing generated contents."
 cd "${DIRECTORY}"
