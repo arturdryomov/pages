@@ -11,7 +11,7 @@ Calculators went to be computers and here we go, waiting for AI to take over,
 [watching movies](https://en.wikipedia.org/wiki/Blade_Runner_2049)
 about transhumanism on our way here.
 
-Automation related to UI testing seems te be a Holy Grail from that standpoint.
+Automation related to UI testing seems to be a Holy Grail from that standpoint.
 Sure thing, it can replace manual QA procedures with automated ones! Like, completely!
 You just need to have a local backend... And maybe disable animations.
 And... you know, somehow wait for backend responses. And don’t forget about the infrastructure.
