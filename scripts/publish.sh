@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -u
 
 GENERATOR="${1}"
 
