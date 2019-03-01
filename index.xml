@@ -6,10 +6,21 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Superior Testing: Make Fakes not Mocks</title>
+      <link>http://arturdryomov.online/posts/superior-testing-make-fakes-not-mocks/</link>
+      <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/superior-testing-make-fakes-not-mocks/</guid>
+      <description>After years of writing and reading tests I’ve discovered that mocking is either overused or underused. Not sure why exactly it happens but striking the right balance seems to be a complicated issue.
+In this Superior Testing article I’ll show how to replace mocking in favor of faking and collect benefits.
+Mocking Sync Let’s say we have a books repository allowing us to get a book based on its ID.</description>
+    </item>
     
     <item>
       <title>Filling Android Autofill Gaps</title>
