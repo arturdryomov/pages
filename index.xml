@@ -6,10 +6,21 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 28 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 19 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Merge Git Authors</title>
+      <link>http://arturdryomov.online/posts/merge-git-authors/</link>
+      <pubDate>Tue, 19 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/merge-git-authors/</guid>
+      <description>Stats! Stats are awesome. You can collect them, you can analyze and visualize them, you can boil, grill and fry them&amp;hellip; Wait, that’s not food, right?
+git shortlog Let’s say we have a Git repository. We want to count commits per author. There is a Git command for that!
+$ git shortlog --summary --numbered 2 Bender Rodriguez 2 Philip J. Fry 1 Bending Unit 22 1 Turanga Leela There are actually three authors but since names are non-consistent Git makes it look like there are four.</description>
+    </item>
     
     <item>
       <title>Superior Testing: Make Fakes not Mocks</title>
