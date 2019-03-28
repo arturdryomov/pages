@@ -6,10 +6,19 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 19 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Mar 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Superior Testing: Check Your Checks</title>
+      <link>http://arturdryomov.online/posts/superior-testing-check-checks/</link>
+      <pubDate>Wed, 27 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/superior-testing-check-checks/</guid>
+      <description>False positives. Such an interesting combination of words, isn’t it? The nature of false positives is mostly human. We misinterpret conditions, define them wrong, forget about effects — but the machine obeys. We get what we want but not what we need. This is dangerous. The civilization downfall in various science fiction books is a false positive result. The AI gets instructions to eliminate all threats, humanity becomes the threat, roll the action scene.</description>
+    </item>
     
     <item>
       <title>Merge Git Authors</title>
