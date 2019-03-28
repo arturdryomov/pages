@@ -1,6 +1,6 @@
 ---
 title: "Superior Testing: Check Your Checks"
-description: "Testing tests is useless for sure but right checks are important!"
+description: "Testing tests is useless for sure but correct checks are important!"
 date: 2019-03-27
 slug: superior-testing-check-checks
 ---
