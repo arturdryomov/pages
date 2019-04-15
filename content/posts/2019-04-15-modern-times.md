@@ -8,7 +8,7 @@ slug: modern-times
 Java 8 gave us a great gift — the `java.time` package, known as
 [JSR 310](https://jcp.org/en/jsr/detail?id=310) and
 [ThreeTen](https://www.threeten.org/).
-The story behind `java.time` is unique. It was introduced as
+The story behind `java.time` is unique. It was introduced in
 [JEP 150](https://openjdk.java.net/jeps/150) by an independent developer —
 Stephen Colebourne ([`@jodastephen`](https://github.com/jodastephen)).
 Yep, the same person who designed and developed
@@ -59,7 +59,7 @@ not from Java resources but from Android assets since it is more efficient.
 * `com.jakewharton.threetenabp:threetenabp:{ABP_VERSION}` —
   efficient time zones initializer.
 * `org.threeten:threetenbp:{BP_VERSION}:no-tzdb` —
-  ThreeTenBP, but [without time zones data](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237).
+  ThreeTenBP, [without time zones data](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237).
 
 ThreeTenABP provides ThreeTenBP as a transitive dependency
 but it is useful to have the same ThreeTenBP version for...
@@ -73,7 +73,7 @@ time zones initializer.
 
 ### Joda-Time?
 
-Abandon Joda-Time! Don’t be hesitant to [migrate from it](https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html)
+Abandon Joda-Time! Don’t hesitate to [migrate from it](https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html)
 to ThreeTenBP ASAP.
 
 * ThreeTen is the next evolutionary step, created by the same developer.
@@ -181,6 +181,12 @@ companion object {
 ```
 
 Being honest — it is not a silver bullet but it reduces the confusion significantly.
+
+## MOAR
+
+Most likely I’m forgetting a lot of things but the bulk of the time-related
+work comes to `Duration` and `ZonedDateTime`. The API is so good
+that there are no workarounds or tricky places to navigate through.
 
 # Time Out
 
