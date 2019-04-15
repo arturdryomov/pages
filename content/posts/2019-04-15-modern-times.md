@@ -15,7 +15,7 @@ Yep, the same person who designed and developed
 [Joda-Time](https://github.com/JodaOrg/joda-time).
 It was even endorsed by Brian Goetz, the
 [Java Concurrency in Practice](http://jcip.net/) author!
-The result was a great API — explicit and direct,
+The result is a great API — explicit and direct,
 based on years of Joda-Time experience.
 
 
@@ -33,16 +33,23 @@ The good news — we got it. The bad news — we have...
 
 # Android
 
-Java 8 was released in 2014, now is 2019 and we still cannot use it on Android
-without asteriscs.
+Java 8 was released in 2014, now is 2019 and we still cannot use
+`java.time` on Android without asterisks.
 
 ## `minSdkVersion <= 25`
 
 Use [ThreeTenBP](https://github.com/ThreeTen/threetenbp) (ThreeTen backport) and
-[ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP/) (ThreeTen Android backport).
+[ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP/) (ThreeTen backport for Android).
 
-The ABP one is not actually a full-blown ThreeTen implementation.
-It is a special time zones data initializer which fetches time zone data
+* Since ThreeTenBP is the ThreeTen backport, migrating to the native JVM API becomes
+  a bulk `org.threeten.bp` package replacement with `java.time`.
+  The migration itself is a fact — `java.time` is already
+  available on the newest Android versions and it is a matter of time before we can use it everywhere.
+* The JVM ecosystem already uses `java.time`.
+  It is better to use the same API to speak the same language.
+
+The ThreeTenABP is not actually a full-blown ThreeTen implementation.
+It is a special time zones initializer which fetches data
 not from Java resources but from Android assets since it is more efficient.
 
 ### Dependencies
@@ -53,28 +60,23 @@ not from Java resources but from Android assets since it is more efficient.
   efficient time zones initializer.
 * `org.threeten:threetenbp:{BP_VERSION}:no-tzdb` —
   ThreeTenBP, but [without time zones data](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237).
-    * ThreeTenABP provides the same transitive dependency under the hood
-      but it is useful to have the same ThreeTenBP version for...
+
+ThreeTenABP provides ThreeTenBP as a transitive dependency
+but it is useful to have the same ThreeTenBP version for...
 
 #### Unit Tests
 
 * `org.threeten:threetenbp:{BP_VERSION}` — regular ThreeTenBP.
-    * Unit tests are being run on JVM so there is no need for the Android-specific
-      time zones initializer.
+
+Unit tests are being run on JVM so there is no need for the Android-specific
+time zones initializer.
 
 ### Joda-Time?
 
-Abandon Joda-Time! Don’t be hisitant to [migrate from it](https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html)
+Abandon Joda-Time! Don’t be hesitant to [migrate from it](https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html)
 to ThreeTenBP ASAP.
 
 * ThreeTen is the next evolutionary step, created by the same developer.
-* Since ThreeTenBP is a ThreeTen backport, migrating to the native JVM API becomes
-  a bulk `org.threeten.bp` package replacement with `java.time`.
-    * The migration itself is a fact — `java.time` is already
-      available on Android and it is a matter of time before we can use it everywhere.
-* JVM ecosystem already uses `java.time`.
-  It is better to use same API to speak the same language.
-    * [Project Reactor is a good example](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#interval-java.time.Duration-).
 * ThreeTen is better for APK size than Joda-Time.
     * Joda-Time without time zones + Joda-Time Android is `735 KiB`.
     * ThreeTenBP without time zones + ThreeTenABP is `485 KiB`.
@@ -89,9 +91,9 @@ forget about Joda-Time and ThreeTenBP.
 
 The downside of using native `java.time` is updating time zones data.
 Since standalone distributions (such as Joda-Time and ThreeTenBP) carry their
-own time zones data it is possible to update it separately.
-Unfortunately on Android system time zones data updates [depend on OEM](https://source.android.com/devices/tech/config/timezone-rules).
-It is an open question which OEMs actually do this in real world.
+own data it is possible to update it separately.
+Unfortunately on Android time zones data updates [depend on OEM](https://source.android.com/devices/tech/config/timezone-rules).
+It is an open question which OEMs actually do this.
 
 # Usage
 
@@ -100,7 +102,7 @@ It is an open question which OEMs actually do this in real world.
 Since ThreeTenBP without time zones data will not initialize time zones by itself,
 we’ll need to do it ourselves. Executing time zone-related
 operations without initialization will lead to runtime exceptions. It is a good idea to have
-a time abstraction in place which will be an entry point for time-related data.
+a time abstraction in place which will be an entry point for time-related operations.
 It is a good practice to have it for testing purposes anyway.
 
 > :book: `Duration` is safe to use everywhere since it is basically
@@ -114,21 +116,21 @@ interface Time {
 
     class Impl(private val context: AndroidContext) : Time {
 
-        private val initialized = AtomicBoolean()
-
-        override fun now(): ZonedDateTime {
-            if (initialized.get() == false) {
-                AndroidThreeTen.init(context)
-                initialized.set(true)
-            }
-
-            return ZonedDateTime.now()
+        private val initializer: Unit by lazy {
+            AndroidThreeTen.init(context)
         }
+
+        private inline fun <T> initialized(crossinline func: () -> T): T {
+            return initializer.let { func() }
+        }
+
+        override fun now() = initialized { ZonedDateTime.now() }
     }
 }
 ```
 
-It is not the best implementation, especially thread-safe wise, but it delivers the idea.
+This implementation provides thread-safe initialization since `lazy` Kotlin fields
+are synchronized by default.
 
 Don’t forget that despite ThreeTenABP features efficient time zone data initializer
 it still takes more than 100 milliseconds to do so. To avoid blocking
