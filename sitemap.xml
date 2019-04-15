@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://arturdryomov.online/posts/modern-times/</loc>
+    <lastmod>2019-04-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://arturdryomov.online/posts/superior-testing-check-checks/</loc>
     <lastmod>2019-03-27T00:00:00+00:00</lastmod>
   </url>
@@ -94,7 +99,7 @@
   
   <url>
     <loc>http://arturdryomov.online/</loc>
-    <lastmod>2019-03-27T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-15T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>

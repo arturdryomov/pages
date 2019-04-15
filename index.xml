@@ -6,10 +6,19 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 15 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Modern DateTimes on Android</title>
+      <link>http://arturdryomov.online/posts/modern-times/</link>
+      <pubDate>Mon, 15 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/modern-times/</guid>
+      <description>Java 8 gave us a great gift — the java.time package, known as JSR 310 and ThreeTen. The story behind java.time is unique. It was introduced in JEP 150 by an independent developer — Stephen Colebourne (@jodastephen). Yep, the same person who designed and developed Joda-Time. It was even endorsed by Brian Goetz, the Java Concurrency in Practice author! The result is a great API — explicit and direct, based on years of Joda-Time experience.</description>
+    </item>
     
     <item>
       <title>Superior Testing: Check Your Checks</title>
