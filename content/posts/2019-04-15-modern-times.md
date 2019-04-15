@@ -1,20 +1,20 @@
 ---
 title: "Modern DateTimes on Android"
-description: "REPLACE ME"
-date: 2019-04-07
-slug: time
+description: "Are we... out of time?"
+date: 2019-04-15
+slug: modern-times
 ---
 
-Java 8 gave us a great gift — `java.time` package, known as
+Java 8 gave us a great gift — the `java.time` package, known as
 [JSR 310](https://jcp.org/en/jsr/detail?id=310) and
 [ThreeTen](https://www.threeten.org/).
 The story behind `java.time` is unique. It was introduced as
 [JEP 150](https://openjdk.java.net/jeps/150) by an independent developer —
-Stephen Colebourne, i. e. [`@jodastephen`](https://github.com/jodastephen).
+Stephen Colebourne ([`@jodastephen`](https://github.com/jodastephen)).
 Yep, the same person who designed and developed
 [Joda-Time](https://github.com/JodaOrg/joda-time).
-It was endorsed by Brian Goetz, the
-[Java Concurrency in Practice](http://jcip.net/) author.
+It was even endorsed by Brian Goetz, the
+[Java Concurrency in Practice](http://jcip.net/) author!
 The result was a great API — explicit and direct,
 based on years of Joda-Time experience.
 
@@ -28,77 +28,78 @@ based on years of Joda-Time experience.
 >
 > — [_JEP 150: Motivation_](https://openjdk.java.net/jeps/150)
 
-There is [a further motivation](https://www.joda.org/joda-time/) behind replacing
-`java.util.Date` and `java.util.Calendar` with Joda-Time. The same reasoning applies
-to ThreeTen. [This was discussed before](https://stackoverflow.com/a/1969651/3359826)
-millions of times. The message is stable — the replacement was needed.
+The message is clear — the replacement was needed.
 The good news — we got it. The bad news — we have...
 
 # Android
 
 Java 8 was released in 2014, now is 2019 and we still cannot use it on Android
-without asteriscs. Java APIs have a rough adoption rate on Android —
-it is the underlying reason for Kotlin popularity.
+without asteriscs.
 
 ## `minSdkVersion <= 25`
 
 Use [ThreeTenBP](https://github.com/ThreeTen/threetenbp) (ThreeTen backport) and
 [ThreeTenABP](https://github.com/JakeWharton/ThreeTenABP/) (ThreeTen Android backport).
 
-The Android one is not actually a full-blown ThreeTen implementation,
-it is basically a special `ZoneRulesInitializer` which fetches time zone data
+The ABP one is not actually a full-blown ThreeTen implementation.
+It is a special time zones data initializer which fetches time zone data
 not from Java resources but from Android assets since it is more efficient.
 
-Recommended dependencies:
+### Dependencies
 
-* Application:
-    * `com.jakewharton.threetenabp:threetenabp:{abp_version}` —
-      efficient time zone initializer.
-    * `org.threeten:threetenbp:{bp_version}:no-tzdb` —
-      actual ThreeTenBP, but [without default time zones data](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237).
-      ThreeTenABP provides the same transitive dependency under the hood
-      but it is important to have the same ThreeTenBP for...
-* Unit tests:
-    * `org.threeten:threetenbp:{bp_version}` — usual ThreeTenBP.
-      Unit tests are being run on JVM so there is no need for an Android-specific
+#### Application
+
+* `com.jakewharton.threetenabp:threetenabp:{ABP_VERSION}` —
+  efficient time zones initializer.
+* `org.threeten:threetenbp:{BP_VERSION}:no-tzdb` —
+  ThreeTenBP, but [without time zones data](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237).
+    * ThreeTenABP provides the same transitive dependency under the hood
+      but it is useful to have the same ThreeTenBP version for...
+
+#### Unit Tests
+
+* `org.threeten:threetenbp:{BP_VERSION}` — regular ThreeTenBP.
+    * Unit tests are being run on JVM so there is no need for the Android-specific
       time zones initializer.
 
 ### Joda-Time?
 
-Abandon Joda-Time! Don’t be hisitant to migrate from it to ThreeTenBP ASAP.
+Abandon Joda-Time! Don’t be hisitant to [migrate from it](https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html)
+to ThreeTenBP ASAP.
 
 * ThreeTen is the next evolutionary step, created by the same developer.
-* Since ThreeTenBP is a ThreeTen backport, migrating to `java.time` will be
-  bulk a package replacement from `org.threeten.bp` with `java.time` and
-  removing unused dependencies. Joda-Time will require more work, depending
-  on the actual usage. The migration itself is a fact — `java.time` is already
-  available on Android and it is a matter of time before we can use it everywhere.
-* JVM ecosystem already moved on to `java.time`. It is better to use same APIs
-  as the rest of developers to speak the same language.
+* Since ThreeTenBP is a ThreeTen backport, migrating to the native JVM API becomes
+  a bulk `org.threeten.bp` package replacement with `java.time`.
+    * The migration itself is a fact — `java.time` is already
+      available on Android and it is a matter of time before we can use it everywhere.
+* JVM ecosystem already uses `java.time`.
+  It is better to use same API to speak the same language.
+    * [Project Reactor is a good example](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html#interval-java.time.Duration-).
 * ThreeTen is better for APK size than Joda-Time.
     * Joda-Time without time zones + Joda-Time Android is `735 KiB`.
     * ThreeTenBP without time zones + ThreeTenABP is `485 KiB`.
 
 ## `minSdkVersion >= 26`
 
-Damn, it feels good, right? Use `java.time`, forget about Joda-Time and ThreeTenBP.
-
-The downside of using `java.time` is time zone updates.
-Since standalone distributions (such as Joda-Time and ThreeTenBP) carry their
-own time zone databases it is possible to update them separately.
-Unfortunately on Android [system time zone updates depend on OEM](https://source.android.com/devices/tech/config/timezone-rules).
-It is an open question who actually does this in practice.
+Use [`java.time`](https://developer.android.com/reference/java/time/package-summary),
+forget about Joda-Time and ThreeTenBP.
 
 > :book: Android [uses ICU](https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java)
-> to provide time zone data.
+> to provide time zones data.
+
+The downside of using native `java.time` is updating time zones data.
+Since standalone distributions (such as Joda-Time and ThreeTenBP) carry their
+own time zones data it is possible to update it separately.
+Unfortunately on Android system time zones data updates [depend on OEM](https://source.android.com/devices/tech/config/timezone-rules).
+It is an open question which OEMs actually do this in real world.
 
 # Usage
 
 ## Access
 
-Since ThreeTenBP without time zone data will not initialize time zones by itself,
-we’ll need to make it ourselves. Even worse — executing time zone-related
-operations will lead to runtime exceptions. It is a good idea to have
+Since ThreeTenBP without time zones data will not initialize time zones by itself,
+we’ll need to do it ourselves. Executing time zone-related
+operations without initialization will lead to runtime exceptions. It is a good idea to have
 a time abstraction in place which will be an entry point for time-related data.
 It is a good practice to have it for testing purposes anyway.
 
@@ -127,11 +128,15 @@ interface Time {
 }
 ```
 
-It is not the best implementation, especially thread-safe one, but it delivers the idea.
+It is not the best implementation, especially thread-safe wise, but it delivers the idea.
 
-Don’t forget that even if ThreeTenABP features efficient time zone data initializer
+Don’t forget that despite ThreeTenABP features efficient time zone data initializer
 it still takes more than 100 milliseconds to do so. To avoid blocking
-the main thread use background threads on the application startup.
+the main thread use background threads on the application startup to pre-initialize time zones.
+
+Please notice that this optimization does not eliminate the `Time` abstraction.
+Since the background initialization is an async process it is possible to use
+`ZonedDateTime` before time zones were actually initialized.
 
 ```kotlin
 class Application : android.app.Application {
@@ -165,29 +170,12 @@ companion object {
 ```
 
 It does not save us though. Since naming is a semantic rule,
-it depends on human nature and behavior. Fortunately enough we have `TimeUnit`.
-
-```kotlin
-companion object {
-    private val DELAY = 10 to TimeUnit.SECONDS
-}
-```
-
-It partially resolves the issue but makes usage cumbersome.
-
-```kotlin
-val millis = DELAY.second.toMillis(DELAY.first)
-```
-
-This is where `Duration` comes in.
+it depends on human nature and behavior. Fortunately enough we have `Duration`.
 
 ```kotlin
 companion object {
     private val DELAY = Duration.ofSeconds(10)
 }
-```
-```kotlin
-val millis = DELAY.toMillis()
 ```
 
 Being honest — it is not a silver bullet but it reduces the confusion significantly.
