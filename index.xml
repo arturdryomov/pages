@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 30 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Superior Testing: Need for Speed</title>
+      <link>http://arturdryomov.online/posts/superior-testing-need-for-speed/</link>
+      <pubDate>Tue, 30 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/superior-testing-need-for-speed/</guid>
+      <description>Everybody wants to have a faster development cycle. Everything should be flawless and straightforward. Nobody wants to have hour-long builds and stuck CI queues. We need results! Now! Or maybe even in the past, preemptively. Guard from the Ruby ecosystem comes to mind, starting tests on file changes, without doing it manually.
+Talking about tests — they are a part of the cycle, right? We run them both locally and remotely (as part of a CI pipeline).</description>
+    </item>
     
     <item>
       <title>Modern DateTimes on Android</title>
