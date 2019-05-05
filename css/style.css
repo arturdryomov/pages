@@ -1,3 +1,21 @@
+:root {
+  --color-background: #ffffff;
+  --color-text: #000000;
+  --color-link: #006bbd;
+  --color-block-background: #f8f8f8;
+  --color-block-border: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1d1f21;
+    --color-text: #c5c8c6;
+    --color-link: #81a2be;
+    --color-block-background: #282a2e;
+    --color-block-border: #373b41;
+  }
+}
+
 body, nav {
   /*
    * system-ui is not supported by all browsers, but should be enough in the future.
@@ -16,6 +34,8 @@ code {
 }
 
 body {
+  color: var(--color-text);
+  background-color: var(--color-background);
   /* Maintain typography measure: https://en.wikipedia.org/wiki/Line_length */
   max-width: 50em;
   margin: auto;
@@ -60,7 +80,7 @@ nav ul, nav ol {
 }
 
 a {
-  color: #006bbd;
+  color: var(--color-link);
   text-decoration: none;
 }
 
@@ -69,8 +89,8 @@ a:hover {
 }
 
 pre, code {
-  background: #f8f8f8;
-  border: 1px solid #ddd;
+  background: var(--color-block-background);
+  border: 1px solid var(--color-block-border);
 }
 
 pre {
@@ -94,14 +114,14 @@ pre code {
 }
 
 blockquote {
-  background: #f9f9f9;
-  border-left: 5px solid #ccc;
+  background: var(--color-block-background);
+  border-left: 5px solid var(--color-block-border);
   padding: 3px 1em 3px;
 }
 
 table, th, td {
   border-collapse: collapse;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-block-border);
 }
 
 th, td {
@@ -112,7 +132,7 @@ th, td {
 }
 
 tr:nth-child(even) {
-  background: #f6f8fa;
+  background: var(--color-block-background);
 }
 
 footer {
