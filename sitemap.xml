@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://arturdryomov.online/posts/superior-testing-cleaning-up/</loc>
+    <lastmod>2019-06-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://arturdryomov.online/posts/abstracting-kotlin-sealed-classes/</loc>
     <lastmod>2019-06-04T00:00:00+00:00</lastmod>
   </url>
@@ -109,7 +114,7 @@
   
   <url>
     <loc>http://arturdryomov.online/</loc>
-    <lastmod>2019-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2019-06-06T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>

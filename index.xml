@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 04 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 06 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Superior Testing: Cleaning Up</title>
+      <link>http://arturdryomov.online/posts/superior-testing-cleaning-up/</link>
+      <pubDate>Thu, 06 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/superior-testing-cleaning-up/</guid>
+      <description>There is a game called Viscera Cleanup Detail. The task in this game is to&amp;hellip; clean things up. Well, it is a bit more exciting since it involves alien invasions, but at the end of the day players become space janitors. It is surprisingly addictive.
+Cleaning things is useful and helpful in a lot of ways. Developers understand that, but usually there is an additional motivation to keep things in order — users.</description>
+    </item>
     
     <item>
       <title>Abstracting Kotlin Sealed Classes</title>
