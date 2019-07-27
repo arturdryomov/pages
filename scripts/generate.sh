@@ -1,7 +1,7 @@
 #!/bin/bash
 set -u
 
-VERSION="0.54.0"
+VERSION="0.56.0"
 PACKAGE="hugo.tar.gz"
 DIRECTORY="hugo"
 BINARY="hugo"
