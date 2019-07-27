@@ -105,10 +105,10 @@ any warnings or errors and yet it will crash <em>in runtime</em>.
 Well, at least when using RxJava 2.1.8 and Kotlin 1.2.10.</p>
 
 <p>Why? Fortunately enough, <a href="https://github.com/ReactiveX/RxJava">RxJava is open source</a>, so we can take a look ourselves.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="o">(</span><span class="n">T</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">ObjectHelper</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="s">&#34;The item is null&#34;</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="o">.</span><span class="na">onAssembly</span><span class="o">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span><span class="n">item</span><span class="o">));</span>
-<span class="o">}</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="p">(</span><span class="n">T</span> <span class="nf">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ObjectHelper</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">&#34;The item is null&#34;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="p">.</span><span class="na">onAssembly</span><span class="p">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span><span class="p">));</span>
+<span class="p">}</span></code></pre></div>
 <p>In other words, the underlying code checks the <code>item</code> to not be <code>null</code>. And yet, Kotlin did not save us.
 The reason is quite simple. When using RxJava we are using Java bytecode which does not have enough metadata.
 To actually have it the Java code should be annotated with so-called Nullability Annotations.
@@ -116,10 +116,10 @@ The platform itself does not have enough introspection knowledge about if a valu
 
 <p>OK, so now we’ve established that we need annotations in the Java code to make Kotlin happy.
 In other words, the RxJava source code should be changed to be like this.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">T</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">ObjectHelper</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="s">&#34;The item is null&#34;</span><span class="o">);</span>
-    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="o">.</span><span class="na">onAssembly</span><span class="o">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span><span class="n">item</span><span class="o">));</span>
-<span class="o">}</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="p">(</span><span class="nd">@NonNull</span> <span class="n">T</span> <span class="nf">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ObjectHelper</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s">&#34;The item is null&#34;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="p">.</span><span class="na">onAssembly</span><span class="p">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span><span class="p">));</span>
+<span class="p">}</span></code></pre></div>
 <p>The difference is in the <code>@NonNull</code> annotation. The IDE will highlight the original code as an error,
 the Kotlin compiler will stop compilation&hellip; The End.</p>
 
@@ -189,13 +189,13 @@ excluding codebases with a huge number of public methods — like RxJava.
 As a side benefit — you will make your code more testable encapsulating implementation behind an interface.</p>
 
 <p>Sample time!</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nc">CorporateCalculator</span> <span class="o">{</span>
-    <span class="kt">void</span> <span class="nf">calculate</span><span class="o">(</span><span class="n">Argument</span> <span class="n">argument</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">argument</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">(</span><span class="s">&#34;Gotcha!&#34;</span><span class="o">);</span>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">class</span> <span class="nf">CorporateCalculator</span> <span class="p">{</span>
+    <span class="kt">void</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">Argument</span> <span class="nf">argument</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">argument</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="p">(</span><span class="s">&#34;Gotcha!&#34;</span><span class="p">);</span>
 
-        <span class="n">calculateUsingCorporateBlackMagic</span><span class="o">(</span><span class="n">argument</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
+        <span class="n">calculateUsingCorporateBlackMagic</span><span class="p">(</span><span class="n">argument</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">argument</span><span class="p">:</span> <span class="n">Argument</span><span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">CorporateImpl</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
@@ -242,9 +242,9 @@ Actually the same syntax is used for implicitly unwrapped optionals.</p>
 <p>Turns out Swift does not have <code>null</code> pointers. At all!</p>
 <div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">let</span> <span class="nv">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span></code></pre></div>
 <p><code>text</code> there is not actually <code>null</code> (<code>nil</code>). Let’s change it a bit to show its true nature.</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">let</span> <span class="nv">text</span><span class="p">:</span> <span class="nb">Optional</span><span class="p">&lt;</span><span class="nb">String</span><span class="o">&gt;</span> <span class="p">=</span> <span class="nb">Optional</span><span class="p">.</span><span class="kr">none</span>
+<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">let</span> <span class="nv">text</span><span class="p">:</span> <span class="nb">Optional</span><span class="p">&lt;</span><span class="nb">String</span><span class="p">&gt;</span> <span class="p">=</span> <span class="nb">Optional</span><span class="p">.</span><span class="kr">none</span>
 
-<span class="kd">enum</span> <span class="nc">Optional</span><span class="p">&lt;</span><span class="n">Wrapped</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="kd">enum</span> <span class="nc">Optional</span><span class="p">&lt;</span><span class="n">Wrapped</span><span class="p">&gt;</span> <span class="p">{</span>
     <span class="k">case</span> <span class="kr">none</span>
     <span class="k">case</span> <span class="n">some</span><span class="p">(</span><span class="n">Wrapped</span><span class="p">)</span>
 <span class="p">}</span></code></pre></div>

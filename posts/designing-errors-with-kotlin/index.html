@@ -99,7 +99,7 @@ At the same time, checked exceptions are useful to enforce
 a desired behavior. From that perspective, unchecked exceptions are actually
 worse — unchecked ones are implicit and easy to miss, checked ones
 are explicit and defined in the declaration.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">File</span> <span class="nf">open</span><span class="o">(</span><span class="n">String</span> <span class="n">filename</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">File</span> <span class="nf">open</span><span class="p">(</span><span class="n">String</span> <span class="nf">filename</span><span class="p">)</span> <span class="kd">throws</span> <span class="nf">IOException</span></code></pre></div>
 <p>Another option is to return <code>null</code> or magic values when something went wrong.
 It can be called either a C-style or a documentation-driven error handling —
 the caller is expected (but not enforced) to check the function result
@@ -138,7 +138,7 @@ to introduce the <code>Result</code> type to the standard library as an alternat
 to <code>throw</code>-driven workflows. It can be seen as a more explicit, manual
 approach to propagating errors to callers. <code>Result</code> eliminates
 the function result vs. error duality via combining both of them.</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">enum</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">enum</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="p">&gt;</span> <span class="p">{</span>
     <span class="k">case</span> <span class="n">value</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">error</span><span class="p">(</span><span class="n">Error</span><span class="p">)</span>
 <span class="p">}</span></code></pre></div>
@@ -189,15 +189,17 @@ like trying to access a location beyond the end of an array.</p>
 <ul>
 <li>There are no exceptions — neither Java-like or Swift-like.</li>
 <li>There is a <code>panic!</code> macros — but there are no ways to recover.</li>
-<li>There is a <code>Result</code> type with a number of helper functions on top
-with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it less verbose.</li>
-</ul>
+
+<li><p>There is a <code>Result</code> type with a number of helper functions on top
+with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it less verbose.</p>
 <div class="highlight"><pre class="chroma"><code class="language-rust" data-lang="rust"><span class="n">panic</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;at the Disco&#34;</span><span class="p">)</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-rust" data-lang="rust"><span class="k">enum</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
-</span><span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
+</span><span class="w"></span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
+</span><span class="w"></span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
 </span><span class="w"></span><span class="p">}</span><span class="w">
-</span></code></pre></div>
+</span></code></pre></div></li>
+</ul>
+
 <h1 id="kotlin">Kotlin</h1>
 
 <p>Welcome back to the JVM world!</p>

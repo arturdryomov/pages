@@ -241,16 +241,17 @@ At the same time, <code>Observable</code> can be terminated either via completio
 <ul>
 <li><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/observers/BaseTestConsumer.html#assertValuesOnly-T...-"><code>assertValuesOnly</code></a> —
 will check for values and for no terminal events.</li>
-<li><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/observers/BaseTestConsumer.html#assertResult-T...-"><code>assertResult</code></a> —
-will check for the value and for completion event. Useful for testing <code>Single</code>.</li>
-</ul>
+
+<li><p><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/observers/BaseTestConsumer.html#assertResult-T...-"><code>assertResult</code></a> —
+will check for the value and for completion event. Useful for testing <code>Single</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">-   valueObserver.assertValue(2)
 </span><span class="gd"></span><span class="gi">+   valueObserver.assertValuesOnly(2)
 </span></code></pre></div>
 <pre><code>TEST FAILED
 
 Error(s) present: (latch = 0, values = 1, errors = 1, completions = 0)
-</code></pre>
+</code></pre></li>
+</ul>
 
 <h1 id="the-cruel-cruel-world">The Cruel, Cruel World</h1>
 

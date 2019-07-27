@@ -258,12 +258,14 @@ Potentially it can be solved with a syntax sugar.</p>
 
 <ul>
 <li>Commands come and go, the <code>BookService</code> reacts to them and moves on.</li>
-<li>The State is being preserved during the runtime.</li>
-</ul>
+
+<li><p>The State is being preserved during the runtime.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">)</span> <span class="p">:</span> <span class="n">BookService</span> <span class="p">{</span>
-    <span class="k">override</span> <span class="k">val</span> <span class="py">state</span> <span class="p">=</span> <span class="n">BehaviorRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
-    <span class="k">override</span> <span class="k">val</span> <span class="py">command</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
+<span class="k">override</span> <span class="k">val</span> <span class="py">state</span> <span class="p">=</span> <span class="n">BehaviorRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
+<span class="k">override</span> <span class="k">val</span> <span class="py">command</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
+<span class="p">}</span></code></pre></div></li>
+</ul>
+
 <p>Next, we are going to react to commands and produce states based on results.
 The refresh command is pretty straightforward.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">refreshState</span> <span class="p">=</span> <span class="n">command</span>

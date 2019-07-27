@@ -149,29 +149,30 @@ However, often there is an in-house handling for common tasks.</p>
 <li>Connectivity. Restart requests on re-established network connections.</li>
 <li>Retries. Restart requests <code>N</code> times or (and) transform error responses
 to manually-retryable actions.</li>
-<li>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</li>
-</ul>
+
+<li><p>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">BookResponse</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
-    <span class="k">object</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
+<span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
+<span class="k">object</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="k">interface</span> <span class="nc">BooksNetworkSource</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">(</span><span class="n">pageSize</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">BooksResponse</span><span class="p">&gt;</span>
-    <span class="k">fun</span> <span class="nf">getBookReviews</span><span class="p">():</span> <span class="n">Flowable</span><span class="p">&lt;</span><span class="n">BookReview</span><span class="p">&gt;</span>
+<span class="k">fun</span> <span class="nf">getBooks</span><span class="p">(</span><span class="n">pageSize</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">BooksResponse</span><span class="p">&gt;</span>
+<span class="k">fun</span> <span class="nf">getBookReviews</span><span class="p">():</span> <span class="n">Flowable</span><span class="p">&lt;</span><span class="n">BookReview</span><span class="p">&gt;</span>
 
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
-        <span class="k">private</span> <span class="k">val</span> <span class="py">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">,</span>
-        <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
-    <span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<ul>
-<li><code>getBooks</code> method returns an <code>Observable</code> and not a <code>Single</code> since the request
+<span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">val</span> <span class="py">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+<span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div></li>
+
+<li><p><code>getBooks</code> method returns an <code>Observable</code> and not a <code>Single</code> since the request
 is automatically resubmitted on an available network if it wasn’t available
-initially.</li>
-<li><code>getBookReviews</code> method returns a <code>Flowable</code> since it is a continuous
+initially.</p></li>
+
+<li><p><code>getBookReviews</code> method returns a <code>Flowable</code> since it is a continuous
 stream of server-sent events which can be a source of issues with backpressure.
-It is up to a consumer to decide how to manage it based on current needs.</li>
+It is up to a consumer to decide how to manage it based on current needs.</p></li>
 </ul>
 
 <p>Storage-related data sources are easier.</p>
