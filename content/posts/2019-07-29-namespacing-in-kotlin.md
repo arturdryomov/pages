@@ -1,7 +1,7 @@
 ---
 title: "Namespacing in Kotlin"
-description: "Well, the lack of it."
-date: 2019-07-28
+description: "Well, the lack of."
+date: 2019-07-29
 slug: namespacing-in-kotlin
 ---
 
