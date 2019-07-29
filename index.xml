@@ -6,10 +6,22 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 06 Jun 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jul 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Namespacing in Kotlin</title>
+      <link>http://arturdryomov.online/posts/namespacing-in-kotlin/</link>
+      <pubDate>Mon, 29 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://arturdryomov.online/posts/namespacing-in-kotlin/</guid>
+      <description>The development process is a research. Find the state machine, organize mutations, wire it for consumers. The process repeats and leads to the meta-research. We investigate scenarios and search for reusable parts. Patterns arise, implementations follow. Ideally, the code resembles a fractal structure.
+ An architecture is said to be fractal if subcomponents are structured in the same way as the whole is.
+— André Staltz
+ The Problem Let’s say we have a fractal components structure.</description>
+    </item>
     
     <item>
       <title>Superior Testing: Cleaning Up</title>
