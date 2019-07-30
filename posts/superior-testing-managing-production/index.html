@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Superior Testing: Managing Production</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arturdryomov" />
+  <meta name="twitter:title" content="Superior Testing: Managing Production" />
+  <meta name="twitter:description" content="Testing never sleeps." />
+
+  
+  <meta name="description" content="Testing never sleeps." />
+  
+
+  
+</head>
+
+<body>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Superior Testing: Managing Production</span></h1>
+  <h3>July 30, 2019</h3>
+
+</div>
+
+<main>
+
+
+<p>The testing process does not magically stop after deploying an artifact.
+<a href="https://en.wikipedia.org/wiki/We%27ve_Only_Just_Begun">We’ve only just begun</a>.
+It is impossible to check everything in a sandboxed environment.
+From a certain perspective it seems like the whole run time is the testing process.
+How is it possible to check the correctness without tests?
+Right — by running the thing. We do the same in production — just on a bigger scale and
+with bigger risks.</p>
+
+<p>Testing in a controlled environment is trivial. After all — we see the result.
+If tests are in place we see it as a report or an output in an IDE.
+If not — we can analyze the output like a UI or a text.
+We don’t see things in production. Imagine the application as a pure function.
+A user supplies inputs (files, text, clicks, swipes) and
+consumes outputs (different files, UI, UX). The code is in between,
+it owns neither inputs nor outputs. What do we do? Introduce side-effects
+in a form of monitoring.</p>
+
+<h1 id="analytics">Analytics</h1>
+
+<p>Business values usually are covered with analytics events.
+Otherwise, it is tricky to identify good and not so good spots
+in business-related flows. Technical metrics are important as well!
+There is a small trick though — it is undesirable to mix
+business and technical analytics in the same pool. Most of the time
+product-related people do not care about technical details.</p>
+
+<p>There are great tools on the market doing what we need —
+like <a href="https://fabric.io/kits/android/answers/features">Fabric Answers</a>
+and <a href="https://firebase.google.com/docs/analytics">Google Analytics for Firebase</a>.
+Both provide dedicated analytics storage for tech-specific needs.
+What do we put there?</p>
+
+<ul>
+<li>Memory usage. On mobile it makes sense to track consumed heap percentage
+instead of absolute values since it might change from device to device.
+Spikes might help find unknown memory leaks.</li>
+<li>Threads count. Absolute values are fine since it shouldn’t change
+from device to device. Spikes might help find unusual resources utilization.</li>
+<li>Deserialization and network errors rate, external component versions
+(like Google Play Services), supported ABIs — everything useful goes there as well.</li>
+</ul>
+
+<p>Such characteristics help to see a bigger picture and make argumented decisions.</p>
+
+<h1 id="logging">Logging</h1>
+
+<p>For reasons unknown a lot of developers neglect logs.
+Do they match a category of archaic tech? No idea.
+Well-structured logs are far more powerful than analytics.
+The key to power is changing the logging mindset.
+Think about logs not as a wall of text (OH HAI Android Logs)
+but as a database.</p>
+
+<p>Let’s imagine that we got a nasty crash. Having a stacktrace is helpful
+but in non-obvious situations it is not trivial
+to understand what went wrong. It is great to have logs in this scenario.
+Having them as a plain text is not so great. What do we do if we want
+to take a range from one date to another? Or take a look at all HTTP requests
+made from a device this month? Or analyze how often we get <code>500</code> HTTP errors
+from a specific endpoint?</p>
+
+<p>Enter <a href="https://www.elastic.co/what-is/elk-stack">the ELK (Elastic) Stack</a>.
+Extremely popular in the backend world it is not so well-known in the mobile one.
+I’m gonna skip the general introduction — there is literally
+an infinity of guides.</p>
+
+<p>The idea from the client perspective is simple. Instead of logging plain text
+we are gonna log&hellip; JSON!</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">/v1/books returned 500</code></pre></div>
+<p>becomes</p>
+<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+    <span class="nt">&#34;application_version&#34;</span><span class="p">:</span> <span class="s2">&#34;1.0.2&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;os_version&#34;</span><span class="p">:</span> <span class="s2">&#34;7.1.1&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;thread&#34;</span><span class="p">:</span> <span class="s2">&#34;main&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;http_path&#34;</span><span class="p">:</span> <span class="s2">&#34;/v1/books&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;http_request_id&#34;</span><span class="p">:</span> <span class="s2">&#34;87814f00-e3a4-41a6-ba21-174f2476bc75&#34;</span><span class="p">,</span>
+    <span class="nt">&#34;http_request_duration&#34;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="nt">&#34;http_response_code&#34;</span><span class="p">:</span> <span class="mi">500</span>
+<span class="p">}</span></code></pre></div>
+<p>An enumeration of such elements is put into a file, files get batch-processed and
+sent to the backend where they are processed by the ELK stack.
+Then, using <a href="https://www.elastic.co/products/kibana">Kibana</a>
+as a frontend and <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a>
+as a query language we can make all sorts of analysis.</p>
+
+<ul>
+<li><p>Responses to <code>/v1/books</code> returned <code>500</code> across all users.</p>
+<div class="highlight"><pre class="chroma"><code class="language-lucene" data-lang="lucene">http_path:&#34;/v1/books&#34; AND http_response_code:500</code></pre></div></li>
+
+<li><p>Requests to <code>/v1/books</code> made from the main thread.</p>
+<div class="highlight"><pre class="chroma"><code class="language-lucene" data-lang="lucene">http_path:&#34;/v1/books&#34; AND thread:&#34;main&#34;</code></pre></div></li>
+
+<li><p>Requests to <code>/v1/books</code> which took from 3 to 5 seconds.</p>
+<div class="highlight"><pre class="chroma"><code class="language-lucene" data-lang="lucene">http_path:&#34;/v1/books&#34; AND http_request_duration:[3 to 5]</code></pre></div></li>
+</ul>
+
+<p>Those are basic examples, the possibilities are almost endless.
+Even better — it is possible to make custom graphs using Kibana
+or even create monitoring dashboards with <a href="https://grafana.com/">Grafana</a>.</p>
+
+<p>This kind of approach to the logging process can save a lot of time
+spent on investigation and analysis. Not gonna lie — it feels great
+to use such powerful instruments.</p>
+
+<h1 id="feature-flags-alerts-non-fatals">Feature Flags, Alerts, Non-Fatals&hellip;</h1>
+
+<p>There are a lot of practices for managing production environments.
+The idea should stay the same — there is no end to testing.
+Like it or not — things will go south. It is always better to have tools
+to understand why did it happen.</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+
