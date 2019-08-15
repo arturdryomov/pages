@@ -5,31 +5,40 @@ date: 2019-08-14
 slug: midnight-in-android-themes
 ---
 
+Android Q introduces [dark themes](https://developer.android.com/preview/features/darktheme).
+Or [night mode](https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate.html#MODE_NIGHT_YES)?
+No idea. Anyways, it is here and can be helpful with using applications in
+dark environments or with bringing back that sweet Winamp skins vibe.
+
+Implementing dark themes is surprisngly deep and affects the whole application.
+At times it feels like a redesign. I’ve tried to collect steps we’ve made to
+introduce the dark theme in the [Juno rider application](https://play.google.com/store/apps/details?id=com.gojuno.rider)
+and make a (kind of) comprehensive guide. Let’s jump in!
+
 # Switching
 
-It is important to start with this step to be able to actually take a look at the dark theme.
+It is important to start with this step to actually take a look at the dark theme.
 
 `AppCompatDelegate.setDefaultNightMode` is our friend here. Use AppCompat 1.1.0+ —
-earlier implementations do not work great with theme switching.
+earlier versions do not work well with theme switching (activities don’t restart,
+themes are not applied to the navigation bar).
 
 * Android < Q
-  * Show in-application switcher. Save chosen theme on each switch.
+  * Show in-application switch. Save theme on each switch.
   * Use `AppCompatDelegate.MODE_NIGHT_NO` and `AppCompatDelegate.MODE_NIGHT_YES`.
   * In `Application.attachBaseContext` read saved theme and switch to it.
 * Android ≥ Q
-  * Do not show in-application switcher. The system switcher is enough.
+  * Do not show in-application switch. The system one is enough.
   * In `Application.attachBaseContext` switch to `AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM`.
 
-That’s it! From now on it is possible to place resources using `night` modifier
+That’s it! From now on it is possible to use resources with the `night` modifier
 (`values-night`, `drawable-night`). Unfortunately switching recreates
-`Activity` instances. Most of the time it is fine but it is a known Android limitation and
-strength at the same time.
+activities, like a regular configuration change.
 
-> :bulb: I’m completely ignoring `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
+> :warning: I ignore `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
 > and go against [Google suggestions](https://developer.android.com/preview/features/darktheme#changing_themes_in-app)
-> which recommend showing a gazilion of switches all the time.
-> Both macOS and Windows work as I suggest — there are no ad-hoc switchers.
-> I have no idea why Google reinvents the wheel.
+> of showing a gazilion of switches.
+> Both macOS and Windows work as I suggest — there are no ad-hoc switches.
 
 # Colors
 
@@ -41,7 +50,7 @@ for small elements like underlines and links. Or keep same colors for particular
 To resolve this I’ve found an approach of opting out of color changes between themes.
 We’ll declare two sets of colors — themed and themeless. Themed ones should be
 used by default but can be replaced with themeless variants to opt-out from
-theming. Such colors naming gives mnemonics as a bonus — before using a color
+theming. The colors naming gives mnemonics as a bonus — before using a color
 a developer should explicitly choose whether it should be themed or not.
 
 ```xml
@@ -64,8 +73,7 @@ a developer should explicitly choose whether it should be themed or not.
 # Themes
 
 There is a good chance that system status and navigation bars should have
-different colors between themes. It is not a rocket science — the API
-to do that is on our hands. `*BarColor` and `windowLight*Bar` do the trick.
+different colors between themes. `*BarColor` and `windowLight*Bar` do the trick.
 Unfortunately these attributes are available from different API versions
 so we’ll use a known trick with `Base.*` themes.
 
@@ -140,7 +148,7 @@ Doing so allows to use colors directly in paths and brings automatic theme manag
 
 ## Remote
 
-Icons fetched from backend are most likely bitmaps.
+Icons fetched from a backend are most likely bitmaps.
 It is possible to tint them locally but I would suggest avoid doing so.
 Usually resources are placed on remote servers to achieve flexibility.
 One day remote icons are monochrome with transparent areas,
@@ -148,8 +156,7 @@ the next day they are colorful and photo-realistic.
 Tinting will turn latter ones into colored silhouettes.
 
 A better solution is finding a middle-ground — remote icons should fit
-light and dark themes at the same time. It is not a universal solution
-but most of the time it should work.
+both light and dark themes.
 
 # Lottie Animations
 
@@ -178,20 +185,19 @@ AnimationComponent.values().forEach { component ->
 
 # Elevation
 
-Elevation looks good in light themes but is essentially invisible in dark ones.
-The issue is not new. In fact, it was already resolved and the solution
-is described in detail in [the Material Design spec](https://material.io/design/color/dark-theme.html#properties). In short — it is proposed to use overlays in addition to shadows
-in dark themes. The overlay changes its transparency depending on the current elevation.
-When the overlay is something like white color the elevated surface becomes
-lighter. Nice!
+Elevations looks good in light themes but are essentially invisible in dark ones.
+The workaround is described in [the Material Design spec](https://material.io/design/color/dark-theme.html#properties).
+In short — it is proposed to use overlays in addition to shadows
+for dark themes. The overlay changes its transparency depending on the current elevation.
+When the overlay is the white color the elevated surface becomes
+lighter. Neat!
 
-Technically speaking the solution is available as well.
+The technical solution is available as well.
 [Material Components](https://github.com/material-components/material-components-android)
 [implement](https://github.com/material-components/material-components-android/blob/master/docs/theming/Dark.md#elevation-overlays)
-elevation overlays in their components like `TabLayout`, `Toolbar`, `NavigationView` and more.
+elevation overlays in components like `NavigationView`, `TabLayout`, `Toolbar` and more.
 
-Following attributes declared in the theme will activate overlays and it will be possible
-to see the effect immediately on supported components.
+Following attributes declared in the theme will activate overlays.
 
 ```xml
 <!-- values/bools.xml -->
@@ -206,6 +212,8 @@ to see the effect immediately on supported components.
 ```
 
 ```xml
+<!-- values/themes.xml -->
+
 <item name="colorSurface">@color/themed_white</item>
 <item name="elevationOverlayEnabled">@bool/theme_dark</item>
 <item name="elevationOverlayColor">@color/themed_black</item>
@@ -213,7 +221,7 @@ to see the effect immediately on supported components.
 
 What about custom components? Actually, it is handled by Material Components as well.
 There is a `Drawable` subclass called [`MaterialShapeDrawable`](https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md).
-It is possible to supply it with elevation to achieve the desired effect.
+It is possible to supply it with the elevation to achieve the desired effect.
 Actually this is what Material Components use under the hood.
 
 ```kotlin
@@ -231,12 +239,12 @@ class Surface(context: Context, attributes: AttributeSet) : FrameLayout(context,
 }
 ```
 
-> :book: Take a look at `ShapeAppearanceModel` to make cards with rounded corners,
+> :book: Take a look at the `ShapeAppearanceModel` to make cards with rounded corners,
 > triangle edges and more via custom `EdgeTreatment` and `CornerTreatment` implementations.
 
 What about gradients and color transitions on elevated surfaces?
 `ElevationOverlayProvider` helps with that. This class is used under the hood
-of `MaterialShapeDrawable`. The following extension is a helpful shortcut.
+of `MaterialShapeDrawable`. The following extension is a shortcut.
 
 ```kotlin
 @ColorInt
@@ -246,21 +254,21 @@ fun Context.surfaceColor(elevation: Float): Int {
 ```
 
 Talking about surface colors — let’s backtrack a bit.
-Which color should be used for `elevationOverlayColor` attribute?
-`#ffffff` comes to mind. Unfortunately that is not always what
+Which color should be used for the `elevationOverlayColor` attribute?
+`#ffffff` comes to mind. Unfortunately this is not always what
 a design team wants to see. Most likely there will be a defined
 color `S` for surfaces and a color `ES` for elevated surfaces.
-At the same time, the math behind `ElevationOverlayProvider` is a bit tricky,
+The math behind `ElevationOverlayProvider` is a bit tricky,
 especially when it comes to ARGB colors with defined alpha channel.
 
-The solution here is color subtraction. Yep. To get a color for `elevationOverlayColor`
-subtract S from ES. For example, using the surface color
+The solution here is the color subtraction. To get a color for `elevationOverlayColor`
+subtract `S` from `ES`. For example, using the surface color
 `#000000` <span style="color: #000000">■</span>
 and the elevated surface color
 `#5b5f65` <span style="color: #5b5f65">■</span>
 we’ll get
 `#e6f0ff` <span style="color: #e6f0ff">■</span>.
-Using the resulting color is usually close enough to design vision without losing
+Using the resulting color is usually close enough to the design vision without compromising
 the ability to automatically change surface color depending on the current elevation.
 Oh, please don’t subtract colors manually,
 use [the special calculator](https://www.colorhexa.com).
@@ -275,12 +283,8 @@ use [the special calculator](https://www.colorhexa.com).
 
 Since Chrome 76 it is possible to use the
 [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)
-CSS media feature. It allows to switch website theme using OS-level settings.
+CSS media feature. It allows to switch website themes using OS-level settings.
 This blog supports it!
-
-* On macOS open System Preferences → General → Switch Appearance to Dark.
-* On Android Q+ switch to Dark theme using Settings Panel on top of system notifications.
-* On Windows, KDE, GNOME and friends — sorry folks, I have no idea what to do.
 
 Technically it is implemented like this:
 
@@ -300,23 +304,23 @@ body {
 }
 ```
 
-Since Android 5.0 the `WebView`
-[is updated separately](https://developer.chrome.com/multidevice/webview/overview)
-so there is a good chance that it will support this feature as well.
+From Android 5.0 the `WebView`
+[is regularly updated](https://developer.chrome.com/multidevice/webview/overview)
+so there is a good chance that it will support this feature.
 [Chrome Custom Tabs](https://developer.chrome.com/multidevice/android/customtabs)
 might work a bit better.
 
 Of course, this kind of approach will require implementation from a frontend team
-behind web pages shown in the application but it is something.
+behind web pages.
 
 ## Local
 
 There is a good chance that some web pages are rendered locally on a device.
-Good examples are OSS license screens and HTML-formatted content from a backend.
+Good examples are the OSS license screen and the HTML-formatted content from a backend.
 
-Of course it is possible to use the approach described above for Remote pages
-but until the `WebView` is updated everywhere to Chrome 76-backed version
-it is possible to use templating like this.
+Of course it is possible to use the approach described above for remote pages
+but until the `WebView` is updated everywhere to the Chrome 76-backed version
+it is possible to use templating.
 
 ```mustache
 body {
@@ -325,23 +329,22 @@ body {
 ```
 
 This is [a Mustache-like template](https://mustache.github.io).
-`{{color_background}}` is gonna be replaced in runtime with local colors.
+`{{color_background}}` is replaced in runtime with a local color.
 
 ```kotlin
-enum class HtmlColor(val mask: String, @ColorRes res: Int) {
+enum class CssColor(val mask: String, @ColorRes res: Int) {
     Background("color_background", R.color.themed_white),
 }
 
-val html = HtmlColor.values().fold(htmlTemplate) { html, htmlColor ->
-    html.replace("{{${htmlColor.mask}}}", "#${context.color(htmlColor.res).colorHexRgba()}")
+val css = CssColor.values().fold(cssTemplate) { css, cssColor ->
+    css.replace("{{${cssColor.mask}}}", "#${context.color(cssColor.res).colorHexRgba()}")
 }
 
 fun Int.colorHexRgba() = String.format("%08x", shl(8) + ushr(24))
 ```
 
 > :bulb: Notice the `colorHexRgba` extension. It is not possible to use Android colors as-is
-> since HTML uses RGBA notation while Android uses ARGB
-> (I hope there was a good reason for this).
+> since HTML uses the RGBA notation while Android uses the ARGB one.
 
 # Maps
 
@@ -354,10 +357,33 @@ the dark one in `raw-night/map_style.json`. This approach gives automatic
 map style switching via referencing `R.raw.map_style`.
 
 Using [static maps](https://developers.google.com/maps/documentation/maps-static/intro)
-is a bit more awkward.
+is more awkward.
 [The styling is still available](https://developers.google.com/maps/documentation/maps-static/styling)
-but since the style is sent via HTTP request it means that domain-level entities of the application
+but since the style is sent via a HTTP request it means that domain-level entities of the application
 will know about the presentation-level characteristic. This is an unpleasant
 coupling. I suggest to migrate to the lite `MapView` — it covers basically everything
-the static map provides and renders maps on a device instead of making network calls.
-Also — it is free! The static maps API is billed.
+the static map provides and renders it on a device instead of making network calls.
+Also — it is free!
+
+# MOAR
+
+Fullscreen views, color change animations, dealing with transparency and
+a lot of fine-tuning. The dark theme integration becomes a marathon, not a sprint.
+Having something like a design system definetely helps.
+
+Is it worth it? I think so. It sheds a light on hacks and forces
+to make universal decisions. This is a good thing. Ah, yes, it looks good!
+
+---
+
+The title is a reference to the [Midnight in a Perfect World](https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7) track.
+
+
+
+
+
+
+
+
+
+
