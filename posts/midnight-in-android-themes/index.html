@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Midnight in Android Themes</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@arturdryomov" />
+  <meta name="twitter:title" content="Midnight in Android Themes" />
+  <meta name="twitter:description" content="The dark theme: colors, animations, elevations, HTML, Maps and moar." />
+
+  
+  <meta name="description" content="The dark theme: colors, animations, elevations, HTML, Maps and moar." />
+  
+
+  
+</head>
+
+<body>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Midnight in Android Themes</span></h1>
+  <h3>August 15, 2019</h3>
+
+</div>
+
+<main>
+
+
+<p>Android Q introduces <a href="https://developer.android.com/preview/features/darktheme">dark themes</a>.
+Or <a href="https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate.html#MODE_NIGHT_YES">night mode</a>?
+No idea. Anyways, it is here and can be helpful with using applications in
+dark environments or with bringing back that sweet Winamp skins vibe.</p>
+
+<p>Implementing dark themes is surprisingly deep and affects the whole application.
+At times it feels like a redesign. I’ve tried to collect steps we’ve made to
+introduce the dark theme in the <a href="https://play.google.com/store/apps/details?id=com.gojuno.rider">Juno rider application</a>
+and make a (kind of) comprehensive guide. Let’s jump in!</p>
+
+<h1 id="switching">Switching</h1>
+
+<p>It is important to start with this step to actually take a look at the dark theme.</p>
+
+<p><code>AppCompatDelegate.setDefaultNightMode</code> is our friend here. Use AppCompat 1.1.0+ —
+earlier versions do not work well with theme switching (activities don’t restart,
+themes are not applied to the navigation bar).</p>
+
+<ul>
+<li>Android &lt; Q
+
+<ul>
+<li>Show the in-application switch. Save theme on each switch.</li>
+<li>Use <code>AppCompatDelegate.MODE_NIGHT_NO</code> and <code>AppCompatDelegate.MODE_NIGHT_YES</code>.</li>
+<li>In <code>Application.attachBaseContext</code> read saved theme and switch to it.</li>
+</ul></li>
+<li>Android ≥ Q
+
+<ul>
+<li>Do not show in-application switch. The system one is enough.</li>
+<li>In <code>Application.attachBaseContext</code> switch to <code>AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM</code>.</li>
+</ul></li>
+</ul>
+
+<p>That’s it! From now on it is possible to use resources with the <code>night</code> modifier
+(<code>values-night</code>, <code>drawable-night</code>, etc). Unfortunately switching recreates
+activities, like a regular configuration change.</p>
+
+<blockquote>
+<p>⚠️ I ignore <code>AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY</code>
+and go against <a href="https://developer.android.com/preview/features/darktheme#changing_themes_in-app">Google suggestions</a>
+of showing a gazillion of switches.
+At least macOS and Windows work without ad-hoc switches.</p>
+</blockquote>
+
+<h1 id="colors">Colors</h1>
+
+<p>In the ideal scenario it is enough to re-declare colors in <code>values-night/colors.xml</code>.
+Unfortunately it is not always so simple. It might be important
+to maintain brand colors but replace them with vibrant variants
+for small elements like underlines and links. Or keep colors across themes for particular icons.</p>
+
+<p>To resolve this I’ve found an approach of opting out from color changes between themes.
+We’ll declare two sets of colors — themed and themeless. Themed ones should be
+used by default but can be replaced with themeless variants to opt-out from
+theming. The colors naming gives mnemonics as a bonus — before using a color
+a developer should explicitly choose whether it should be themed or not.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values/colors.xml --&gt;</span>
+
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themeless_black&#34;</span><span class="nt">&gt;</span>#000000<span class="nt">&lt;/color&gt;</span>
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themeless_white&#34;</span><span class="nt">&gt;</span>#ffffff<span class="nt">&lt;/color&gt;</span>
+
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themed_black&#34;</span><span class="nt">&gt;</span>@color/themeless_black<span class="nt">&lt;/color&gt;</span>
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themed_white&#34;</span><span class="nt">&gt;</span>@color/themeless_white<span class="nt">&lt;/color&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values-night/colors.xml --&gt;</span>
+
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themed_black&#34;</span><span class="nt">&gt;</span>@color/themeless_white<span class="nt">&lt;/color&gt;</span>
+<span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;themed_white&#34;</span><span class="nt">&gt;</span>@color/themeless_black<span class="nt">&lt;/color&gt;</span></code></pre></div>
+<h1 id="themes">Themes</h1>
+
+<p>There is a good chance that system status and navigation bars should have
+different colors between themes. <code>*BarColor</code> and <code>windowLight*Bar</code> do the trick.
+Unfortunately these attributes are available from different API versions
+so we’ll use a known trick with <code>Base.*</code> themes.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values/bools.xml --&gt;</span>
+
+<span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&#34;theme_light&#34;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/bool&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values-night/bools.xml --&gt;</span>
+
+<span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&#34;theme_light&#34;</span><span class="nt">&gt;</span>false<span class="nt">&lt;/bool&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values/themes.xml --&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Base.Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Theme.AppCompat.Light.NoActionBar&#34;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Base.Theme.Local&#34;</span><span class="nt">/&gt;</span></code></pre></div>
+<blockquote>
+<p>💡 Notice that I’m not using <code>Theme.AppCompat.DayNight</code>.
+<code>DayNight</code> switches <code>Theme.AppCompat</code> attributes between themes but it might be
+useless if attributes are already re-declared in the application-level theme.</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values-v23/themes.xml --&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Base.Theme.Local.v23&#34;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;android:statusBarColor&#34;</span><span class="nt">&gt;</span>@color/themed_white<span class="nt">&lt;/item&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;android:windowLightStatusBar&#34;</span><span class="nt">&gt;</span>@bool/theme_light<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Base.Theme.Local.v23&#34;</span><span class="nt">/&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values-v27/themes.xml --&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Base.Theme.Local.v27&#34;</span> <span class="na">parent=</span><span class="s">&#34;Base.Theme.Local.v23&#34;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;android:navigationBarColor&#34;</span><span class="nt">&gt;</span>@color/themed_white<span class="nt">&lt;/item&gt;</span>
+    <span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;android:windowLightNavigationBar&#34;</span><span class="nt">&gt;</span>@bool/theme_light<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;/style&gt;</span>
+
+<span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Base.Theme.Local.v27&#34;</span><span class="nt">/&gt;</span></code></pre></div>
+<h1 id="icons">Icons</h1>
+
+<h2 id="local">Local</h2>
+
+<p>Avoid using bitmaps like a plague! Well, it makes sense to use bitmaps
+for illustrations but icons ideally should be in vector.
+Doing so allows to use colors directly in paths and brings automatic theme management.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;vector</span> <span class="na">xmlns:android=</span><span class="s">&#34;http://schemas.android.com/apk/res/android&#34;</span>
+    <span class="na">android:width=</span><span class="s">&#34;24dp&#34;</span>
+    <span class="na">android:height=</span><span class="s">&#34;24dp&#34;</span>
+    <span class="na">android:viewportWidth=</span><span class="s">&#34;24.0&#34;</span>
+    <span class="na">android:viewportHeight=</span><span class="s">&#34;24.0&#34;</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;path</span>
+        <span class="na">android:fillColor=</span><span class="s">&#34;@color/themed_black&#34;</span>
+        <span class="na">android:pathData=</span><span class="s">&#34;drawing-instructions&#34;</span>
+        <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;/vector&gt;</span></code></pre></div>
+<h2 id="remote">Remote</h2>
+
+<p>Icons fetched from a backend are most likely bitmaps.
+It is possible to tint them locally but I would suggest avoiding doing so.
+Usually resources are placed on remote servers to achieve flexibility.
+One day remote icons are monochrome with transparent areas,
+the next day they are colorful and photo-realistic.
+Tinting will turn the latter ones into colored silhouettes.</p>
+
+<p>A better solution is finding a middle-ground — remote icons should fit
+both light and dark themes.</p>
+
+<h1 id="lottie-animations">Lottie Animations</h1>
+
+<p>Unfortunately Lottie animations do not use Android color resources.
+Colors are inlined in JSON files. The good thing is —
+it is possible to change colors in runtime using
+<a href="http://airbnb.io/lottie/#/android?id=dynamic-properties">dynamic properties</a>.
+In fact, I would advise to do so all the time, no matter if there is
+a dark theme or not. Colors change all the time but animation files
+are not changed with the same frequency.</p>
+
+<p>The implementation is actually a breeze. The awkward part is finding
+correct <code>KeyPath</code> combinations — it is better to do that with a design team.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="n">AnimationComponent</span><span class="p">(</span><span class="k">val</span> <span class="py">path</span><span class="p">:</span> <span class="n">KeyPath</span><span class="p">,</span> <span class="n">@ColorRes</span> <span class="k">val</span> <span class="py">colorRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">Circle</span><span class="p">(</span><span class="n">KeyPath</span><span class="p">(</span><span class="s">&#34;circle-group-42&#34;</span><span class="p">),</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_black</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="n">AnimationComponent</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">component</span> <span class="p">-&gt;</span>
+    <span class="n">@ColorInt</span> <span class="k">val</span> <span class="py">componentColor</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">color</span><span class="p">(</span><span class="n">component</span><span class="p">.</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="n">animationView</span><span class="p">.</span><span class="n">addValueCallback</span><span class="p">(</span><span class="n">component</span><span class="p">.</span><span class="n">path</span><span class="p">,</span> <span class="n">LottieProperty</span><span class="p">.</span><span class="n">COLOR</span><span class="p">)</span> <span class="p">{</span> <span class="n">componentColor</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<h1 id="elevation">Elevation</h1>
+
+<p>Elevations look good in light themes but are essentially invisible in dark ones.
+The workaround is described in <a href="https://material.io/design/color/dark-theme.html#properties">the Material Design spec</a>.
+In short — it is proposed to use overlays in addition to shadows
+for dark themes. The overlay changes its transparency depending on the current elevation.
+When the overlay is the white color the elevated surface becomes
+lighter. Neat!</p>
+
+<p>The technical solution is available as well.
+<a href="https://github.com/material-components/material-components-android">Material Components</a>
+<a href="https://github.com/material-components/material-components-android/blob/master/docs/theming/Dark.md#elevation-overlays">implement</a>
+elevation overlays in components like <code>NavigationView</code>, <code>TabLayout</code>, <code>Toolbar</code> and more.</p>
+
+<p>Following attributes declared in the theme will activate overlays.</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values/bools.xml --&gt;</span>
+
+<span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&#34;theme_dark&#34;</span><span class="nt">&gt;</span>false<span class="nt">&lt;/bool&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values-night/bools.xml --&gt;</span>
+
+<span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&#34;theme_dark&#34;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/bool&gt;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="c">&lt;!-- values/themes.xml --&gt;</span>
+
+<span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;colorSurface&#34;</span><span class="nt">&gt;</span>@color/themed_white<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;elevationOverlayEnabled&#34;</span><span class="nt">&gt;</span>@bool/theme_dark<span class="nt">&lt;/item&gt;</span>
+<span class="nt">&lt;item</span> <span class="na">name=</span><span class="s">&#34;elevationOverlayColor&#34;</span><span class="nt">&gt;</span>@color/themed_black<span class="nt">&lt;/item&gt;</span></code></pre></div>
+<p>What about custom components? Actually, it is handled by Material Components as well.
+There is a <code>Drawable</code> subclass called <a href="https://github.com/material-components/material-components-android/blob/master/docs/theming/Shape.md"><code>MaterialShapeDrawable</code></a>.
+It is possible to supply it with the elevation to achieve the desired effect.
+Actually this is what Material Components use under the hood.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Surface</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="n">AttributeSet</span><span class="p">)</span> <span class="p">:</span> <span class="n">FrameLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">init</span> <span class="p">{</span>
+        <span class="n">background</span> <span class="p">=</span> <span class="n">MaterialShapeDrawable</span><span class="p">.</span><span class="n">createWithElevationOverlay</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">elevation</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">fun</span> <span class="nf">setElevation</span><span class="p">(</span><span class="n">elevation</span><span class="p">:</span> <span class="n">Float</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">.</span><span class="n">setElevation</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
+
+        <span class="n">MaterialShapeUtils</span><span class="p">.</span><span class="n">setElevation</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">elevation</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<blockquote>
+<p>📖 Take a look at the <code>ShapeAppearanceModel</code> to make cards with rounded corners,
+triangle edges and more via custom <code>EdgeTreatment</code> and <code>CornerTreatment</code> implementations.</p>
+</blockquote>
+
+<p>What about gradients and color transitions on elevated surfaces?
+<code>ElevationOverlayProvider</code> helps with that. This class is used under the hood
+of <code>MaterialShapeDrawable</code>. The following extension is a shortcut.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@ColorInt</span>
+<span class="k">fun</span> <span class="nf">Context</span><span class="p">.</span><span class="n">surfaceColor</span><span class="p">(</span><span class="n">elevation</span><span class="p">:</span> <span class="n">Float</span><span class="p">):</span> <span class="n">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">ElevationOverlayProvider</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="n">compositeOverlayWithThemeSurfaceColorIfNeeded</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
+<p>Talking about surface colors — let’s backtrack a bit.
+Which color should be used for the <code>elevationOverlayColor</code> attribute?
+<code>#ffffff</code> comes to mind. Unfortunately this is not always what
+a design team wants. Most likely there will be a defined
+color <code>S</code> for surfaces and a color <code>ES</code> for elevated surfaces.
+The math behind <code>ElevationOverlayProvider</code> is a bit tricky,
+especially when it comes to ARGB colors with defined alpha channel.</p>
+
+<p>The solution here is the color subtraction. To get a color for <code>elevationOverlayColor</code>
+subtract <code>S</code> from <code>ES</code>. For example, using the surface color
+<code>#000000</code> <span style="color: #000000">■</span>
+and the elevated surface color
+<code>#5b5f65</code> <span style="color: #5b5f65">■</span>
+we’ll get
+<code>#e6f0ff</code> <span style="color: #e6f0ff">■</span>.
+Using the resulting color is usually close enough to the design vision without compromising
+the ability to automatically change surface color depending on the current elevation.
+Oh, please don’t subtract colors manually,
+use <a href="https://www.colorhexa.com">the special calculator</a>.</p>
+
+<blockquote>
+<p>📖 Since I’m horrible at explaining color math — refer to wonderful
+<a href="https://ciechanow.ski/alpha-compositing/">Alpha Compositing</a> and
+<a href="https://ciechanow.ski/color-spaces/">Color Spaces</a> articles for details.</p>
+</blockquote>
+
+<h1 id="html">HTML</h1>
+
+<h2 id="remote-1">Remote</h2>
+
+<p>From Chrome 76 it is possible to use the
+<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme"><code>prefers-color-scheme</code></a>
+CSS media feature. It allows switching website themes using OS-level settings.
+This blog supports it!</p>
+
+<p>Technically it is implemented like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css"><span class="p">:</span><span class="nd">root</span> <span class="p">{</span>
+    <span class="nv">--color-background</span><span class="p">:</span> <span class="mh">#ffffff</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">@</span><span class="k">media</span> <span class="o">(</span><span class="nt">prefers-color-scheme</span><span class="o">:</span> <span class="nt">dark</span><span class="o">)</span> <span class="p">{</span>
+    <span class="p">:</span><span class="nd">root</span> <span class="p">{</span>
+        <span class="nv">--color-background</span><span class="p">:</span> <span class="mh">#000000</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nt">body</span> <span class="p">{</span>
+    <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="kc">color</span><span class="o">-</span><span class="n">background</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+<p>From Android 5.0 the <code>WebView</code>
+<a href="https://developer.chrome.com/multidevice/webview/overview">is regularly updated</a>
+so there is a good chance that it will support this feature.
+<a href="https://developer.chrome.com/multidevice/android/customtabs">Chrome Custom Tabs</a>
+might work a bit better.</p>
+
+<p>Of course, this kind of approach will require implementation from a frontend team
+behind web pages.</p>
+
+<h2 id="local-1">Local</h2>
+
+<p>There is a good chance that some web pages are rendered locally on a device.
+Good examples are the OSS license screen and the HTML-formatted content from a backend.</p>
+
+<p>Of course it is possible to use the approach described above for remote pages
+but until the <code>WebView</code> is updated everywhere to the Chrome 76-backed version
+it is possible to use templates.</p>
+<div class="highlight"><pre class="chroma"><code class="language-mustache" data-lang="mustache">body {
+    background-color: {{color_background}};
+}</code></pre></div>
+<p>This is <a href="https://mustache.github.io">a Mustache-like template</a>.
+<code>{{color_background}}</code> is replaced in runtime with a local color.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CssColor</span><span class="p">(</span><span class="k">val</span> <span class="py">mask</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">@ColorRes</span> <span class="n">res</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Background</span><span class="p">(</span><span class="s">&#34;color_background&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_white</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">val</span> <span class="py">css</span> <span class="p">=</span> <span class="n">CssColor</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">fold</span><span class="p">(</span><span class="n">cssTemplate</span><span class="p">)</span> <span class="p">{</span> <span class="n">css</span><span class="p">,</span> <span class="n">cssColor</span> <span class="p">-&gt;</span>
+    <span class="n">css</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#34;{{${cssColor.mask}}}&#34;</span><span class="p">,</span> <span class="s">&#34;#${context.color(cssColor.res).colorHexRgba()}&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">fun</span> <span class="nf">Int</span><span class="p">.</span><span class="n">colorHexRgba</span><span class="p">()</span> <span class="p">=</span> <span class="n">String</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;%08x&#34;</span><span class="p">,</span> <span class="n">shl</span><span class="p">(</span><span class="m">8</span><span class="p">)</span> <span class="p">+</span> <span class="n">ushr</span><span class="p">(</span><span class="m">24</span><span class="p">))</span></code></pre></div>
+<blockquote>
+<p>💡 Notice the <code>colorHexRgba</code> extension. It is not possible to use Android colors as-is
+since HTML uses the RGBA notation while Android uses the ARGB one.</p>
+</blockquote>
+
+<h1 id="maps">Maps</h1>
+
+<p>Both regular and <a href="https://developers.google.com/maps/documentation/android-sdk/lite">lite</a>
+<a href="https://developers.google.com/android/reference/com/google/android/gms/maps/MapView"><code>MapView</code></a>
+support styling via
+<a href="https://developers.google.com/android/reference/com/google/android/gms/maps/model/MapStyleOptions"><code>MapStyleOptions</code></a>.
+In fact, it is possible to place the light style in <code>raw/map_style.json</code> and
+the dark one in <code>raw-night/map_style.json</code>. This approach gives automatic
+map style switching via referencing <code>R.raw.map_style</code>.</p>
+
+<p>Using <a href="https://developers.google.com/maps/documentation/maps-static/intro">static maps</a>
+is more awkward.
+<a href="https://developers.google.com/maps/documentation/maps-static/styling">The styling is still available</a>
+but since the style is sent via an HTTP request it means that domain-level entities of the application
+will know about the presentation-level characteristic. This is an unpleasant
+coupling. I suggest to migrate to the lite <code>MapView</code> — it covers basically everything
+the static map provides and renders it on a device instead of making network calls.
+Also — it is <a href="https://developers.google.com/maps/billing/gmp-billing#mobile-static">free</a>!</p>
+
+<h1 id="moar">MOAR</h1>
+
+<p>Fullscreen views, color change animations, dealing with transparency and
+a lot of fine-tuning. The dark theme integration becomes a marathon, not a sprint.
+Having something like a design system definitely helps.</p>
+
+<p>Is it worth it? I think so. It sheds a light on hacks and forces
+to make universal decisions. This is a good thing. Ah, yes, it looks nice!</p>
+
+<hr />
+
+<p>The title is a reference to the <a href="https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7">Midnight in a Perfect World</a> track.</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/ming13">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+
