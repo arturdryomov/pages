@@ -5,22 +5,44 @@ date: 2019-08-14
 slug: midnight-in-android-themes
 ---
 
+# Switching
+
+It is important to start with this step to be able to actually take a look at the dark theme.
+
+`AppCompatDelegate.setDefaultNightMode` is our friend here. Use AppCompat 1.1.0+ —
+earlier implementations do not work great with theme switching.
+
+* Android < Q
+  * Show in-application switcher. Save chosen theme on each switch.
+  * Use `AppCompatDelegate.MODE_NIGHT_NO` and `AppCompatDelegate.MODE_NIGHT_YES`.
+  * In `Application.attachBaseContext` read saved theme and switch to it.
+* Android ≥ Q
+  * Do not show in-application switcher. The system switcher is enough.
+  * In `Application.attachBaseContext` switch to `AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM`.
+
+That’s it! From now on it is possible to place resources using `night` modifier
+(`values-night`, `drawable-night`). Unfortunately switching recreates
+`Activity` instances. Most of the time it is fine but it is a known Android limitation and
+strength at the same time.
+
+> :bulb: I’m completely ignoring `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
+> and go against [Google suggestions](https://developer.android.com/preview/features/darktheme#changing_themes_in-app)
+> which recommend showing a gazilion of switches all the time.
+> Both macOS and Windows work as I suggest — there are no ad-hoc switchers.
+> I have no idea why Google reinvents the wheel.
+
 # Colors
 
-This is most likely the most important step.
-In ideal scenario it sounds like an easy task — re-declare colors
-in `values-night/colors.xml` and that’s it.
-Unfortunately it might be more complicated.
-Let’s say the primary color across an application is the one
-associated with a brand. It is undesirable to change it across themes
-but it doesn’t look great all the time. A good example is using
-dark colors — such ones look fine in light themes but are blending
-into background in dark themes. In such situations it might be
-better to use the brand color everywhere except tiny elements —
-like `EditText` underlines and links.
+In ideal scenario it is enough to re-declare colors in `values-night/colors.xml`.
+Unfortunately it is not always so simple. It might be important
+to maintain brand colors but replace them with vibrant variants
+for small elements like underlines and links. Or keep same colors for particular icons.
 
-To resolve this I’ve found out an approach of opting out of color changes between themes.
-
+To resolve this I’ve found an approach of opting out of color changes between themes.
+We’ll declare two sets of colors — themed and themeless. Themed ones should be
+used by default but can be replaced with themeless variants to opt-out from
+theming. Such colors naming gives mnemonics as a bonus — before using a color
+a developer should explicitly choose whether it should be themed or not.
 
 ```xml
 <!-- values/colors.xml -->
@@ -30,26 +52,48 @@ To resolve this I’ve found out an approach of opting out of color changes betw
 
 <color name="themed_black">@color/themeless_black</color>
 <color name="themed_white">@color/themeless_white</color>
+```
 
+```xml
 <!-- values-night/colors.xml -->
 
 <color name="themed_black">@color/themeless_white</color>
 <color name="themed_white">@color/themeless_black</color>
 ```
 
-The idea is simple — use `themed_*` colors by default.
-Such colors are changed across themes and in the majority of situations it is fine.
-In exceptional situations when the color should stay the same — use `themeless_*` one.
-
 # Themes
+
+There is a good chance that system status and navigation bars should have
+different colors between themes. It is not a rocket science — the API
+to do that is on our hands. `*BarColor` and `windowLight*Bar` do the trick.
+Unfortunately these attributes are available from different API versions
+so we’ll use a known trick with `Base.*` themes.
+
+```xml
+<!-- values/bools.xml -->
+
+<bool name="theme_light">true</bool>
+```
+
+```xml
+<!-- values-night/bools.xml -->
+
+<bool name="theme_light">false</bool>
+```
 
 ```xml
 <!-- values/themes.xml -->
 
 <style name="Base.Theme.Local" parent="Theme.AppCompat.Light.NoActionBar"/>
-
 <style name="Theme.Local" parent="Base.Theme.Local"/>
+```
 
+> :bulb: Notice that I’m not using `Theme.AppCompat.DayNight`.
+> `DayNight` switches default `AppCompat` attributes between themes but it might be
+> useless if attributes are already re-declared in the application-level theme.
+> This might be wrong for different codebases.
+
+```xml
 <!-- values-v23/themes.xml -->
 
 <style name="Base.Theme.Local.v23">
@@ -58,7 +102,9 @@ In exceptional situations when the color should stay the same — use `themeless
 </style>
 
 <style name="Theme.Local" parent="Base.Theme.Local.v23"/>
+```
 
+```xml
 <!-- values-v27/themes.xml -->
 
 <style name="Base.Theme.Local.v27" parent="Base.Theme.Local.v23">
@@ -73,7 +119,7 @@ In exceptional situations when the color should stay the same — use `themeless
 
 ## Local
 
-Avoid using bitmap ones like a plague! Well, it makes sense to use bitmaps
+Avoid using bitmaps like a plague! Well, it makes sense to use bitmaps
 for illustrations but icons ideally should be in vector.
 Doing so allows to use colors directly in paths and brings automatic theme management.
 
@@ -86,7 +132,8 @@ Doing so allows to use colors directly in paths and brings automatic theme manag
 
     <path
         android:fillColor="@color/themed_black"
-        android:pathData="drawing-instructions" />
+        android:pathData="drawing-instructions"
+        />
 
 </vector>
 ```
@@ -107,20 +154,19 @@ but most of the time it should work.
 # Lottie Animations
 
 Unfortunately Lottie animations do not use Android color resources.
-Colors are inlined into the JSON file itself. The good thing is —
+Colors are inlined in JSON files. The good thing is —
 it is possible to change colors in runtime using
 [dynamic properties](http://airbnb.io/lottie/#/android?id=dynamic-properties).
-In fact, I would advise to do this all the time, no matter if there is
+In fact, I would advise to do so all the time, no matter if there is
 a dark theme or not. Colors change all the time but animation files
 are not changed with the same frequency.
 
-The implementation is actually a breeze. The awkward part is finding out
+The implementation is actually a breeze. The awkward part is finding
 correct `KeyPath` combinations — it is better to do that with a design team.
 
 ```kotlin
 enum AnimationComponent(val path: KeyPath, @ColorRes val colorRes: Int) {
-   Circle(KeyPath("circle"), R.color.themed_red),
-   Rectangle(KeyPath("rect"), R.color.themed_green),
+   Circle(KeyPath("circle-group-42"), R.color.themed_black),
 }
 
 AnimationComponent.values().forEach { component ->
@@ -148,12 +194,21 @@ Following attributes declared in the theme will activate overlays and it will be
 to see the effect immediately on supported components.
 
 ```xml
-<!-- Translated to black in dark theme. -->
+<!-- values/bools.xml -->
+
+<bool name="theme_dark">false</bool>
+```
+
+```xml
+<!-- values-night/bools.xml -->
+
+<bool name="theme_dark">true</bool>
+```
+
+```xml
 <item name="colorSurface">@color/themed_white</item>
-<!-- The boolean value is custom and placed in values and values-night. -->
 <item name="elevationOverlayEnabled">@bool/theme_dark</item>
-<!-- The color is usually white but might be different. -->
-<item name="elevationOverlayColor">@color/elevation_overlay</item>
+<item name="elevationOverlayColor">@color/themed_black</item>
 ```
 
 What about custom components? Actually, it is handled by Material Components as well.
@@ -212,7 +267,7 @@ use [the special calculator](https://www.colorhexa.com).
 
 > :book: Since I’m horrible at explaining color math — refer to wonderful
 > [Alpha Compositing](https://ciechanow.ski/alpha-compositing/) and
-> [Color Spaces](https://ciechanow.ski/color-spaces/) articles for details about color subtraction.
+> [Color Spaces](https://ciechanow.ski/color-spaces/) articles for details.
 
 # HTML
 
@@ -236,7 +291,7 @@ Technically it is implemented like this:
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --color-background: #1d1f21;
+        --color-background: #000000;
     }
 }
 
@@ -284,9 +339,9 @@ val html = HtmlColor.values().fold(htmlTemplate) { html, htmlColor ->
 fun Int.colorHexRgba() = String.format("%08x", shl(8) + ushr(24))
 ```
 
-Notice the `colorHexRgba` extension. It is not possible to use Android colors as-is
-since HTML uses RGBA notation while Android uses ARGB
-(I hope there was a good reason for this).
+> :bulb: Notice the `colorHexRgba` extension. It is not possible to use Android colors as-is
+> since HTML uses RGBA notation while Android uses ARGB
+> (I hope there was a good reason for this).
 
 # Maps
 
