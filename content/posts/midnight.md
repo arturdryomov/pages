@@ -1,7 +1,7 @@
 ---
 title: "Midnight in Android Themes"
-description: "Dark theme: colors, animations, elevations, HTML, Maps and more."
-date: 2019-08-14
+description: "The dark theme: colors, animations, elevations, HTML, Maps and moar."
+date: 2019-08-15
 slug: midnight-in-android-themes
 ---
 
@@ -10,7 +10,7 @@ Or [night mode](https://developer.android.com/reference/androidx/appcompat/app/A
 No idea. Anyways, it is here and can be helpful with using applications in
 dark environments or with bringing back that sweet Winamp skins vibe.
 
-Implementing dark themes is surprisngly deep and affects the whole application.
+Implementing dark themes is surprisingly deep and affects the whole application.
 At times it feels like a redesign. I’ve tried to collect steps we’ve made to
 introduce the dark theme in the [Juno rider application](https://play.google.com/store/apps/details?id=com.gojuno.rider)
 and make a (kind of) comprehensive guide. Let’s jump in!
@@ -24,7 +24,7 @@ earlier versions do not work well with theme switching (activities don’t resta
 themes are not applied to the navigation bar).
 
 * Android < Q
-  * Show in-application switch. Save theme on each switch.
+  * Show the in-application switch. Save theme on each switch.
   * Use `AppCompatDelegate.MODE_NIGHT_NO` and `AppCompatDelegate.MODE_NIGHT_YES`.
   * In `Application.attachBaseContext` read saved theme and switch to it.
 * Android ≥ Q
@@ -32,22 +32,22 @@ themes are not applied to the navigation bar).
   * In `Application.attachBaseContext` switch to `AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM`.
 
 That’s it! From now on it is possible to use resources with the `night` modifier
-(`values-night`, `drawable-night`). Unfortunately switching recreates
+(`values-night`, `drawable-night`, etc). Unfortunately switching recreates
 activities, like a regular configuration change.
 
 > :warning: I ignore `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
 > and go against [Google suggestions](https://developer.android.com/preview/features/darktheme#changing_themes_in-app)
-> of showing a gazilion of switches.
-> Both macOS and Windows work as I suggest — there are no ad-hoc switches.
+> of showing a gazillion of switches.
+> At least macOS and Windows work without ad-hoc switches.
 
 # Colors
 
-In ideal scenario it is enough to re-declare colors in `values-night/colors.xml`.
+In the ideal scenario it is enough to re-declare colors in `values-night/colors.xml`.
 Unfortunately it is not always so simple. It might be important
 to maintain brand colors but replace them with vibrant variants
-for small elements like underlines and links. Or keep same colors for particular icons.
+for small elements like underlines and links. Or keep colors across themes for particular icons.
 
-To resolve this I’ve found an approach of opting out of color changes between themes.
+To resolve this I’ve found an approach of opting out from color changes between themes.
 We’ll declare two sets of colors — themed and themeless. Themed ones should be
 used by default but can be replaced with themeless variants to opt-out from
 theming. The colors naming gives mnemonics as a bonus — before using a color
@@ -97,9 +97,8 @@ so we’ll use a known trick with `Base.*` themes.
 ```
 
 > :bulb: Notice that I’m not using `Theme.AppCompat.DayNight`.
-> `DayNight` switches default `AppCompat` attributes between themes but it might be
+> `DayNight` switches `Theme.AppCompat` attributes between themes but it might be
 > useless if attributes are already re-declared in the application-level theme.
-> This might be wrong for different codebases.
 
 ```xml
 <!-- values-v23/themes.xml -->
@@ -149,11 +148,11 @@ Doing so allows to use colors directly in paths and brings automatic theme manag
 ## Remote
 
 Icons fetched from a backend are most likely bitmaps.
-It is possible to tint them locally but I would suggest avoid doing so.
+It is possible to tint them locally but I would suggest avoiding doing so.
 Usually resources are placed on remote servers to achieve flexibility.
 One day remote icons are monochrome with transparent areas,
 the next day they are colorful and photo-realistic.
-Tinting will turn latter ones into colored silhouettes.
+Tinting will turn the latter ones into colored silhouettes.
 
 A better solution is finding a middle-ground — remote icons should fit
 both light and dark themes.
@@ -185,7 +184,7 @@ AnimationComponent.values().forEach { component ->
 
 # Elevation
 
-Elevations looks good in light themes but are essentially invisible in dark ones.
+Elevations look good in light themes but are essentially invisible in dark ones.
 The workaround is described in [the Material Design spec](https://material.io/design/color/dark-theme.html#properties).
 In short — it is proposed to use overlays in addition to shadows
 for dark themes. The overlay changes its transparency depending on the current elevation.
@@ -256,7 +255,7 @@ fun Context.surfaceColor(elevation: Float): Int {
 Talking about surface colors — let’s backtrack a bit.
 Which color should be used for the `elevationOverlayColor` attribute?
 `#ffffff` comes to mind. Unfortunately this is not always what
-a design team wants to see. Most likely there will be a defined
+a design team wants. Most likely there will be a defined
 color `S` for surfaces and a color `ES` for elevated surfaces.
 The math behind `ElevationOverlayProvider` is a bit tricky,
 especially when it comes to ARGB colors with defined alpha channel.
@@ -281,9 +280,9 @@ use [the special calculator](https://www.colorhexa.com).
 
 ## Remote
 
-Since Chrome 76 it is possible to use the
+From Chrome 76 it is possible to use the
 [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)
-CSS media feature. It allows to switch website themes using OS-level settings.
+CSS media feature. It allows switching website themes using OS-level settings.
 This blog supports it!
 
 Technically it is implemented like this:
@@ -320,7 +319,7 @@ Good examples are the OSS license screen and the HTML-formatted content from a b
 
 Of course it is possible to use the approach described above for remote pages
 but until the `WebView` is updated everywhere to the Chrome 76-backed version
-it is possible to use templating.
+it is possible to use templates.
 
 ```mustache
 body {
@@ -359,31 +358,22 @@ map style switching via referencing `R.raw.map_style`.
 Using [static maps](https://developers.google.com/maps/documentation/maps-static/intro)
 is more awkward.
 [The styling is still available](https://developers.google.com/maps/documentation/maps-static/styling)
-but since the style is sent via a HTTP request it means that domain-level entities of the application
+but since the style is sent via an HTTP request it means that domain-level entities of the application
 will know about the presentation-level characteristic. This is an unpleasant
 coupling. I suggest to migrate to the lite `MapView` — it covers basically everything
 the static map provides and renders it on a device instead of making network calls.
-Also — it is free!
+Also — it is [free](https://developers.google.com/maps/billing/gmp-billing#mobile-static)!
 
 # MOAR
 
 Fullscreen views, color change animations, dealing with transparency and
 a lot of fine-tuning. The dark theme integration becomes a marathon, not a sprint.
-Having something like a design system definetely helps.
+Having something like a design system definitely helps.
 
 Is it worth it? I think so. It sheds a light on hacks and forces
-to make universal decisions. This is a good thing. Ah, yes, it looks good!
+to make universal decisions. This is a good thing. Ah, yes, it looks nice!
 
 ---
 
 The title is a reference to the [Midnight in a Perfect World](https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7) track.
-
-
-
-
-
-
-
-
-
 
