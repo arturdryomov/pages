@@ -373,6 +373,9 @@ Having something like a design system definitely helps.
 Is it worth it? I think so. It sheds a light on hacks and forces
 to make universal decisions. This is a good thing. Ah, yes, it looks nice!
 
+> :book: The design team have published [their own view on the process](https://medium.com/design-juno/implementing-dark-mode-e57cccab19f9).
+> Feel free to take a look!
+
 ---
 
 The title is a reference to the [Midnight in a Perfect World](https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7) track.
