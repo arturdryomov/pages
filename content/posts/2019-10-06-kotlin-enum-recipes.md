@@ -74,6 +74,130 @@ This way the VCS change becomes minimal:
 
 # Usage
 
+## Namespacing
+
+The barbarian approach to create namespacing is (of course) prefixes.
+
+```kotlin
+companion object {
+    const val SHARED_PREFERENCE_KEY_TOKEN = "token"
+    const val SHARED_PREFERENCE_KEY_SESSIONS_COUNT = "sessions-count"
+}
+```
+
+The next level is named `companion object` declarations.
+
+```kotlin
+companion object SharedPreferenceKeys {
+    const val TOKEN = "token"
+    const val SESSIONS_COUNT = "sessions-count"
+}
+```
+
+There is catch though — a class can have a single `companion object`,
+no matter named or not.
+
+It is possible to use `enum` to create an infinite number of namespaces.
+
+```kotlin
+enum class SharedPreferenceKey(val value: String) {
+    Token("token"),
+    SessionsCount("sessions-count"),
+}
+```
+
+An additional bonus — type-safety!
+
+```kotlin
+// Possible to pass non-existent keys.
+fun sharedPreferenceValue(key: String): String
+
+// Impossible to pass garbage since the type provides the scoping.
+fun sharedPreferenceValue(key: SharedPreferenceKey): String
+```
+
+## Abstraction
+
+### HTTP API
+
+Let’s imagine that our backend returns a limited set of codes in error responses.
+
+```kotlin
+data class ErrorResponse(@SerializedName("code") val code: String)
+```
+
+This is a fine declaration but the usage becomes repetitive and error-prone to typos.
+
+```kotlin
+if (error.code == "not_found") {
+    throw RuntimeException()
+}
+
+// ... 1_000_000 LOC ...
+
+// Oops!
+if (error.code == "not__found") {
+    throw RuntimeException()
+}
+```
+
+Enumerations are perfect for this.
+
+```kotlin
+enum class ErrorCode(val value: String) {
+    @SerializedName("not_found") NotFound,
+    @SerializedName("unauthorized") Unauthorized,
+}
+
+data class ErrorResponse(@SerializedName("code") val code: ErrorCode?)
+```
+
+> :warning: Gson will write unknown `enum` values as `null`,
+> no matter the Kotlin nullability since the Java reflection doesn’t know about it.
+> Make such values nullable and handle them as deserialization errors or use
+> Moshi which will handle it automatically.
+
+### Platform-Specific Values
+
+It is useful to hide platform values inside `enum` cases to provide
+both abstraction from a platform and DSL-like storage of possibilities.
+
+For example, here is an enumeration of supported vibration patterns:
+
+```kotlin
+enum class VibrationPattern(private vararg timings: Long) {
+    Ping(0, 100),
+    Pong(50, 150),
+    ;
+
+    fun asAndroidEffect() = android.os.VibrationEffect.createWaveform(timings)
+}
+```
+
+Map markers:
+
+```kotlin
+enum class Marker(@DrawableRes val icon: Int, val elevation: Int) {
+    Airport(R.drawable.ic_map_airport, 4),
+    Underground(R.drawable.ic_map_underground, 0),
+}
+
+data class ViewState(val marker: Marker, val location: LatLng)
+```
+
+List sections:
+
+```kotlin
+enum class Section(@StringRes val title: Int, val from: Int, val to: Int) {
+    Dozen(R.string.Section_Dozen, 0, 10),
+    Dozens(R.string.Section_Dozens, 11, Int.MAX_VALUE),
+}
+
+data class ViewState(val values: Map<Section, List<Item>>)
+```
+
+The idea remains the same — keep the declarative description of enumeration sets.
+
 ## Anti-Abusing `sealed class`
 
 I see the following sealed classes usage from time to time and it kind of hurts.
