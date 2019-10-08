@@ -5,12 +5,24 @@ date: 2019-10-06
 slug: kotlin-enum-recipes
 ---
 
+Enumerations, in a form of `enum class` declarations, got a bad rep on Android.
+In fact, the official documentation straight out
+[recommends to avoid them](https://developer.android.com/topic/performance/reduce-apk-size#remove-enums).
+How rude is that?
+At the same time, [Effective Java](https://www.amazon.com//dp/0134685997)
+has a full chapter about `enum`.
+The situation reminds me of [the trolley problem](https://en.wikipedia.org/wiki/Trolley_problem).
+Kind of.
+
+In this article, I’ll distance myself from Android specifics and show
+useful `enum`-related snippets.
+
 # Declaration
 
 ## Naming
 
 Use `CamelCase`, don’t be ashamed. I doubt that anyone names
-sealed classes using the `UPPERCASE` notation.
+`sealed class` using the `UPPERCASE` notation.
 
 ```kotlin
 sealed class Level {
@@ -19,8 +31,8 @@ sealed class Level {
 }
 ```
 
-Enumerations are not so different. Don’t scream at developers!
-We don’t have [BASIC](https://en.wikipedia.org/wiki/BASIC) constraints.
+Enumerations are not so different. Don’t scream in code!
+We don’t have [BASIC](https://en.wikipedia.org/wiki/BASIC) syntax constraints.
 
 ```kotlin
 enum class Fruit {
@@ -28,9 +40,9 @@ enum class Fruit {
 }
 ```
 
-## Multiline Commas
+## Commas
 
-There is a useful trick for minimizing VCS changes while adding an `enum` case.
+Let’s say we have a `Screen` enumeration.
 
 ```kotlin
 enum class Screen(val analyticsName: String) {
@@ -38,7 +50,7 @@ enum class Screen(val analyticsName: String) {
 }
 ```
 
-Let’s imagine we need to add an another case to the `Screen` `enum` — `SignUp`.
+At some point we need to add another case to the `Screen` — `SignUp`.
 
 ```kotlin
 enum class Screen(val analyticsName: String) {
@@ -47,7 +59,7 @@ enum class Screen(val analyticsName: String) {
 }
 ```
 
-Looks fine, but the VCS change will look like this:
+Looks fine, but the change from a VCS perspective will be like this:
 
 ```diff
 - SignIn("Sign In")
@@ -55,18 +67,18 @@ Looks fine, but the VCS change will look like this:
 + SignUp("Sign Up")
 ```
 
-This approach makes it difficult to determine when the `SignIn` case was introduced
-since the last `SignIn` change is now tied to the `SignUp` one which doesn’t make sense.
-
-We can solve this via putting commas after each enumeration case.
+This approach makes it difficult to see through `SignIn` changes.
+The last `SignIn` change is now tied to the `SignUp` one which doesn’t make sense.
+We can solve this by putting commas after each enumeration case.
 
 ```kotlin
 enum class Screen(val analyticsName: String) {
     SignIn("Sign In"),
+    SignUp("Sign Up"),
 }
 ```
 
-This way the VCS change becomes minimal:
+This way the VCS change becomes minimal.
 
 ```diff
 + SignUp("Sign Up"),
@@ -74,9 +86,9 @@ This way the VCS change becomes minimal:
 
 # Usage
 
-## Namespacing
+## Constants Namespacing
 
-The barbarian approach to create namespacing is (of course) prefixes.
+The barbarian approach to create namespaces is using prefixes.
 
 ```kotlin
 companion object {
@@ -85,7 +97,7 @@ companion object {
 }
 ```
 
-The next level is named `companion object` declarations.
+The next step — named `companion object`.
 
 ```kotlin
 companion object SharedPreferenceKeys {
@@ -94,10 +106,8 @@ companion object SharedPreferenceKeys {
 }
 ```
 
-There is catch though — a class can have a single `companion object`,
-no matter named or not.
-
-It is possible to use `enum` to create an infinite number of namespaces.
+There is catch though — a class can have a single `companion object`, named or not.
+`enum` doesn’t have such limitations.
 
 ```kotlin
 enum class SharedPreferenceKey(val value: String) {
@@ -106,24 +116,9 @@ enum class SharedPreferenceKey(val value: String) {
 }
 ```
 
-An additional bonus — type-safety!
-
-```kotlin
-// Possible to pass non-existent keys.
-fun sharedPreferenceValue(key: String): String
-
-// Impossible to pass garbage since the type provides the scoping.
-fun sharedPreferenceValue(key: SharedPreferenceKey): String
-```
-
 ## Abstraction
 
-The idea is simple. When we have an enumeration set that we need to translate
-in source code — it might be useful to have an `enum`. First, it brings
-the declarative description of available enumeration cases. Second, it provides
-type-safety over alternative methods (like constants).
-
-### HTTP API
+### API
 
 Let’s imagine that a backend returns codes in error responses.
 
@@ -157,14 +152,14 @@ enum class ErrorCode(val value: String) {
 data class ErrorResponse(@SerializedName("code") val code: ErrorCode?)
 ```
 
-> :warning: Gson will write unknown `enum` values as `null`,
-> no matter the Kotlin nullability since the Java reflection doesn’t know about it.
+> :warning: Gson will write unknown `enum` values as `null` —
+> ignoring the Kotlin nullability — since the Java reflection doesn’t know about Kotlin.
 > Make such values nullable and handle them as deserialization errors or use
-> Moshi which will handle it automatically.
+> Moshi which will do it automatically.
 
 ### Android Resources
 
-It is possible to define `enum` in XML which is helpful for custom `View` implementations.
+It is possible to define `enum` in XML which is helpful with custom `View` implementations.
 
 ```xml
 <declare-styleable name="NavigationBar">
@@ -182,8 +177,8 @@ It is possible to define `enum` in XML which is helpful for custom `View` implem
     application:navigationIcon="close"/>
 ```
 
-Instead of matching to constants in `NavigationBar.kt` it is better
-to declare `enum` as an XML mirror.
+Instead of `Int`-matching in `NavigationBar.kt` it is better
+to declare an `enum` as a direct XML mirror.
 
 ```kotlin
 enum class NavigationIcon(val attrValue: Int) {
@@ -200,29 +195,14 @@ val icon = attrs.getInt(R.styleable.NavigationBar_navigationIcon, defaultIcon.at
 }
 ```
 
-### Platform-Specific Values
-
-It is useful to hide platform values inside `enum` cases to provide
-both abstraction from a platform and DSL-like storage of possibilities.
-
-For example, here is an enumeration of supported vibration patterns:
-
-```kotlin
-enum class VibrationPattern(private vararg timings: Long) {
-    Ping(0, 100),
-    Pong(50, 150),
-    ;
-
-    fun asAndroidEffect() = android.os.VibrationEffect.createWaveform(timings)
-}
-```
+### Even More
 
 Map markers:
 
 ```kotlin
 enum class Marker(@DrawableRes val icon: Int, val elevation: Int) {
-    Airport(R.drawable.ic_map_airport, 4),
-    Underground(R.drawable.ic_map_underground, 0),
+    Airport(R.drawable.ic_map_airport, elevation = 4),
+    Underground(R.drawable.ic_map_underground, elevation = 0),
 }
 
 data class ViewState(val marker: Marker, val location: LatLng)
@@ -232,18 +212,109 @@ List sections:
 
 ```kotlin
 enum class Section(@StringRes val title: Int, val from: Int, val to: Int) {
-    Dozen(R.string.Section_Dozen, 0, 10),
-    Dozens(R.string.Section_Dozens, 11, Int.MAX_VALUE),
+    Dozen(R.string.Section_Dozen, from = 0, to = 10),
+    Dozens(R.string.Section_Dozens, from = 11, to = Int.MAX_VALUE),
 }
 
-data class ViewState(val values: Map<Section, List<Item>>)
+listOf(1, 2, 3, 42).groupBy { number ->
+    Section.values().find { it.from <= number && number <= it.to }
+}
 ```
 
-The idea remains the same — keep the declarative description of enumeration sets.
+The idea remains the same — use the declarative `enum` nature when it fits.
+
+## Iterating
+
+### Templates
+
+Let’s say we need to render an HTML page. Since we want to keep application colors
+and HTML colors in sync, we need to translate resources to RGBA hex values.
+
+This is where the `enum` `values()` method becomes helpful. We can declare
+color associations, go over all of them and get processed CSS.
+
+```kotlin
+enum class CssTemplateColor(val mask: String, @ColorRes val res: Int) {
+    Background("color_background", R.color.white),
+    Text("color_text", R.color.black),
+}
+```
+```kotlin
+val cssTemplate =
+    """
+    body {
+        background-color: {{color_background}};
+        color: {{color_text}};
+    }
+    """
+
+val css = CssTemplateColor.values().fold(cssTemplate) { css, color ->
+    css.replace("{{${color.mask}}}", "#${color.res.hexRgba()}")
+}
+```
+
+### Tests
+
+This is not as useful for JUnit-based approaches but enumerations shine with
+anything specification-related.
+
+```kotlin
+ErrorCode.values().forEach { errorCode ->
+
+    it("creates error response from error code [${errorCode.name}]") {
+        assertThat(api.response(errorCode)).isEqualTo(ErrorResponse(errorCode))
+    }
+}
+```
+
+This is a rough equivalent of this JUnit test:
+
+```kotlin
+@Test fun `it creates error response`() {
+    ErrorCode.values().forEach { errorCode ->
+        assertThat(api.response(errorCode)).isEqualTo(ErrorResponse(errorCode))
+    }
+}
+```
+
+However, instead of a single test with a number of assertions the specification above
+will produce a number of tests with a single assertion in each one.
+
+```
+.
+├── it creates error response from error code [BadRequest]
+├── it creates error response from error code [NotFound]
+└── it creates error response from error code [Unauthorized]
+```
+
+## [`EnumSet`](https://developer.android.com/reference/java/util/EnumSet)
+
+Use it when there is a need to define a subset of enumeration values.
+It is much more efficient than regular `Set` implementations
+since values are stored as bit vectors internally.
+
+```kotlin
+val onboardingScreens = EnumSet.of(Screen.SignIn, Screen.SignUp)
+```
+
+This is a `java.util` class and unfortunately there nothing
+like this in Kotlin for cases when the endgame is multiplatform.
+Most likely it is possible to solve this using platform-specific declarations.
+
+```kotlin
+expect fun <T> enumSetOf(vararg elements: T): Set<T>
+```
+```kotlin
+// JVM
+actual fun <T> enumSetOf(vararg elements: T): Set<T> = EnumSet.of(elements)
+
+// Not JVM
+actual fun <T> enumSetOf(vararg elements: T): Set<T> = setOf(elements)
+```
 
 ## Anti-Abusing `sealed class`
 
-I see the following sealed classes usage from time to time and it kind of hurts.
+I see the following `sealed class` usage from time to time and it kind of hurts.
 
 ```kotlin
 sealed class Color {
@@ -286,83 +357,83 @@ public abstract class Color {
 }
 ```
 
-## Batch Operations
+# Refactoring IRL
 
-Let’s say we need to render an HTML page. Since we want to keep native colors
-and HTML colors in sync — we need to translate native ones to HTML.
+I was lucky to see
+[a convenient piece of the Mozilla Fenix code](https://github.com/mozilla-mobile/fenix/blob/e6d29df5de88684be18778c155ba694f794423ca/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt#L61-L117)
+which I’m gonna refactor step-by-step.
 
-This is where the `values()` `enum` method becomes helpful. We can declare
-color associations, go over all of them and get processed CSS.
+## `sealed class` → `enum class`
+
+There is no need to have a `sealed class` with `object` cases. Replacing it with `enum`.
 
 ```kotlin
-enum class CssTemplateColor(val mask: String, @ColorRes val res: Int) {
-    Background("color_background", R.color.white),
-    Text("color_text", R.color.black),
+sealed class RiskLevel {
+    object Low : RiskLevel()
+    object Medium : RiskLevel()
+    object High : RiskLevel()
 }
 ```
+
+:arrow_down:
+
 ```kotlin
-val cssTemplate =
-    """
-    body {
-        background-color: {{color_background}};
-        color: {{color_text}};
+enum class RiskLevel { Low, Medium, High }
+```
+
+## Methods → Fields
+
+We can inline method result values into `enum` since both are matching operations and nothing else.
+
+```kotlin
+private fun getPageForRiskLevel(riskLevel: RiskLevel): Int {
+    return when (riskLevel) {
+        RiskLevel.Low -> R.raw.low_risk_error_pages
+        RiskLevel.Medium -> R.raw.medium_and_high_risk_error_pages
+        RiskLevel.High -> R.raw.medium_and_high_risk_error_pages
     }
-    """
+}
 
-val css = CssTemplateColor.values().fold(cssTemplate) { css, color ->
-    css.replace("{{${color.mask}}}", "#${color.res.hexRgba()}")
+private fun getStyleForRiskLevel(riskLevel: RiskLevel): Int {
+    return when (riskLevel) {
+        RiskLevel.Low -> R.raw.low_and_medium_risk_error_style
+        RiskLevel.Medium -> R.raw.low_and_medium_risk_error_style
+        RiskLevel.High -> R.raw.high_risk_error_style
+    }
 }
 ```
 
-Another example — LeakCanary and its [`AndroidReferenceMatchers`](https://github.com/square/leakcanary/blob/bd9d9836813d06df41335ed8916ce756628a3130/shark-android/src/main/java/shark/AndroidReferenceMatchers.kt).
-Since it is declared as `enum` with a common method declaration —
-it is possible to [go over all cases and call the method](https://github.com/square/leakcanary/blob/bd9d9836813d06df41335ed8916ce756628a3130/shark-android/src/main/java/shark/AndroidReferenceMatchers.kt#L1217-L1233). Think about it as iterating over all `interface` implementations
-without reflection calls.
-
-## [`EnumSet`](https://developer.android.com/reference/java/util/EnumSet)
-
-Use it when there is a need to define a subset of enumeration values.
-It is much more efficient than regular `Set` implementations
-since values are stored as bit vectors internally.
+:arrow_down:
 
 ```kotlin
-val onboardingScreens = EnumSet.of(Screen.SignIn, Screen.SignUp)
-```
-
-This is a `java.util` class and unfortunately there nothing
-like this in Kotlin for cases when the endgame is multiplatform.
-Most likely it is possible to solve this using platform-specific declarations.
-
-```kotlin
-expect fun <T> enumSetOf(vararg elements: T): Set<T>
-```
-```kotlin
-// JVM
-actual fun <T> enumSetOf(vararg elements: T): Set<T> = EnumSet.of(elements)
-
-// Not JVM
-actual fun <T> enumSetOf(vararg elements: T): Set<T> = setOf(elements)
-```
-
-# Case Study Refactoring
-
-We are gonna take a piece of the Mozilla Fenix code and refactor it.
-
-```kotlin
-enum class RiskLevel(@RawRes val pageRes: Int, @RawRes val styleRes: Int) {
+enum class RiskLevel(@RawRes val html: Int, @RawRes val css: Int) {
     Low(R.raw.low_risk_error_pages, R.raw.low_and_medium_risk_error_style),
     Medium(R.raw.medium_and_high_risk_error_pages, R.raw.low_and_medium_risk_error_style),
     High(R.raw.medium_and_high_risk_error_pages, R.raw.high_risk_error_style),
 }
-
-val ErrorType.riskLevel: RiskLevel = when (this) {
-    ErrorType.UNKNOWN,
-    ErrorType.ERROR_UNKNOWN_PROTOCOL,
-    ErrorType.ERROR_UNKNOWN_PROXY_HOST -> RiskLevel.Low
-
-    ErrorType.ERROR_SECURITY_BAD_CERT,
-    ErrorType.ERROR_SECURITY_SSL -> RiskLevel.Medium
-
-    ErrorType.ERROR_SAFEBROWSING_MALWARE_URI -> RiskLevel.High
-}
 ```
+
+## Usage
+
+Since we don’t have methods anymore we can reference `enum` fields directly.
+
+```kotlin
+val htmlResource = getPageForRiskLevel(riskLevel)
+val cssResource = getStyleForRiskLevel(riskLevel)
+
+ErrorPages.createErrorPage(htmlResource, cssResource)
+```
+
+:arrow_down:
+
+```kotlin
+ErrorPages.createErrorPage(riskLevel.html, cssResource.css)
+```
+
+## Voilà!
+
+Seems like we managed to eliminate about 20 LOC without loss.
+In fact, the code became more declarative!
+
+I think this example shows that there are good enumeration use cases.
+Don’t be afraid to use them. Not everything needs a `sealed class`.
