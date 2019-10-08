@@ -1,7 +1,7 @@
 ---
 title: "Kotlin Enum Recipes"
 description: "Is this... a sealed class?"
-date: 2019-10-06
+date: 2019-10-08
 slug: kotlin-enum-recipes
 ---
 
