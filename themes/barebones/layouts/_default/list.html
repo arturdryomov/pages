@@ -7,7 +7,7 @@
 {{ .Content }}
 
 <ul>
-  {{ range (where .Data.Pages "Section" "!=" "") }}
+  {{ range .Site.RegularPages  }}
   <li>
     <a href="{{ .RelPermalink}}">{{ .Title | markdownify }}</a><span>, {{ .Date.Format "January 2, 2006" }}</span>
   </li>

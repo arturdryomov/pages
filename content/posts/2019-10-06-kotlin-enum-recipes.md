@@ -118,9 +118,14 @@ fun sharedPreferenceValue(key: SharedPreferenceKey): String
 
 ## Abstraction
 
+The idea is simple. When we have an enumeration set that we need to translate
+in source code — it might be useful to have an `enum`. First, it brings
+the declarative description of available enumeration cases. Second, it provides
+type-safety over alternative methods (like constants).
+
 ### HTTP API
 
-Let’s imagine that our backend returns a limited set of codes in error responses.
+Let’s imagine that a backend returns codes in error responses.
 
 ```kotlin
 data class ErrorResponse(@SerializedName("code") val code: String)
@@ -156,6 +161,44 @@ data class ErrorResponse(@SerializedName("code") val code: ErrorCode?)
 > no matter the Kotlin nullability since the Java reflection doesn’t know about it.
 > Make such values nullable and handle them as deserialization errors or use
 > Moshi which will handle it automatically.
+
+### Android Resources
+
+It is possible to define `enum` in XML which is helpful for custom `View` implementations.
+
+```xml
+<declare-styleable name="NavigationBar">
+    <attr name="navigationIcon">
+        <enum name="back" value="0"/>
+        <enum name="close" value="1"/>
+        <enum name="menu" value="2"/>
+    </attr>
+</declare-styleable>
+```
+```xml
+<NavigationBar
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    application:navigationIcon="close"/>
+```
+
+Instead of matching to constants in `NavigationBar.kt` it is better
+to declare `enum` as an XML mirror.
+
+```kotlin
+enum class NavigationIcon(val attrValue: Int) {
+    Back(0),
+    Close(1),
+    Menu(2),
+}
+```
+```kotlin
+val defaultIcon = NavigationIcon.Back
+
+val icon = attrs.getInt(R.styleable.NavigationBar_navigationIcon, defaultIcon.attrValue).let { attrValue ->
+    NavigationIcon.values().find { it.attrValue == attrValue } ?: defaultIcon
+}
+```
 
 ### Platform-Specific Values
 
@@ -243,6 +286,39 @@ public abstract class Color {
 }
 ```
 
+## Batch Operations
+
+Let’s say we need to render an HTML page. Since we want to keep native colors
+and HTML colors in sync — we need to translate native ones to HTML.
+
+This is where the `values()` `enum` method becomes helpful. We can declare
+color associations, go over all of them and get processed CSS.
+
+```kotlin
+enum class CssTemplateColor(val mask: String, @ColorRes val res: Int) {
+    Background("color_background", R.color.white),
+    Text("color_text", R.color.black),
+}
+```
+```kotlin
+val cssTemplate =
+    """
+    body {
+        background-color: {{color_background}};
+        color: {{color_text}};
+    }
+    """
+
+val css = CssTemplateColor.values().fold(cssTemplate) { css, color ->
+    css.replace("{{${color.mask}}}", "#${color.res.hexRgba()}")
+}
+```
+
+Another example — LeakCanary and its [`AndroidReferenceMatchers`](https://github.com/square/leakcanary/blob/bd9d9836813d06df41335ed8916ce756628a3130/shark-android/src/main/java/shark/AndroidReferenceMatchers.kt).
+Since it is declared as `enum` with a common method declaration —
+it is possible to [go over all cases and call the method](https://github.com/square/leakcanary/blob/bd9d9836813d06df41335ed8916ce756628a3130/shark-android/src/main/java/shark/AndroidReferenceMatchers.kt#L1217-L1233). Think about it as iterating over all `interface` implementations
+without reflection calls.
+
 ## [`EnumSet`](https://developer.android.com/reference/java/util/EnumSet)
 
 Use it when there is a need to define a subset of enumeration values.
@@ -266,4 +342,27 @@ actual fun <T> enumSetOf(vararg elements: T): Set<T> = EnumSet.of(elements)
 
 // Not JVM
 actual fun <T> enumSetOf(vararg elements: T): Set<T> = setOf(elements)
+```
+
+# Case Study Refactoring
+
+We are gonna take a piece of the Mozilla Fenix code and refactor it.
+
+```kotlin
+enum class RiskLevel(@RawRes val pageRes: Int, @RawRes val styleRes: Int) {
+    Low(R.raw.low_risk_error_pages, R.raw.low_and_medium_risk_error_style),
+    Medium(R.raw.medium_and_high_risk_error_pages, R.raw.low_and_medium_risk_error_style),
+    High(R.raw.medium_and_high_risk_error_pages, R.raw.high_risk_error_style),
+}
+
+val ErrorType.riskLevel: RiskLevel = when (this) {
+    ErrorType.UNKNOWN,
+    ErrorType.ERROR_UNKNOWN_PROTOCOL,
+    ErrorType.ERROR_UNKNOWN_PROXY_HOST -> RiskLevel.Low
+
+    ErrorType.ERROR_SECURITY_BAD_CERT,
+    ErrorType.ERROR_SECURITY_SSL -> RiskLevel.Medium
+
+    ErrorType.ERROR_SAFEBROWSING_MALWARE_URI -> RiskLevel.High
+}
 ```
