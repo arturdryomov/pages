@@ -117,8 +117,8 @@ The good news is — Mockito has [a verification mode](https://static.javadoc.i
 which checks exactly what we need.
 
 ```diff
--   verify(onPlus).accept(2)
-+   verify(onPlus, only()).accept(2)
+- verify(onPlus).accept(2)
++ verify(onPlus, only()).accept(2)
 ```
 ```
 TEST FAILED
@@ -210,8 +210,8 @@ Thankfully there are more suitable checks.
   will check for the value and for completion event. Useful for testing `Single`.
 
 ```diff
--   valueObserver.assertValue(2)
-+   valueObserver.assertValuesOnly(2)
+- valueObserver.assertValue(2)
++ valueObserver.assertValuesOnly(2)
 ```
 ```
 TEST FAILED

@@ -59,8 +59,8 @@ I create a Git branch, commit changes and open a pull request. But! When the PR
 was being prepared someone had merged the following change.
 
 ```diff
--   <color name="white">#fffafa</white>
-+   <color name="snow_white">#fffafa</white>
+- <color name="white">#fffafa</white>
++ <color name="snow_white">#fffafa</white>
 ```
 
 It actually makes sense — `#fffafa` isn’t a white per se,

@@ -147,16 +147,16 @@ That’s what I like about Rust — the straightforward declaration of principl
 * There is a `Result` type with a number of helper functions on top
   with [plans](https://www.ncameron.org/blog/rust-in-2022/) to make it less verbose.
 
-```rust
-panic!("at the Disco")
-```
+    ```rust
+    panic!("at the Disco")
+    ```
 
-```rust
-enum Result<Value, Error> {
-    Ok(Value),
-    Err(Error),
-}
-```
+    ```rust
+    enum Result<Value, Error> {
+        Ok(Value),
+        Err(Error),
+    }
+    ```
 
 # Kotlin
 

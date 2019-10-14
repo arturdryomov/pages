@@ -73,22 +73,22 @@ However, often there is an in-house handling for common tasks.
   to manually-retryable actions.
 * Authentication, validation, processing, [SSE](https://en.wikipedia.org/wiki/Server-sent_events), etc.
 
-```kotlin
-sealed class BookResponse {
-    data class Success(val books: List<Book>) : BookResponse()
-    object Failure : BookResponse()
-}
+    ```kotlin
+    sealed class BookResponse {
+        data class Success(val books: List<Book>) : BookResponse()
+        object Failure : BookResponse()
+    }
 
-interface BooksNetworkSource {
-    fun getBooks(pageSize: Int): Observable<BooksResponse>
-    fun getBookReviews(): Flowable<BookReview>
+    interface BooksNetworkSource {
+        fun getBooks(pageSize: Int): Observable<BooksResponse>
+        fun getBookReviews(): Flowable<BookReview>
 
-    class Impl(
-        private val api: BooksApi,
-        private val ioScheduler: Scheduler
-    ) { /* ... */ }
-}
-```
+        class Impl(
+            private val api: BooksApi,
+            private val ioScheduler: Scheduler
+        ) { /* ... */ }
+    }
+    ```
 
 * `getBooks` method returns an `Observable` and not a `Single` since the request
   is automatically resubmitted on an available network if it wasn’t available

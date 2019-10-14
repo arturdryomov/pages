@@ -63,7 +63,7 @@ Looks fine, but the change from a VCS perspective will be like this:
 
 ```diff
 - SignIn("Sign In")
-+ SignIn("Sign Up"),
++ SignIn("Sign In"),
 + SignUp("Sign Up")
 ```
 
@@ -427,7 +427,7 @@ ErrorPages.createErrorPage(htmlResource, cssResource)
 :arrow_down:
 
 ```kotlin
-ErrorPages.createErrorPage(riskLevel.html, cssResource.css)
+ErrorPages.createErrorPage(riskLevel.html, riskLevel.css)
 ```
 
 ## Voilà!
