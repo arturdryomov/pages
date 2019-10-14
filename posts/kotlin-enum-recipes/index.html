@@ -112,7 +112,7 @@ We don’t have <a href="https://en.wikipedia.org/wiki/BASIC">BASIC</a> syntax c
 <span class="p">}</span></code></pre></div>
 <p>Looks fine, but the change from a VCS perspective will be like this:</p>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- SignIn(&#34;Sign In&#34;)
-</span><span class="gd"></span><span class="gi">+ SignIn(&#34;Sign Up&#34;),
+</span><span class="gd"></span><span class="gi">+ SignIn(&#34;Sign In&#34;),
 </span><span class="gi">+ SignUp(&#34;Sign Up&#34;)
 </span></code></pre></div>
 <p>This approach makes it difficult to see through <code>SignIn</code> changes.
@@ -363,7 +363,7 @@ which I’m gonna refactor step-by-step.</p>
 
 <span class="n">ErrorPages</span><span class="p">.</span><span class="n">createErrorPage</span><span class="p">(</span><span class="n">htmlResource</span><span class="p">,</span> <span class="n">cssResource</span><span class="p">)</span></code></pre></div>
 <p>⬇️</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">ErrorPages</span><span class="p">.</span><span class="n">createErrorPage</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">.</span><span class="n">html</span><span class="p">,</span> <span class="n">cssResource</span><span class="p">.</span><span class="n">css</span><span class="p">)</span></code></pre></div>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">ErrorPages</span><span class="p">.</span><span class="n">createErrorPage</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">.</span><span class="n">html</span><span class="p">,</span> <span class="n">riskLevel</span><span class="p">.</span><span class="n">css</span><span class="p">)</span></code></pre></div>
 <h2 id="voilà">Voilà!</h2>
 
 <p>Seems like we managed to eliminate about 20 LOC without loss.

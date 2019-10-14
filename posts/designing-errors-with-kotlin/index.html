@@ -194,8 +194,8 @@ like trying to access a location beyond the end of an array.</p>
 with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it less verbose.</p>
 <div class="highlight"><pre class="chroma"><code class="language-rust" data-lang="rust"><span class="n">panic</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;at the Disco&#34;</span><span class="p">)</span><span class="w">
 </span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-rust" data-lang="rust"><span class="k">enum</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w"></span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
-</span><span class="w"></span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
+</span><span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
+</span><span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
 </span><span class="w"></span><span class="p">}</span><span class="w">
 </span></code></pre></div></li>
 </ul>

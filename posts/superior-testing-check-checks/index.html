@@ -163,8 +163,8 @@ to find out that the message was changed again, to another text we don’t want 
 
 <p>The good news is — Mockito has <a href="https://static.javadoc.io/org.mockito/mockito-core/2.25.1/org/mockito/Mockito.html#only--">a verification mode</a>
 which checks exactly what we need.</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">-   verify(onPlus).accept(2)
-</span><span class="gd"></span><span class="gi">+   verify(onPlus, only()).accept(2)
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- verify(onPlus).accept(2)
+</span><span class="gd"></span><span class="gi">+ verify(onPlus, only()).accept(2)
 </span></code></pre></div>
 <pre><code>TEST FAILED
 
@@ -244,8 +244,8 @@ will check for values and for no terminal events.</li>
 
 <li><p><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/observers/BaseTestConsumer.html#assertResult-T...-"><code>assertResult</code></a> —
 will check for the value and for completion event. Useful for testing <code>Single</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">-   valueObserver.assertValue(2)
-</span><span class="gd"></span><span class="gi">+   valueObserver.assertValuesOnly(2)
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- valueObserver.assertValue(2)
+</span><span class="gd"></span><span class="gi">+ valueObserver.assertValuesOnly(2)
 </span></code></pre></div>
 <pre><code>TEST FAILED
 
