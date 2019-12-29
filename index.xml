@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Artur Dryomov</title>
-    <link>http://arturdryomov.online/</link>
+    <link>https://arturdryomov.dev/</link>
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 08 Oct 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://arturdryomov.online/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Kotlin Enum Recipes</title>
-      <link>http://arturdryomov.online/posts/kotlin-enum-recipes/</link>
+      <link>https://arturdryomov.dev/posts/kotlin-enum-recipes/</link>
       <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/kotlin-enum-recipes/</guid>
+      <guid>https://arturdryomov.dev/posts/kotlin-enum-recipes/</guid>
       <description>Enumerations, in a form of enum class declarations, got a bad rep on Android. In fact, the official documentation straight out recommends to avoid them. How rude is that? At the same time, Effective Java has a full chapter about enum. The situation reminds me of the trolley problem. Kind of.
 In this article, I’ll distance myself from Android specifics and show useful enum-related snippets.
 Declaration Naming Use CamelCase, don’t be ashamed.</description>
@@ -24,29 +24,29 @@ Declaration Naming Use CamelCase, don’t be ashamed.</description>
     
     <item>
       <title>Midnight in Android Themes</title>
-      <link>http://arturdryomov.online/posts/midnight-in-android-themes/</link>
+      <link>https://arturdryomov.dev/posts/midnight-in-android-themes/</link>
       <pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/midnight-in-android-themes/</guid>
+      <guid>https://arturdryomov.dev/posts/midnight-in-android-themes/</guid>
       <description>Android Q introduces dark themes. Or night mode? No idea. Anyways, it is here and can be helpful with using applications in dark environments or with bringing back that sweet Winamp skins vibe.
 Implementing dark themes is surprisingly deep and affects the whole application. At times it feels like a redesign. I’ve tried to collect steps we’ve made to introduce the dark theme in the Juno rider application and make a (kind of) comprehensive guide.</description>
     </item>
     
     <item>
       <title>Superior Testing: Managing Production</title>
-      <link>http://arturdryomov.online/posts/superior-testing-managing-production/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-managing-production/</link>
       <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-managing-production/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-managing-production/</guid>
       <description>The testing process does not magically stop after deploying an artifact. We’ve only just begun. It is impossible to check everything in a sandboxed environment. From a certain perspective it seems like the whole run time is the testing process. How is it possible to check the correctness without tests? Right — by running the thing. We do the same in production — just on a bigger scale and with bigger risks.</description>
     </item>
     
     <item>
       <title>Namespacing in Kotlin</title>
-      <link>http://arturdryomov.online/posts/namespacing-in-kotlin/</link>
+      <link>https://arturdryomov.dev/posts/namespacing-in-kotlin/</link>
       <pubDate>Mon, 29 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/namespacing-in-kotlin/</guid>
+      <guid>https://arturdryomov.dev/posts/namespacing-in-kotlin/</guid>
       <description>The development process is a research. Find the state machine, organize mutations, wire it for consumers. The process repeats and leads to the meta-research. We investigate scenarios and search for reusable parts. Patterns arise, implementations follow. Ideally, the code resembles a fractal structure.
  An architecture is said to be fractal if subcomponents are structured in the same way as the whole is.
 — André Staltz
@@ -55,58 +55,58 @@ Implementing dark themes is surprisingly deep and affects the whole application.
     
     <item>
       <title>Superior Testing: Cleaning Up</title>
-      <link>http://arturdryomov.online/posts/superior-testing-cleaning-up/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-cleaning-up/</link>
       <pubDate>Thu, 06 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-cleaning-up/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-cleaning-up/</guid>
       <description>There is a game called Viscera Cleanup Detail. The task in this game is to&amp;hellip; clean things up. Well, it is a bit more exciting since it involves alien invasions, but at the end of the day players become space janitors. It is surprisingly addictive.
 Cleaning things is useful and helpful in a lot of ways. Developers understand that, but usually there is an additional motivation to keep things in order — users.</description>
     </item>
     
     <item>
       <title>Abstracting Kotlin Sealed Classes</title>
-      <link>http://arturdryomov.online/posts/abstracting-kotlin-sealed-classes/</link>
+      <link>https://arturdryomov.dev/posts/abstracting-kotlin-sealed-classes/</link>
       <pubDate>Tue, 04 Jun 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/abstracting-kotlin-sealed-classes/</guid>
+      <guid>https://arturdryomov.dev/posts/abstracting-kotlin-sealed-classes/</guid>
       <description>Things tend to be similar. Cars and bikes are different for sure but both have wheels, engines, exhaust systems and so on. Such similarities between models are usually described using basic polymorphism in virtual domain modeling.
 Kotlin makes this process a bit more pragmatic using sealed class declarations. Specifying type hierarchies using sealed classes is simple, but what about declaring common properties? Fortunately or not there are multiple ways to achieve this — partially because of the Java baggage.</description>
     </item>
     
     <item>
       <title>Superior Testing: Need for Speed</title>
-      <link>http://arturdryomov.online/posts/superior-testing-need-for-speed/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-need-for-speed/</link>
       <pubDate>Tue, 30 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-need-for-speed/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-need-for-speed/</guid>
       <description>Everybody wants to have a faster development cycle. Everything should be flawless and straightforward. Nobody wants to have hour-long builds and stuck CI queues. We need results! Now! Or maybe even in the past, preemptively. Guard from the Ruby ecosystem comes to mind, starting tests on file changes, without doing it manually.
 Talking about tests — they are a part of the cycle, right? We run them both locally and remotely (as part of a CI pipeline).</description>
     </item>
     
     <item>
       <title>Modern DateTimes on Android</title>
-      <link>http://arturdryomov.online/posts/modern-times/</link>
+      <link>https://arturdryomov.dev/posts/modern-times/</link>
       <pubDate>Mon, 15 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/modern-times/</guid>
+      <guid>https://arturdryomov.dev/posts/modern-times/</guid>
       <description>Java 8 gave us a great gift — the java.time package, known as JSR 310 and ThreeTen. The story behind java.time is unique. It was introduced in JEP 150 by an independent developer — Stephen Colebourne (@jodastephen). Yep, the same person who designed and developed Joda-Time. It was even endorsed by Brian Goetz, the Java Concurrency in Practice author! The result is a great API — explicit and direct, based on years of Joda-Time experience.</description>
     </item>
     
     <item>
       <title>Superior Testing: Check Your Checks</title>
-      <link>http://arturdryomov.online/posts/superior-testing-check-checks/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-check-checks/</link>
       <pubDate>Wed, 27 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-check-checks/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-check-checks/</guid>
       <description>False positives. Such an interesting combination of words, isn’t it? The nature of false positives is mostly human. We misinterpret conditions, define them wrong, forget about effects — but the machine obeys. We get what we want but not what we need. This is dangerous. The civilization downfall in various science fiction books is a false positive result. The AI gets instructions to eliminate all threats, humanity becomes the threat, roll the action scene.</description>
     </item>
     
     <item>
       <title>Merge Git Authors</title>
-      <link>http://arturdryomov.online/posts/merge-git-authors/</link>
+      <link>https://arturdryomov.dev/posts/merge-git-authors/</link>
       <pubDate>Tue, 19 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/merge-git-authors/</guid>
+      <guid>https://arturdryomov.dev/posts/merge-git-authors/</guid>
       <description>Stats! Stats are awesome. You can collect them, you can analyze and visualize them, you can boil, grill and fry them&amp;hellip; Wait, that’s not food, right?
 git shortlog Let’s say we have a Git repository. We want to count commits per author. There is a Git command for that!
 $ git shortlog --summary --numbered 2 Bender Rodriguez 2 Philip J. Fry 1 Bending Unit 22 1 Turanga Leela There are actually three authors but since names are non-consistent Git makes it look like there are four.</description>
@@ -114,10 +114,10 @@ $ git shortlog --summary --numbered 2 Bender Rodriguez 2 Philip J. Fry 1 Bending
     
     <item>
       <title>Superior Testing: Make Fakes not Mocks</title>
-      <link>http://arturdryomov.online/posts/superior-testing-make-fakes-not-mocks/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-make-fakes-not-mocks/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</guid>
       <description>After years of writing and reading tests I’ve discovered that mocking is either overused or underused. Not sure why exactly it happens but striking the right balance seems to be a complicated issue.
 In this Superior Testing article I’ll show how to replace mocking in favor of faking and collect benefits.
 Mocking Sync Let’s say we have a books repository allowing us to get a book based on its ID.</description>
@@ -125,78 +125,78 @@ Mocking Sync Let’s say we have a books repository allowing us to get a book ba
     
     <item>
       <title>Filling Android Autofill Gaps</title>
-      <link>http://arturdryomov.online/posts/filling-android-autofill-gaps/</link>
+      <link>https://arturdryomov.dev/posts/filling-android-autofill-gaps/</link>
       <pubDate>Wed, 13 Feb 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/filling-android-autofill-gaps/</guid>
+      <guid>https://arturdryomov.dev/posts/filling-android-autofill-gaps/</guid>
       <description>We can have different opinions but should be able to agree on one thing — we are humans. Well, except ones who like Gerrit and use Dashboard on macOS. Those are clearly aliens (Mulder was right). All humans tend to forget things. Important and useless, smart and dumb, beautiful and ugly — it does not matter, any thought or information can disappear. Precious credentials for applications we work on are no exception.</description>
     </item>
     
     <item>
       <title>Superior Testing: Stop Stopping</title>
-      <link>http://arturdryomov.online/posts/superior-testing-stop-stopping/</link>
+      <link>https://arturdryomov.dev/posts/superior-testing-stop-stopping/</link>
       <pubDate>Sun, 27 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/superior-testing-stop-stopping/</guid>
+      <guid>https://arturdryomov.dev/posts/superior-testing-stop-stopping/</guid>
       <description>Let’s start with confessions. The initial idea to kick-off a series of articles about testing was the shortest article ever. A single phrase. Just do it. I mean, isn’t it obvious that testing is awesome and useful?
 Unfortunately, after talking to dozens of developers I’ve come to the shocking fact that most of them don’t write tests. Our customer doesn’t pay for tests. We don’t have time. The codebase is impossible to test.</description>
     </item>
     
     <item>
       <title>Acceptance Criteria Bureaucracy</title>
-      <link>http://arturdryomov.online/posts/acceptance-criteria-bureaucracy/</link>
+      <link>https://arturdryomov.dev/posts/acceptance-criteria-bureaucracy/</link>
       <pubDate>Sun, 20 Jan 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/acceptance-criteria-bureaucracy/</guid>
+      <guid>https://arturdryomov.dev/posts/acceptance-criteria-bureaucracy/</guid>
       <description>Cooperation! It sure sounds better than bureaucracy. A released product is a result of cooperation between the Business and the Tech. There is an obvious issue though. Both sides have different mindsets. The misunderstanding is inevitable. How do we solve this? Well, there are still wars on the planet so apparently humanity wasn’t able to find a solution.
 What about establishing not world peace but a good communication channel? Agile methodologies establish such artifact as Acceptance Criteria (AC).</description>
     </item>
     
     <item>
       <title>Designing Errors with Kotlin</title>
-      <link>http://arturdryomov.online/posts/designing-errors-with-kotlin/</link>
+      <link>https://arturdryomov.dev/posts/designing-errors-with-kotlin/</link>
       <pubDate>Tue, 18 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/designing-errors-with-kotlin/</guid>
+      <guid>https://arturdryomov.dev/posts/designing-errors-with-kotlin/</guid>
       <description>Fun fact — the area of the Java island is 138 793 km², the Kotlin island occupies 15 km². Of course, it is blatantly incorrect to compare languages based on same-named island areas. At the same time, it brings things in perspective. Java is the cornerstone of the JVM platform. The platform itself overshadows everything it hosts: Groovy, Ceylon, Scala, Clojure and Kotlin. It brings a lot to the table — error handling is no exception (pun intended).</description>
     </item>
     
     <item>
       <title>Abandon Jenkins for Great Good!</title>
-      <link>http://arturdryomov.online/posts/abandon-jenkins/</link>
+      <link>https://arturdryomov.dev/posts/abandon-jenkins/</link>
       <pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/abandon-jenkins/</guid>
+      <guid>https://arturdryomov.dev/posts/abandon-jenkins/</guid>
       <description>CI and CD techniques are a part of all good happened to the software development. Having CI in place means better productivity and higher confidence in the result of the everyday work. Sounds kind of obvious, right? Well, let’s take a look at the dark side of the Moon.
 Do you have a person on the team who occasionally curses Gradle or (and) Maven, Android SDK or (and) NDK? Maybe someone who knows everything about these weird Shell scripts you have in the repository?</description>
     </item>
     
     <item>
       <title>Reactive Pipelines in Action</title>
-      <link>http://arturdryomov.online/posts/reactive-pipelines/</link>
+      <link>https://arturdryomov.dev/posts/reactive-pipelines/</link>
       <pubDate>Wed, 07 Nov 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/reactive-pipelines/</guid>
+      <guid>https://arturdryomov.dev/posts/reactive-pipelines/</guid>
       <description>Human beings are reactive by nature — fortunately or not. The reason is mostly physiology. The dopamine hormone helps us to feel comfortable and secure while we do familiar things. Eating a sandwich sounds and feels far better than gardening, doesn’t it? Essentially it is a fight between psychology (the mind, proactive actions) and physiology (the body, reactive actions).
 The same thing happens in CS. Object-oriented programming (OOP) is the king of the hill and functional programming (FP) is on the outskirts.</description>
     </item>
     
     <item>
       <title>Reactive State Mutations via CQRS</title>
-      <link>http://arturdryomov.online/posts/reactive-state-mutations/</link>
+      <link>https://arturdryomov.dev/posts/reactive-state-mutations/</link>
       <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/reactive-state-mutations/</guid>
+      <guid>https://arturdryomov.dev/posts/reactive-state-mutations/</guid>
       <description>State-state-state. It surrounds us. Think hard enough and everything around will become either a state or a state mutation. The current time is a state and each passing second is a state mutation. A tree can be represented by a state and each drop of rain mutates it, increasing the water supply level and applying the pressure on leaves.
 The concept is not new, but sometimes it becomes too hard to manage it.</description>
     </item>
     
     <item>
       <title>Optimizing Android Vector Images. Or Not?</title>
-      <link>http://arturdryomov.online/posts/optimizing-android-vector-images/</link>
+      <link>https://arturdryomov.dev/posts/optimizing-android-vector-images/</link>
       <pubDate>Tue, 18 Sep 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/optimizing-android-vector-images/</guid>
+      <guid>https://arturdryomov.dev/posts/optimizing-android-vector-images/</guid>
       <description>An average working day of an Android developer involves doing something with UI. Pushing widgets around, changing text and images&amp;hellip;
 The colleges of mine convert SVG images to VectorDrawable via a specific converter and I use Android Studio. Which tool does the job better? Let’s find out!
 Tools Converters (do optimizations under the hood):
@@ -205,10 +205,10 @@ Tools Converters (do optimizations under the hood):
     
     <item>
       <title>Reactive Abstractions in Android World</title>
-      <link>http://arturdryomov.online/posts/reactive-abstractions-in-android-world/</link>
+      <link>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</link>
       <pubDate>Sun, 26 Aug 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/reactive-abstractions-in-android-world/</guid>
+      <guid>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</guid>
       <description>Who knows how many test suites were not created because of a classic parry.
  It cannot be tested — it uses a platform call!
  Well, it is not actually true all the time. Unit testing something that only a human eye and neural networks can catch — like animations — doesn’t make sense. On the other hand, retrying a network request on a re-established connection can and should be tested.</description>
@@ -216,40 +216,40 @@ Tools Converters (do optimizations under the hood):
     
     <item>
       <title>How the Pull Request is Built</title>
-      <link>http://arturdryomov.online/posts/how-the-pull-request-is-built/</link>
+      <link>https://arturdryomov.dev/posts/how-the-pull-request-is-built/</link>
       <pubDate>Sun, 29 Jul 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/how-the-pull-request-is-built/</guid>
+      <guid>https://arturdryomov.dev/posts/how-the-pull-request-is-built/</guid>
       <description>Contact information of a friend of mine mentions that he doesn’t have Facebook or Twitter accounts, but he is available at a really cool social network called&amp;hellip; GitHub. Actually, GitHub is a social network, it even had direct private messages until April 2012.
 The developer community should be grateful to GitHub not only for awesome Octocats but for the popularizing a concept of pull requests. It is taken for granted now and we tend to forget that the closest thing before was sending a patch via email.</description>
     </item>
     
     <item>
       <title>Mobile Developer Morning Fun</title>
-      <link>http://arturdryomov.online/posts/mobile-developer-morning-fun/</link>
+      <link>https://arturdryomov.dev/posts/mobile-developer-morning-fun/</link>
       <pubDate>Sat, 16 Jun 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/mobile-developer-morning-fun/</guid>
+      <guid>https://arturdryomov.dev/posts/mobile-developer-morning-fun/</guid>
       <description>Do you read this article on a phone? No? Well, I’m pretty sure you have a phone. Fun fact — I’ve bought the best phone I ever had, the Nexus 5X, from Amazon. Another fun fact — there is a pretty good chance you’ve bought something from Amazon too since it grabbed 4% of US retail sales in 2017. That’s a lot!
 Amazon not only sells things but hosts a significant portion of internet resources thanks to Amazon Web Services.</description>
     </item>
     
     <item>
       <title>Do Androids Dream of UI Testing?</title>
-      <link>http://arturdryomov.online/posts/do-androids-dream-of-ui-testing/</link>
+      <link>https://arturdryomov.dev/posts/do-androids-dream-of-ui-testing/</link>
       <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/do-androids-dream-of-ui-testing/</guid>
+      <guid>https://arturdryomov.dev/posts/do-androids-dream-of-ui-testing/</guid>
       <description>Automation is a foundation stone of the software development. People didn’t like counting numbers themselves, so they invented calculators. Calculators went to be computers and here we go, waiting for AI to take over, watching movies about transhumanism on our way here.
 Automation related to UI testing seems to be a Holy Grail from that standpoint. Sure thing, it can replace manual QA procedures with automated ones! Like, completely! You just need to have a local backend&amp;hellip; And maybe disable animations.</description>
     </item>
     
     <item>
       <title>A Dagger to Remember</title>
-      <link>http://arturdryomov.online/posts/a-dagger-to-remember/</link>
+      <link>https://arturdryomov.dev/posts/a-dagger-to-remember/</link>
       <pubDate>Sun, 22 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/a-dagger-to-remember/</guid>
+      <guid>https://arturdryomov.dev/posts/a-dagger-to-remember/</guid>
       <description>Story Time! Kotlin and Java annotations have a complicated relationship. This goes from the syntax to the toolchain.
 Does anybody remember that at the beginning of time Kotlin annotations were placed in square brackets? In 2015 the syntax was changed to the current form. Before that, it was [Inject] instead of @Inject. Yep.
 The syntax is fine at this point, but kapt (Kotlin annotation processing tool) from the Kotlin toolchain can be&amp;hellip; cruel.</description>
@@ -257,20 +257,20 @@ The syntax is fine at this point, but kapt (Kotlin annotation processing tool) f
     
     <item>
       <title>The Art of a Dependency Upgrade</title>
-      <link>http://arturdryomov.online/posts/art-of-a-dependency-upgrade/</link>
+      <link>https://arturdryomov.dev/posts/art-of-a-dependency-upgrade/</link>
       <pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/art-of-a-dependency-upgrade/</guid>
+      <guid>https://arturdryomov.dev/posts/art-of-a-dependency-upgrade/</guid>
       <description>RxJava 1.x reaches EOL on March 31, 2018, meaning no further development. That’s not surprising since the 1.x was in a bugfix-only mode since June 1, 2017.
 This is an interesting event in a software lifetime, since not so many libraries actually live and prosper long enough to produce a superior version, at the same time handling support for an older version for so long. Fortunately enough, RxJava is one of these lucky projects with maintainers actually caring about users.</description>
     </item>
     
     <item>
       <title>Kotlin: The Problem with `null`</title>
-      <link>http://arturdryomov.online/posts/kotlin-the-problem-with-null/</link>
+      <link>https://arturdryomov.dev/posts/kotlin-the-problem-with-null/</link>
       <pubDate>Wed, 10 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://arturdryomov.online/posts/kotlin-the-problem-with-null/</guid>
+      <guid>https://arturdryomov.dev/posts/kotlin-the-problem-with-null/</guid>
       <description>I think almost everybody in the CS world knows about the Null References: The Billion Dollar Mistake talk. However, it does not really matter if the concept of null references a good idea or a really bad one. We live in the world where we just have to deal with null this way or another. Yep, just deal with it. So let’s ask the “How” question instead of the “Why” one.</description>
     </item>
     
