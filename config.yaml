@@ -1,7 +1,7 @@
 languageCode: "en-us"
 title: "Artur Dryomov"
 
-baseUrl: "http://arturdryomov.online"
+baseUrl: "https://arturdryomov.dev"
 permalinks:
   post: ":slug"
 
