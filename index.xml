@@ -6,10 +6,19 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 08 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 30 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>On Technical Writing</title>
+      <link>https://arturdryomov.dev/posts/on-technical-writing/</link>
+      <pubDate>Mon, 30 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/on-technical-writing/</guid>
+      <description>Books were the internet for me before the real one became accessible. Authors wrote a thing and I’ve read it, consuming the information behind the text. First, I’ve read each book we had at home. Then everything meaningful from a kids’ section of the local library. And then I’ve been introduced into the serious stuff. I think The Hobbit was the beginning. Then The Three Musketeers, The Adventures of Sherlock Holmes&amp;hellip;</description>
+    </item>
     
     <item>
       <title>Kotlin Enum Recipes</title>
