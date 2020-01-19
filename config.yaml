@@ -7,8 +7,10 @@ permalinks:
 
 params:
   description: "Artur Dryomov on software design, development and deployment."
-  twitter: "arturdryomov"
   googleSearchCode: "Noz-S7X4481rtWBcFiugLcNzvzXEG3Ukn-T6QVPPUOE"
+
+social:
+  twitter: "arturdryomov"
 
 menu:
   left:
