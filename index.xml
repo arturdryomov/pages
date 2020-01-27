@@ -6,10 +6,20 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kotlin Code Organization</title>
+      <link>https://arturdryomov.dev/posts/kotlin-code-organization/</link>
+      <pubDate>Mon, 27 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/kotlin-code-organization/</guid>
+      <description>What’s the motivation behind organizing the code? Two points come to mind.
+ Help humans. Consistent environments are easier to understand and adapt. Storing the source code in src/ instead of _k_/ makes it easier to find. Help machines. Build systems need hints. The code in main/ should be assembled all the time, while test/ is test-specific and shouldn’t make it to a production environment.  Sounds empathic. Where do we start?</description>
+    </item>
     
     <item>
       <title>On Technical Writing</title>
