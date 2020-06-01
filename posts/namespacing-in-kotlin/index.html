@@ -63,25 +63,18 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>The development process is a research. Find the state machine,
 organize mutations, wire it for consumers. The process
 repeats and leads to the meta-research. We investigate scenarios and
 search for reusable parts. Patterns arise, implementations follow.
 Ideally, the code resembles a fractal structure.</p>
-
 <blockquote>
 <p>An architecture is said to be fractal if subcomponents are structured
 in the same way as the whole is.</p>
-
 <p>— <a href="https://staltz.com/unidirectional-user-interface-architectures.html"><em>André Staltz</em></a></p>
 </blockquote>
-
 <h1 id="the-problem">The Problem</h1>
-
 <p>Let’s say we have a fractal components structure. Each one has a <code>View</code> and a <code>ViewModel</code>.</p>
-
 <p>There is a <code>Movie</code> component which delegates to sub-components
 of the same structure — <code>MovieCast</code> and <code>MovieRating</code>. The movie view
 contains the cast view and the rating view, the same applies to the view model.</p>
@@ -93,8 +86,8 @@ contains the cast view and the rating view, the same applies to the view model.<
 <span class="k">interface</span> <span class="nc">MovieViewModel</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">cast</span><span class="p">:</span> <span class="n">MovieCastViewModel</span>
     <span class="k">val</span> <span class="py">rating</span><span class="p">:</span> <span class="n">MovieRatingViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>This is a fine structure but IRL classes are separate.</p>
+<span class="p">}</span>
+</code></pre></div><p>This is a fine structure but IRL classes are separate.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">MovieView</span>
 <span class="k">interface</span> <span class="nc">MovieViewModel</span>
 
@@ -102,8 +95,8 @@ contains the cast view and the rating view, the same applies to the view model.<
 <span class="k">interface</span> <span class="nc">MovieCastViewModel</span>
 
 <span class="k">interface</span> <span class="nc">MovieRatingView</span>
-<span class="k">interface</span> <span class="nc">MovieRatingViewModel</span></code></pre></div>
-<p>The reliance on the naming is apparent. It is repeating, verbose and does not show
+<span class="k">interface</span> <span class="nc">MovieRatingViewModel</span>
+</code></pre></div><p>The reliance on the naming is apparent. It is repeating, verbose and does not show
 that components follow the same structure. What if&hellip;</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">namespace</span> <span class="n">Movie</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
@@ -118,93 +111,83 @@ that components follow the same structure. What if&hellip;</p>
 <span class="n">namespace</span> <span class="n">MovieRating</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>Much better. It is clear that components are using the same pattern.
+<span class="p">}</span>
+</code></pre></div><p>Much better. It is clear that components are using the same pattern.
 It scales!</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">MovieView</span>
 <span class="k">interface</span> <span class="nc">MovieViewModel</span>
-<span class="k">class</span> <span class="nc">MovieActivity</span></code></pre></div>
-<p>vs.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">namespace</span> <span class="n">Movie</span> <span class="p">{</span>
+<span class="k">class</span> <span class="nc">MovieActivity</span>
+</code></pre></div><p>vs.</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin">
+<span class="n">namespace</span> <span class="n">Movie</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
     <span class="k">class</span> <span class="nc">Activity</span>
-<span class="p">}</span></code></pre></div>
-<p>The <code>namespace</code> keyword is obviously made up, Kotlin does not have it.
+<span class="p">}</span>
+</code></pre></div><p>The <code>namespace</code> keyword is obviously made up, Kotlin does not have it.
 How do we achieve the same effect?</p>
-
 <h1 id="the-solution">The Solution</h1>
-
 <h2 id="package"><code>package</code></h2>
-
 <p><a href="https://www.youtube.com/watch?v=VYOjWnS4cMY">This is Java</a>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">component</span>
 
 <span class="k">interface</span> <span class="nc">View</span>
-<span class="k">interface</span> <span class="nc">ViewModel</span></code></pre></div>
-<p>It works but it is awkward to use:</p>
+<span class="k">interface</span> <span class="nc">ViewModel</span>
+</code></pre></div><p>It works but it is awkward to use:</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">movie.cast</span>
 
-<span class="k">interface</span> <span class="nc">View</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">movie</span>
+<span class="k">interface</span> <span class="nc">View</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">movie</span>
 
 <span class="k">interface</span> <span class="nc">View</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">cast</span><span class="p">:</span> <span class="n">movie</span><span class="p">.</span><span class="n">cast</span><span class="p">.</span><span class="n">View</span>
-<span class="p">}</span></code></pre></div>
-<p>We are forced to use <a href="https://en.wikipedia.org/wiki/Fully_qualified_name">the FQN</a>
+<span class="p">}</span>
+</code></pre></div><p>We are forced to use <a href="https://en.wikipedia.org/wiki/Fully_qualified_name">the FQN</a>
 since the compiler is not able to distinguish between <code>View</code> classes.
 Not good.</p>
-
 <h2 id="enum"><code>enum</code></h2>
-
 <p>I’m not actually joking.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Component</span> <span class="p">{</span>
     <span class="p">;</span>
 
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>➕ It is impossible to create the <code>Component</code> instance.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>➕ It is impossible to create the <code>Component</code> instance.</p>
 <p>➖ It is awkward to have a semicolon at the beginning of each component.</p>
-
 <p>➖ Semantics are messed up.
 In Java and Kotlin <code>enum</code> represent variations of the enumeration
 (unlike Swift where <code>enum</code> cases might have completely different structure).
 While nested classes are not <code>enum</code> cases it feels wrong.</p>
-
 <h2 id="object"><code>object</code></h2>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">object</span> <span class="nc">Component</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>It works! The Java representation is not fun though.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">final</span> <span class="kd">class</span> <span class="nf">Component</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><p>It works! The Java representation is not fun though.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="nf">static</span> <span class="kd">final</span> <span class="nf">Component</span> <span class="n">INSTANCE</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Component</span> <span class="n">INSTANCE</span><span class="o">;</span>
 
-    <span class="kd">private</span> <span class="nf">Component</span><span class="p">()</span> <span class="p">{</span>
-    <span class="p">}</span>
+    <span class="kd">private</span> <span class="nf">Component</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
 
-    <span class="kd">static</span> <span class="p">{</span>
-        <span class="n">Component</span> <span class="nf">var0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Component</span><span class="p">();</span>
-        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="n">var0</span><span class="p">;</span>
-    <span class="p">}</span></code></pre></div>
-<p>Yikes! We create a completely useless singleton for no reason.
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">Component</span> <span class="n">var0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Component</span><span class="o">();</span>
+        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="n">var0</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div><p>Yikes! We create a completely useless singleton for no reason.
 Moving on.</p>
-
 <h2 id="class"><code>class</code></h2>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Component</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>What a <code>class</code>y way to do things. Looks fine in the Java representation.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">final</span> <span class="kd">class</span> <span class="nf">Component</span> <span class="p">{</span></code></pre></div>
-<p>Let’s take a deeper look using the disassembler.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>What a <code>class</code>y way to do things. Looks fine in the Java representation.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
+</code></pre></div><p>Let’s take a deeper look using the disassembler.</p>
 <pre><code>$ javap -C Component.java &amp;&amp; javap -c -verbose Component.class
-</code></pre>
-
-<pre><code>  Size 194 bytes
+</code></pre><pre><code>  Size 194 bytes
   MD5 checksum 3a2a9141881597581908528a19f7d993
   Compiled from &quot;Component.java&quot;
 public final class Component
@@ -236,27 +219,19 @@ Constant pool:
       LineNumberTable:
         line 1: 0
 }
-</code></pre>
-
-<p>➕ Looks innocent compared to the <code>object</code>.</p>
-
+</code></pre><p>➕ Looks innocent compared to the <code>object</code>.</p>
 <p>➕ Impossible to inherit from since Kotlin classes are <code>final</code> by default.</p>
-
 <p>➖ Possible to create an object.</p>
-
 <h2 id="interface"><code>interface</code></h2>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Component</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">View</span>
     <span class="k">interface</span> <span class="nc">ViewModel</span>
-<span class="p">}</span></code></pre></div>
-<p>Almost the same as the <code>class</code> approach. The Java representation does not bring surprises.</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">interface</span> <span class="nf">Component</span> <span class="p">{</span></code></pre></div>
-<p>The disassembler shows that it is much lighter than the <code>class</code>.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>Almost the same as the <code>class</code> approach. The Java representation does not bring surprises.</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">interface</span> <span class="nc">Component</span> <span class="o">{</span>
+</code></pre></div><p>The disassembler shows that it is much lighter than the <code>class</code>.</p>
 <pre><code>$ javap -C Component.java &amp;&amp; javap -c -verbose Component.class
-</code></pre>
-
-<pre><code>  Size 101 bytes
+</code></pre><pre><code>  Size 101 bytes
   MD5 checksum 574e4f61d4b3e17ccd964289678c7ae2
   Compiled from &quot;Component.java&quot;
 interface Component
@@ -272,34 +247,25 @@ Constant pool:
   #6 = Utf8               java/lang/Object
 {
 }
-</code></pre>
-
-<p>➕ Impossible to create an object.</p>
-
+</code></pre><p>➕ Impossible to create an object.</p>
 <p>➕ Lighter than the <code>class</code> — 6 constants in the pool vs. 12, 101 bytes on disk vs. 194.</p>
-
 <p>➖ Possible to inherit from.</p>
-
 <h2 id="namespace"><code>namespace</code>?</h2>
 <div class="highlight"><pre class="chroma"><code class="language-csharp" data-lang="csharp"><span class="k">namespace</span> <span class="nn">Component</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="n">IView</span>
     <span class="k">interface</span> <span class="n">IViewModel</span>
 <span class="p">}</span>
-</code></pre></div>
-<p>The <code>I</code> prefix means that we are in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/namespaces/">the C# world</a>.
+</code></pre></div><p>The <code>I</code> prefix means that we are in <a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/namespaces/">the C# world</a>.
 It might be surprising but there are not a lot of languages supporting namespaces.
 I can name C++, C#, PHP, TypeScript and that’s basically it. In fact,
 languages with the <code>namespace</code> keyword do not have a concept of packages.
 Seems like namespaces can cover everything packages provide
 but I wonder — why not have both?</p>
-
 <h1 id="the-decision">The Decision</h1>
-
 <p>There is no good way to put it — all approaches are not great.
 The reason is simple — Kotlin drags a ton of JVM baggage and
 maintains Java compatibility. Approaches described above are
 basically the direct translation from the Java world (except the <code>object</code> variant).</p>
-
 <p>However, namespacing can be achieved using nested <code>interface</code> declarations.
 It is the most efficient approach so far. It would be great to have
 the <code>namespace</code> keyword though. I imagine it being like an <code>interface</code>

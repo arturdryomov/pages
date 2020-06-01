@@ -63,8 +63,6 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>Java 8 gave us a great gift — the <code>java.time</code> package, known as
 <a href="https://jcp.org/en/jsr/detail?id=310">JSR 310</a> and
 <a href="https://www.threeten.org/">ThreeTen</a>.
@@ -77,7 +75,6 @@ It was even endorsed by Brian Goetz, the
 <a href="http://jcip.net/">Java Concurrency in Practice</a> author!
 The result is a great API — explicit and direct,
 based on years of Joda-Time experience.</p>
-
 <blockquote>
 <p>The existing Java date and time classes are poor, mutable,
 and have unpredictable performance. There has been a long-standing desire
@@ -85,23 +82,16 @@ for a better date and time API based on the Joda-Time project.
 The new API will have a more intuitive design allowing code
 to better express its intent. The classes will also be immutable
 which aligns with the multi-core direction of the industry.</p>
-
 <p>— <a href="https://openjdk.java.net/jeps/150"><em>JEP 150: Motivation</em></a></p>
 </blockquote>
-
 <p>The message is clear — the replacement was needed.
 The good news — we got it. The bad news — we have&hellip;</p>
-
 <h1 id="android">Android</h1>
-
 <p>Java 8 was released in 2014, now is 2019 and we still cannot use
 <code>java.time</code> on Android without asterisks.</p>
-
-<h2 id="minsdkversion-25"><code>minSdkVersion &lt;= 25</code></h2>
-
+<h2 id="minsdkversion--25"><code>minSdkVersion &lt;= 25</code></h2>
 <p>Use <a href="https://github.com/ThreeTen/threetenbp">ThreeTenBP</a> (ThreeTen backport) and
 <a href="https://github.com/JakeWharton/ThreeTenABP/">ThreeTenABP</a> (ThreeTen backport for Android).</p>
-
 <ul>
 <li>Since ThreeTenBP is the ThreeTen backport, migrating to the native JVM API becomes
 a bulk <code>org.threeten.bp</code> package replacement with <code>java.time</code>.
@@ -110,75 +100,56 @@ available on the newest Android versions and it is a matter of time before we ca
 <li>The JVM ecosystem already uses <code>java.time</code>.
 It is better to use the same API to speak the same language.</li>
 </ul>
-
 <p>The ThreeTenABP is not actually a full-blown ThreeTen implementation.
 It is a special time zones initializer which fetches data
 not from Java resources but from Android assets since it is more efficient.</p>
-
 <h3 id="dependencies">Dependencies</h3>
-
 <h4 id="application">Application</h4>
-
 <ul>
 <li><code>com.jakewharton.threetenabp:threetenabp:{ABP_VERSION}</code> —
 efficient time zones initializer.</li>
 <li><code>org.threeten:threetenbp:{BP_VERSION}:no-tzdb</code> —
 ThreeTenBP, <a href="https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/pom.xml#L218-L237">without time zones data</a>.</li>
 </ul>
-
 <p>ThreeTenABP provides ThreeTenBP as a transitive dependency
 but it is useful to have the same ThreeTenBP version for&hellip;</p>
-
 <h4 id="unit-tests">Unit Tests</h4>
-
 <ul>
 <li><code>org.threeten:threetenbp:{BP_VERSION}</code> — regular ThreeTenBP.</li>
 </ul>
-
 <p>Unit tests are being run on JVM so there is no need for the Android-specific
 time zones initializer.</p>
-
 <h3 id="joda-time">Joda-Time?</h3>
-
 <p>Abandon Joda-Time! Don’t hesitate to <a href="https://blog.joda.org/2014/11/converting-from-joda-time-to-javatime.html">migrate from it</a>
 to ThreeTenBP ASAP.</p>
-
 <ul>
 <li>ThreeTen is the next evolutionary step, created by the same developer.</li>
 <li>ThreeTen is better for APK size than Joda-Time.
-
 <ul>
 <li>Joda-Time without time zones + Joda-Time Android is <code>735 KiB</code>.</li>
 <li>ThreeTenBP without time zones + ThreeTenABP is <code>485 KiB</code>.</li>
-</ul></li>
 </ul>
-
-<h2 id="minsdkversion-26"><code>minSdkVersion &gt;= 26</code></h2>
-
+</li>
+</ul>
+<h2 id="minsdkversion--26"><code>minSdkVersion &gt;= 26</code></h2>
 <p>Use <a href="https://developer.android.com/reference/java/time/package-summary"><code>java.time</code></a>,
 forget about Joda-Time and ThreeTenBP.</p>
-
 <blockquote>
 <p>📖 Android <a href="https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java">uses ICU</a>
 to provide time zones data.</p>
 </blockquote>
-
 <p>The downside of using native <code>java.time</code> is updating time zones data.
 Since standalone distributions (such as Joda-Time and ThreeTenBP) carry their
 own data it is possible to update it separately.
 Unfortunately on Android time zones data updates <a href="https://source.android.com/devices/tech/config/timezone-rules">depend on OEM</a>.
 It is an open question which OEMs actually do this.</p>
-
 <h1 id="usage">Usage</h1>
-
 <h2 id="access">Access</h2>
-
 <p>Since ThreeTenBP without time zones data will not initialize time zones by itself,
 we’ll need to do it ourselves. Executing time zone-related
 operations without initialization will lead to runtime exceptions. It is a good idea to have
 a time abstraction in place which will be an entry point for time-related operations.
 It is a good practice to have it for testing purposes anyway.</p>
-
 <blockquote>
 <p>📖 <code>Duration</code> is safe to use everywhere since it is basically
 <a href="https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/src/main/java/org/threeten/bp/Duration.java#L486-L490">a pair of seconds and nanoseconds</a>
@@ -200,14 +171,12 @@ with syntax sugar on top.</p>
 
         <span class="k">override</span> <span class="k">fun</span> <span class="nf">now</span><span class="p">()</span> <span class="p">=</span> <span class="n">initialized</span> <span class="p">{</span> <span class="n">ZonedDateTime</span><span class="p">.</span><span class="n">now</span><span class="p">()</span> <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>This implementation provides thread-safe initialization since <code>lazy</code> Kotlin fields
+<span class="p">}</span>
+</code></pre></div><p>This implementation provides thread-safe initialization since <code>lazy</code> Kotlin fields
 are synchronized by default.</p>
-
 <p>Don’t forget that despite ThreeTenABP features efficient time zone data initializer
 it still takes more than 100 milliseconds to do so. To avoid blocking
 the main thread use background threads on the application startup to pre-initialize time zones.</p>
-
 <p>Please notice that this optimization does not eliminate the <code>Time</code> abstraction.
 Since the background initialization is an async process it is possible to use
 <code>ZonedDateTime</code> before time zones were actually initialized.</p>
@@ -220,36 +189,29 @@ Since the background initialization is an async process it is possible to use
 </span><span class="c1"></span>
         <span class="n">Schedulers</span><span class="p">.</span><span class="n">io</span><span class="p">().</span><span class="n">scheduleDirect</span> <span class="p">{</span> <span class="n">time</span><span class="p">.</span><span class="n">now</span><span class="p">()</span> <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="constants">Constants</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="constants">Constants</h2>
 <p>There is a common struggle in the industry with naming variables.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">DELAY</span> <span class="p">=</span> <span class="m">10</span>
-<span class="p">}</span></code></pre></div>
-<p>What does it even mean? Are we talking about seconds or hours? We can make it a bit better.</p>
+<span class="p">}</span>
+</code></pre></div><p>What does it even mean? Are we talking about seconds or hours? We can make it a bit better.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">DELAY_SECONDS</span> <span class="p">=</span> <span class="m">10</span>
-<span class="p">}</span></code></pre></div>
-<p>It does not save us though. Since naming is a semantic rule,
+<span class="p">}</span>
+</code></pre></div><p>It does not save us though. Since naming is a semantic rule,
 it depends on human nature and behavior. Fortunately enough we have <code>Duration</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">val</span> <span class="py">DELAY</span> <span class="p">=</span> <span class="n">Duration</span><span class="p">.</span><span class="n">ofSeconds</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<p>Being honest — it is not a silver bullet but it reduces the confusion significantly.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>Being honest — it is not a silver bullet but it reduces the confusion significantly.</p>
 <h2 id="moar">MOAR</h2>
-
 <p>Most likely I’m forgetting a lot of things but the bulk of the time-related
 work comes to <code>Duration</code> and <code>ZonedDateTime</code>. The API is so good
 that there are no workarounds or tricky places to navigate through.</p>
-
 <h1 id="time-out">Time Out</h1>
-
 <p>Think about what to do with time before you run out of&hellip; time.</p>
-
-<hr />
-
+<hr>
 <p>The title is a reference to the <a href="https://en.wikipedia.org/wiki/Modern_Times_(film)">Charlie Chaplin movie</a>.</p>
 
 </main>

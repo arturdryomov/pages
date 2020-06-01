@@ -63,14 +63,11 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>There is a game called <a href="https://en.wikipedia.org/wiki/Viscera_Cleanup_Detail">Viscera Cleanup Detail</a>.
 The task in this game is to&hellip; clean things up.
 Well, it is a bit more exciting since it involves alien invasions,
 but at the end of the day players become space janitors.
 It is surprisingly addictive.</p>
-
 <p>Cleaning things is useful and helpful in a lot of ways.
 Developers understand that, but usually there is an additional motivation
 to keep things in order — users.
@@ -78,9 +75,7 @@ Nobody wants a product that breaks because there is not enough memory
 or wrecks havoc across the file system.
 The picture is very different with tests — often they become
 a second class citizen. It shouldn’t be this way.</p>
-
 <h1 id="ram">RAM</h1>
-
 <p>It is interesting that not a lot of people bother with memory management
 in tests. Tests run so fast and have such
 short lifecycle that memory consumption doesn’t seem like an issue.
@@ -89,11 +84,8 @@ And guess what works worse when there are memory leaks but
 the execution demands more and more memory? That’s right — GC.
 In practice it means that memory leaks and high memory consumption in general
 slow down test runs, eventually leading to out-of-memory errors.</p>
-
 <h2 id="mockito">Mockito</h2>
-
 <h3 id="inline-mocking">Inline Mocking</h3>
-
 <p>Mockito 2.1.0 introduced <a href="https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2#mock-the-unmockable-opt-in-mocking-of-final-classesmethods">inline mocking</a>.
 It allows to mock and spy <code>final</code> Java classes.
 This might be useful in combination with Kotlin, where classes are <code>final</code> by default.
@@ -103,9 +95,8 @@ was introduced to mitigate this since it was not possible to resolve it automati
 Use it!</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@After</span> <span class="k">fun</span> <span class="nf">clearMockito</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">Mockito</span><span class="p">.</span><span class="n">framework</span><span class="p">().</span><span class="n">clearInlineMocks</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="stubs">Stubs</h3>
-
+<span class="p">}</span>
+</code></pre></div><h3 id="stubs">Stubs</h3>
 <p>It might be surprising to find out how much Mockito does under the hood.
 There is basically a mini-GC tracking all invocations.
 Fortunately we can save a bit of memory using
@@ -113,22 +104,18 @@ Fortunately we can save a bit of memory using
 which do not track invocations.
 Use it to make dumb objects which will not be verified in the future.
 Or not use Mockito at all for this, just create objects by hand.</p>
-
 <p>We can make a handy Kotlin function which will reduce the boilerplate.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> &lt;reified T : Any&gt; <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">actionStub</span> <span class="p">=</span> <span class="n">stub</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&gt;()</span></code></pre></div>
-<h1 id="files">Files</h1>
-
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> &lt;reified T : Any&gt; <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">actionStub</span> <span class="p">=</span> <span class="n">stub</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&gt;()</span>
+</code></pre></div><h1 id="files">Files</h1>
 <p>Dealing with files in tests is straightforward.</p>
-
 <ul>
 <li>Create files only in <a href="https://en.wikipedia.org/wiki/Temporary_folder">temporary directories</a>.</li>
 <li>Delete files after each run.</li>
 </ul>
-
 <p>Not following these rules might result in myriads of files
 scattered around in the project directory.
 Especially if there are hundreds of them created and removed on each run.</p>
-
 <p>Even better — do not repeat all necessary steps in all tests and
 use <a href="https://junit.org/junit4/javadoc/latest/org/junit/rules/TemporaryFolder.html">a JUnit rule</a>
 instead. It is not even necessary to use JUnit 4 to use it.</p>
@@ -144,9 +131,8 @@ instead. It is not even necessary to use JUnit 4 to use it.</p>
 
 <span class="n">afterEach</span> <span class="p">{</span>
     <span class="n">fileSystem</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
-<h1 id="cleaning-up">Cleaning Up</h1>
-
+<span class="p">}</span>
+</code></pre></div><h1 id="cleaning-up">Cleaning Up</h1>
 <p>Think about test runs this way — they should not leave anything behind.
 Tests are ghosts. Or ninjas.
 And seriously — <a href="https://en.wikipedia.org/wiki/Viscera_Cleanup_Detail">play the game</a>.</p>

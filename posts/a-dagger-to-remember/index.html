@@ -63,25 +63,17 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <h1 id="story-time">Story Time!</h1>
-
 <p>Kotlin and Java annotations have a complicated relationship. This goes from the syntax to the toolchain.</p>
-
 <p>Does anybody remember that at the beginning of time Kotlin annotations were placed in square brackets?
 <a href="https://blog.jetbrains.com/kotlin/2015/04/upcoming-change-syntax-for-annotations/">In 2015 the syntax was changed to the current form</a>.
 Before that, it was <code>[Inject]</code> instead of <code>@Inject</code>. Yep.</p>
-
 <p>The syntax is fine at this point, but <code>kapt</code>
 (<a href="https://kotlinlang.org/docs/reference/kapt.html">Kotlin annotation processing tool</a>)
 from the Kotlin toolchain can be&hellip; cruel.</p>
-
 <h2 id="kapt-denial"><code>kapt</code>: denial</h2>
-
 <p>The project I’m working on started using Kotlin from the very beginning — in 2015.
 At the beginning of 2017, there was the following situation.</p>
-
 <ul>
 <li>There was a <em>kind of</em> incremental Kotlin compiler. It was enabled for everyone
 <a href="https://kotlinlang.org/docs/reference/using-gradle.html#incremental-compilation">only in 1.1.1</a>
@@ -92,39 +84,29 @@ on each change. It was so bad that these kind of builds were jokingly called as 
 a full rebuild. If you saw something like <code>*_MemberInjector.java: error: package does not exist</code>
 you know what I’m talking about.</li>
 </ul>
-
 <p>When you are working on a constantly growing codebase
 and your builds take up to 5 minutes, even if you’ve changed only a single line&hellip;
 It is a horrible experience and a plain bad development environment which leads to decreased productivity
 and to <a href="https://blog.gradle.com/quantifying-the-cost-of-builds/">potential financial losses</a>.</p>
-
 <p>How do you solve this? There is a nice method — throw more hardware at it!
 That’s a short story about how <a href="https://github.com/gojuno/mainframer">Mainframer</a> was born.</p>
-
 <h2 id="kapt-anger"><code>kapt</code>: anger</h2>
-
 <p>Using Mainframer was fine for a while. Yes, the issue was solved using quantity over quality,
 but it was a good idea and it scaled well. If you don’t have enough expertise to change <code>kapt</code>,
 you can at least change the environment it is being run in. Besides, the Kotlin toolchain became
 better over time, so there was a pretty good chance to get an incremental build.</p>
-
 <p>Unfortunately, <code>kapt</code> <a href="https://youtrack.jetbrains.com/issue/KT-22763">struck again in Kotlin 1.2.21</a>.
 Increasing <code>kapt</code> processing time for unit tests by a magnitude of <code>3</code> was too much,
 especially if you are running tests more often than the project executable itself.
 I’ve asked myself a million dollar question.</p>
-
 <blockquote>
 <p>Do you even need <code>kapt</code>?</p>
 </blockquote>
-
 <p>Turns out there was only a single annotation-processing dependency in the project.
 I think you already know which one. Yep, it was <a href="https://google.github.io/dagger/">Dagger</a>.
 Down the rabbit hole we go.</p>
-
 <h1 id="adventure-time">Adventure Time!</h1>
-
 <h2 id="do-you-even-need-kapt-dagger">Do You Even Need <del><code>kapt</code></del> Dagger?</h2>
-
 <p>I’m going to talk about the <a href="https://github.com/google/dagger">Google Dagger</a>.
 It was forked from the <a href="https://github.com/square/dagger">Square Dagger</a>.
 The Square one did some lookups at runtime but generated code as well
@@ -132,7 +114,6 @@ using the annotation processing, just like the Google one. At the same time,
 the Google version doesn’t use reflection and generates everything beforehand.
 This is actually great. No reflection usage — better runtime performance
 and compile-time <code>Context</code> validation.</p>
-
 <blockquote>
 <p>There might be a confusion among Android developers about the <code>Context</code> naming.
 I’m going to use it as a more broad term than
@@ -144,23 +125,19 @@ You can observe this naming in different environments, such as
 You can associate it with Google Dagger <code>@Component</code> or
 a Square Dagger <code>ObjectGraph</code>.</p>
 </blockquote>
-
 <p>There is a downside though. The Square version had a small but extensive API.
 In my opinion, it covered almost everything you need from a dependency injection.
 The Google version has grown up big and sometimes not in a good way.
 The API includes Android support module (let’s just forget about <code>DaggerActivity</code>
 which&hellip; <a href="https://github.com/google/dagger/blob/e1ed045d59ef8fcbbd664939a476083ac8614b32/java/dagger/android/DaggerActivity.java">exists</a>),
 multibindings, reusable dependencies, components and subcomponents, modules and producer modules&hellip;</p>
-
 <p>The project I’m working on didn’t use anything magical. Hell, most likely Dagger was used wrong!</p>
-
 <ul>
 <li><em>Model</em> components, such as services, have dependencies passed via constructor.</li>
 <li><em>Presentation</em> components, such as <code>ViewModel</code> have dependencies passed via constructor as a <code>Context</code>.</li>
 <li><code>Context</code> is a result of combining a number of modules.</li>
 <li>Modules contain all dependency declarations, no components have <code>@Inject</code> annotations on them.</li>
 </ul>
-
 <p>Basically, the DI glue is separated from the main codebase.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="c1">// Model
 </span><span class="c1"></span>
@@ -211,63 +188,49 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 
 <span class="n">@Singleton</span>
 <span class="n">@Component</span><span class="p">(</span><span class="n">modules</span> <span class="p">=</span> <span class="p">[</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="k">class</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="o">::</span><span class="k">class</span><span class="p">])</span>
-<span class="k">interface</span> <span class="nc">ContextComponent</span> <span class="p">:</span> <span class="n">Context</span></code></pre></div>
-<p>I know, I know, that’s not how you do it, but it is just a use case I have on hand.</p>
-
+<span class="k">interface</span> <span class="nc">ContextComponent</span> <span class="p">:</span> <span class="n">Context</span>
+</code></pre></div><p>I know, I know, that’s not how you do it, but it is just a use case I have on hand.</p>
 <p>How do you test things using this structure? Well, it is pretty simple.</p>
-
 <ul>
 <li>For <em>model</em> components, you can mock or stub your dependencies and pass them to constructor, no biggie.</li>
 <li>For <em>presentation</em> components, it is possible to build your own <code>Context</code> and pass it instead.</li>
 </ul>
-
 <h2 id="decisions-decisions">Decisions, Decisions</h2>
-
 <p>All of the above got me thinking.</p>
-
 <blockquote>
 <p>Do you need complex tools to solve simple problems?</p>
 </blockquote>
-
 <p>As you can see, the setup is pretty simple.
 Yes, <em>potentially</em> Dagger could give some benefits,
 but is it worth it increasing build time for every developer on the team
 dozens of times per day? And taking into an account the fact
 that this setup worked for years without any change at all?</p>
-
 <blockquote>
 <p>Do you need to keep using tools designed for different conditions?</p>
 </blockquote>
-
 <p>Let’s face it — the annotation processing is a nice idea but meant
 for special environments.
 It is too verbose to declare everything by hand using Java, so here we go,
 there is a code generator which does this for us.
 Is it a good fit if you are using Kotlin for the entire codebase?
 I have no idea, it is your codebase and your call. I did mine.</p>
-
 <h2 id="back-to-the-roots">Back to the Roots</h2>
-
 <blockquote>
 <p>Having a library isn’t cool. You know what’s cool? Not having a library.</p>
 </blockquote>
-
 <p>Let’s go crazy and use Kotlin to make our own
 <a href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> implementation.
 Not <a href="https://github.com/Ekito/koin">Koin</a>,
 not <a href="https://github.com/SalomonBrys/Kodein">Kodein</a>,
 not <a href="https://github.com/traversals/kapsule">Kapsule</a> —
 just some patterns and language features.</p>
-
 <blockquote>
 <p>I highly suggest reading
 <a href="https://martinfowler.com/articles/injection.html">a Martin Fowler article</a>
 about inversion of control (IoC) containers.
 It contains almost everything you need to know about IoC, so I’m going to talk about practice only.</p>
 </blockquote>
-
 <h3 id="modules">Modules</h3>
-
 <p>What is a module? It is a registry of dependencies.
 What properties a module has? Dependencies on other modules.
 Sounds simple enough.</p>
@@ -285,15 +248,13 @@ Sounds simple enough.</p>
     <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">override</span> <span class="k">val</span> <span class="py">service</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">.</span><span class="n">repository</span><span class="p">)</span> <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>Notice the <code>lazy</code> delegate.
+<span class="p">}</span>
+</code></pre></div><p>Notice the <code>lazy</code> delegate.
 It makes our <a href="https://kotlinlang.org/docs/reference/delegated-properties.html#lazy">properties lazy singletons</a>,
 just like Dagger would do it for you!
 In other words, creating a module would not create all dependencies in it at once,
 but will do it only on the first access.</p>
-
 <h3 id="context"><code>Context</code></h3>
-
 <p>Talking about <code>Context</code>&hellip; It is just a composition of modules, right?</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span>
     <span class="n">RepositoryModule</span><span class="p">,</span>
@@ -305,25 +266,23 @@ but will do it only on the first access.</p>
     <span class="p">)</span> <span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
         <span class="n">RepositoryModule</span> <span class="k">by</span> <span class="n">repositoryModule</span><span class="p">,</span>
         <span class="n">ServiceModule</span> <span class="k">by</span> <span class="n">serviceModule</span>
-<span class="p">}</span></code></pre></div>
-<p>We are using <a href="https://kotlinlang.org/docs/reference/delegation.html">Kotlin delegation</a> here.
+<span class="p">}</span>
+</code></pre></div><p>We are using <a href="https://kotlinlang.org/docs/reference/delegation.html">Kotlin delegation</a> here.
 The <code>Context</code> will be translated to something like this to the end user.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
     <span class="k">val</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
-<span class="p">}</span></code></pre></div>
-<p>You have to create it by hand though, creating all modules first.
+<span class="p">}</span>
+</code></pre></div><p>You have to create it by hand though, creating all modules first.
 Dagger would’ve done it for you, but it is no biggie.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">createContext</span><span class="p">():</span> <span class="n">Context</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">repositoryModule</span> <span class="p">=</span> <span class="n">RepositoryModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
     <span class="k">val</span> <span class="py">serviceModule</span> <span class="p">=</span> <span class="n">ServiceModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">Context</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">,</span> <span class="n">serviceModule</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<p>Yep, it is a bit verbose, but you are in a total control because it is your code.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>Yep, it is a bit verbose, but you are in a total control because it is your code.</p>
 <h3 id="tricks">Tricks</h3>
-
 <p>You can define non-lazy dependencies which will be created at the same time as a module.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
@@ -331,8 +290,8 @@ Dagger would’ve done it for you, but it is no biggie.</p>
     <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
         <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>You can define non-singleton dependencies.</p>
+<span class="p">}</span>
+</code></pre></div><p>You can define non-singleton dependencies.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
 
@@ -340,8 +299,8 @@ Dagger would’ve done it for you, but it is no biggie.</p>
         <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
             <span class="k">get</span><span class="p">()</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>You can define scopes using the same delegation approach as with the <code>Context</code>.</p>
+<span class="p">}</span>
+</code></pre></div><p>You can define scopes using the same delegation approach as with the <code>Context</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">UserContext</span> <span class="p">:</span>
     <span class="n">Context</span><span class="p">,</span>
     <span class="n">UserModule</span> <span class="p">{</span>
@@ -360,53 +319,46 @@ Dagger would’ve done it for you, but it is no biggie.</p>
     <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Context</span> <span class="p">{</span>
         <span class="k">override</span> <span class="k">fun</span> <span class="nf">plus</span><span class="p">(</span><span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span><span class="p">)</span> <span class="p">=</span> <span class="n">UserContext</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">userModule</span><span class="p">)</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>You can define multiple dependencies with the same interface.</p>
+<span class="p">}</span>
+</code></pre></div><p>You can define multiple dependencies with the same interface.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">yinService</span><span class="p">:</span> <span class="n">Service</span>
     <span class="k">val</span> <span class="py">yangService</span><span class="p">:</span> <span class="n">Service</span>
-<span class="p">}</span></code></pre></div>
-<p>You can move from <code>lateinit var</code> to <code>private val</code>.</p>
+<span class="p">}</span>
+</code></pre></div><p>You can move from <code>lateinit var</code> to <code>private val</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="results">Results</h3>
-
+<span class="p">}</span>
+</code></pre></div><h3 id="results">Results</h3>
 <p>Seems like it is possible to do the inversion of control without Dagger, who knew?</p>
-
 <h4 id="pros">Pros</h4>
-
 <ul>
 <li>Inversion of control is based on your code and patterns instead of frameworks.</li>
 <li>Since it is your code you can do whatever you want with it and it is extremely simple to understand how it actually works.</li>
 <li>Compile-time validation with meaningful messages.</li>
 <li>No annotation processing, i. e. faster and more reliable builds.</li>
 </ul>
-
 <h4 id="cons">Cons</h4>
-
 <ul>
 <li>It is a gross <a href="https://en.wikipedia.org/wiki/Service_locator_pattern">service locator</a>.
-
 <ul>
 <li>Well, it is mostly true, but can I live with it? Certainly.
 Especially when taking into an account that the goal
 was to achieve the inversion of control and not a dependency injection.</li>
-</ul></li>
+</ul>
+</li>
 <li>It is verbose.
-
 <ul>
 <li>It is, thanks! You have to actually think about how your <code>Context</code> is made and I actually like it.</li>
-</ul></li>
+</ul>
+</li>
 <li>No Dagger — no cool points.
-
 <ul>
 <li>I’m typing this text on a Plan 9 machine, so&hellip;</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>Jokes aside though — it works in real life.</p>
-
 <ul>
 <li><code>kapt</code> removal finally brought team confidence in the Kotlin compiler.
 I haven’t heard any complaints about either performance or weird compilation errors
@@ -416,22 +368,17 @@ I’ve observed 25% reduction in build time and proper incremental builds.</li>
 like they do for the main codebase since it is no longer a pile of dependencies
 no one understands. It is a good thing as well.</li>
 </ul>
-
 <h1 id="exploration-time">Exploration Time!</h1>
-
 <p>Since I’m trying to advocate a more broad-minded approach to the development process,
 let’s take a look at other languages and how people try to achieve
 the inversion of control in their code without using frameworks for that purpose.</p>
-
 <h2 id="scala">Scala</h2>
-
 <p>The research I’ve made for framework-less IoC brought me to frequent mentions
 of the Cake and Thin Cake patterns originated from Scala.
 I highly suggest reading <a href="https://www.cakesolutions.net/teamblogs/2011/12/19/cake-pattern-in-depth">the explanation article</a>
 since it covers everything you need to know about the Cake pattern.
 There is also <a href="https://www.youtube.com/watch?v=OJe0Dm3t5wQ">a great presentation</a>
 on the topic comparing Cake, Thin Cake and a couple of other approaches, including Guice.</p>
-
 <p>I don’t think it is possible to do the exact Thin Cake translation
 to Kotlin, but here is an attempt to do so anyway.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
@@ -442,24 +389,21 @@ to Kotlin, but here is an attempt to do so anyway.</p>
     <span class="k">fun</span> <span class="nf">service</span><span class="p">()</span> <span class="p">=</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">())</span>
 <span class="p">}</span>
 
-<span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span></code></pre></div>
-<p>The code is not identical to the original approach though since
+<span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span>
+</code></pre></div><p>The code is not identical to the original approach though since
 we don’t have
 <a href="https://docs.scala-lang.org/tour/traits.html">traits</a> and
 <a href="https://docs.scala-lang.org/tour/self-types.html">self-types</a> in Kotlin.
 I think the closest true match is actually using the delegation,
 just like I’ve described above. So I guess the Kotlin approach
 is a rough adaptation of the Thin Cake pattern!</p>
-
 <h2 id="swift">Swift</h2>
-
 <p>Passing <code>Context</code> to <code>ViewModel</code> in the described approach is actually messy.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
-<span class="p">}</span></code></pre></div>
-<p>The <code>Context</code> is a dependency container and passing it basically means
+<span class="p">}</span>
+</code></pre></div><p>The <code>Context</code> is a dependency container and passing it basically means
 a complete access to all dependencies, whether you like it or not.</p>
-
 <p>Swift has a nice method to isolate the scope of the <code>Context</code>
 via declaring child <code>Context</code> using
 <a href="https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Protocols.html#//apple_ref/doc/uid/TP40014097-CH25-ID282">protocol composition</a>.
@@ -467,7 +411,6 @@ This approach is described
 <a href="http://merowing.info/2017/04/using-protocol-compositon-for-dependency-injection/">here</a>
 and
 <a href="https://5sw.de/2017/04/protocol-composition-and-dependency-injection/">there</a>.</p>
-
 <p>A rough Kotlin translation seems to be something like this.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">ViewModel</span><span class="p">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">ServiceModule</span>
@@ -475,40 +418,33 @@ and
 
 <span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// Error: type mismatch.
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<p>Unfortunately for this to work all child <code>Context</code> variations should be declared
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>Unfortunately for this to work all child <code>Context</code> variations should be declared
 at the top-level <code>Context</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="p">,</span> <span class="n">ViewModel</span><span class="p">.</span><span class="n">Context</span>
 
 <span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// It works!
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<p>A more sane approach actually can be just passing all dependencies
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>A more sane approach actually can be just passing all dependencies
 in <code>ViewModel</code> constructors directly, without a <code>Context</code> instance.
 Plus, this requires declaring a module per dependency to be able
 to construct <code>Context</code> from singular dependencies instead of their enumerations.
 But, at the same time, it would be nice to have protocol composition
 for such cases as an alternative.</p>
-
 <h1 id="fin">Fin</h1>
-
 <p>Developers tend to search for <em>a silver bullet</em> all the time.
 Do you parse JSON? You absolutely have to use the most performant
 parser available on this planet, otherwise&hellip; Have you played
 <a href="https://en.wikipedia.org/wiki/Doom_(2016_video_game)">Doom</a>? Well, it
 goes exactly this way. Oh, you parse it only once and it is an object with two fields?
 You need the most performant parser, remember!</p>
-
 <p>Don’t let a tool to become <a href="https://en.wikipedia.org/wiki/MacGuffin">a MacGuffin</a> —
 pick it based on your needs and do not adapt your needs to a tool.
 We develop things to solve issues, not to create them.</p>
-
-<hr />
-
+<hr>
 <p>PS Bonus points to everyone who got <a href="https://en.wikipedia.org/wiki/A_Flight_to_Remember">the Futurama reference</a> 😉</p>
-
-<hr />
-
+<hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a> and
 <a href="https://twitter.com/PreusslerBerlin">Danny Preussler</a> for the review!</p>
 

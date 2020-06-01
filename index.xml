@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Artur Dryomov</title>
@@ -139,7 +139,7 @@ $ git shortlog --summary --numbered 2 Bender Rodriguez 2 Philip J. Fry 1 Bending
       <guid>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</guid>
       <description>After years of writing and reading tests I’ve discovered that mocking is either overused or underused. Not sure why exactly it happens but striking the right balance seems to be a complicated issue.
 In this Superior Testing article I’ll show how to replace mocking in favor of faking and collect benefits.
-Mocking Sync Let’s say we have a books repository allowing us to get a book based on its ID.</description>
+Mocking Sync Let’s say we have a books repository allowing us to get a book based on its ID. The repository depends on the storage.</description>
     </item>
     
     <item>

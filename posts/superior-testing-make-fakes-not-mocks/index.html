@@ -63,19 +63,13 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>After years of writing and reading tests I’ve discovered that mocking
 is either overused or underused. Not sure why exactly it happens
 but striking the right balance seems to be a complicated issue.</p>
-
 <p>In this Superior Testing article I’ll show how to replace mocking
 in favor of faking and collect benefits.</p>
-
 <h1 id="mocking">Mocking</h1>
-
 <h2 id="sync">Sync</h2>
-
 <p>Let’s say we have a books repository allowing us to get a book based on its ID.
 The repository depends on the storage. The resulting code is simple enough.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
@@ -90,16 +84,14 @@ The repository depends on the storage. The resulting code is simple enough.</p>
 
         <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBook</span><span class="p">(</span><span class="n">id</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">storage</span><span class="p">.</span><span class="n">getBooks</span><span class="p">().</span><span class="n">find</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">id</span> <span class="p">==</span> <span class="n">id</span> <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>Notice that everything is carefully hidden behind <code>interface</code>. This helps
+<span class="p">}</span>
+</code></pre></div><p>Notice that everything is carefully hidden behind <code>interface</code>. This helps
 a lot with abstraction which leads to better inversion of control practices
 and utility use-cases (like mocking). Rephrasing
 <a href="https://en.wikipedia.org/wiki/Single_Ladies_(Put_a_Ring_on_It)">a modern classic Beyoncé</a>:</p>
-
 <blockquote>
 <p>If you like it, then you shoulda put an <code>interface</code> on it.</p>
 </blockquote>
-
 <p>We’ll make a single test for now — to check that the repository returns <code>null</code>
 when the storage is blank.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
@@ -109,9 +101,8 @@ when the storage is blank.</p>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
     <span class="n">assertThat</span><span class="p">(</span><span class="n">repository</span><span class="p">.</span><span class="n">getBook</span><span class="p">(</span><span class="s">&#34;ID&#34;</span><span class="p">)).</span><span class="n">isNull</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="reactive">Reactive</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="reactive">Reactive</h2>
 <p>Soon enough we notice that book-related operations block the main thread.
 Also, RxJava is <a href="https://www.reddit.com/r/OutOfTheLoop/comments/2ho0gy/where_di_the_so_hot_right_now_meme_come_from/">so hot right now</a>
 (or was, I have no idea). The code evolves.</p>
@@ -128,8 +119,8 @@ Also, RxJava is <a href="https://www.reddit.com/r/OutOfTheLoop/comments/2ho0gy/w
         <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBook</span><span class="p">(</span><span class="n">id</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">storage</span><span class="p">.</span><span class="n">getBooks</span><span class="p">()</span>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">books</span> <span class="p">-&gt;</span> <span class="n">books</span><span class="p">.</span><span class="n">find</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">id</span> <span class="p">==</span> <span class="n">id</span> <span class="p">}.</span><span class="n">toOptional</span><span class="p">()</span> <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>The relevant test needs to be modified as well.</p>
+<span class="p">}</span>
+</code></pre></div><p>The relevant test needs to be modified as well.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storageBooks</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">BooksStorage</span><span class="p">&gt;</span> <span class="p">{</span>
@@ -139,17 +130,13 @@ Also, RxJava is <a href="https://www.reddit.com/r/OutOfTheLoop/comments/2ho0gy/w
 
     <span class="n">storageBooks</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
     <span class="n">repository</span><span class="p">.</span><span class="n">getBook</span><span class="p">(</span><span class="s">&#34;ID&#34;</span><span class="p">).</span><span class="n">assertValuesOnly</span><span class="p">(</span><span class="n">None</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="lessons-learned">Lessons Learned</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="lessons-learned">Lessons Learned</h2>
 <h3 id="good">Good</h3>
-
 <ul>
 <li>Mocking works and works well.</li>
 </ul>
-
 <h3 id="meh">Meh</h3>
-
 <ul>
 <li>More complicated the code becomes — the bulkier mocking feels.
 This scales linearly.</li>
@@ -159,26 +146,21 @@ Producing another test will require the same mocking all over again.</li>
 This might not seem like an issue but maintaining mocking tools is a dangerous
 idea — magic is not cheap and certainly is not trivial.</li>
 </ul>
-
 <h1 id="faking">Faking</h1>
-
 <p>Instead of mocking let’s produce reusable fakes using language instruments and nothing else.</p>
-
 <blockquote>
 <p>📖 Fakes might be called stubs or dummies —
 <a href="http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html">depends on the material</a>.
 I suggest calling them <em>test implementations</em>.</p>
 </blockquote>
-
 <h2 id="sync-1">Sync</h2>
-
 <p>The implementation is not complicated at all.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
     <span class="k">var</span> <span class="py">getBookResult</span><span class="p">:</span> <span class="n">String</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBook</span><span class="p">(</span><span class="n">id</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">getBookResult</span>
-<span class="p">}</span></code></pre></div>
-<p>The relevant test changes, but not by a huge margin.</p>
+<span class="p">}</span>
+</code></pre></div><p>The relevant test changes, but not by a huge margin.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
         <span class="n">getBookResult</span> <span class="p">=</span> <span class="k">null</span>
@@ -186,22 +168,22 @@ I suggest calling them <em>test implementations</em>.</p>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
     <span class="n">assertThat</span><span class="p">(</span><span class="n">repository</span><span class="p">.</span><span class="n">getBook</span><span class="p">(</span><span class="s">&#34;ID&#34;</span><span class="p">)).</span><span class="n">isNull</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="reactive-1">Reactive</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="reactive-1">Reactive</h2>
 <p>Basically the same thing as the sync variant.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">books</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">()</span> <span class="p">=</span> <span class="n">books</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">()</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
     <span class="n">storage</span><span class="p">.</span><span class="n">books</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
     <span class="n">repository</span><span class="p">.</span><span class="n">getBook</span><span class="p">(</span><span class="s">&#34;ID&#34;</span><span class="p">).</span><span class="n">assertValuesOnly</span><span class="p">(</span><span class="n">None</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<p>There is an interesting note though. If we transform <code>BooksStorage</code> to use
+<span class="p">}</span>
+</code></pre></div><p>There is an interesting note though. If we transform <code>BooksStorage</code> to use
 <code>val</code> instead of <code>fun</code> we’ll be able to use a more compact notation.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
@@ -209,40 +191,34 @@ I suggest calling them <em>test implementations</em>.</p>
 
 <span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">books</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">()</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
     <span class="n">storage</span><span class="p">.</span><span class="n">books</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
     <span class="n">repository</span><span class="p">.</span><span class="n">getBook</span><span class="p">(</span><span class="s">&#34;ID&#34;</span><span class="p">).</span><span class="n">assertValuesOnly</span><span class="p">(</span><span class="n">None</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<p>This is possible because in Kotlin referencing an <code>interface</code> implementation
+<span class="p">}</span>
+</code></pre></div><p>This is possible because in Kotlin referencing an <code>interface</code> implementation
 gives access to underlying types. In this particular case <code>books</code>
 is an <code>Observable</code> but we reference it as <code>PublishSubject</code> because we have access
 to the actual implementation. Use it as an advantage in tests but avoid
 in inversion of control containers since essentially it might lead
 to leaking implementation details.</p>
-
 <h2 id="lessons-learned-1">Lessons Learned</h2>
-
 <h3 id="good-1">Good</h3>
-
 <ul>
 <li>Test implementations are implemented as dedicated reusable components.</li>
 <li>In particular cases faking is less verbose than mocking.</li>
 <li>It is possible to sugar-coat fakes with DSL-ish operators like <code>BooksStorage.emitBooks()</code>.</li>
 <li>There is no external dependency on the mocking provider.</li>
 </ul>
-
 <h3 id="meh-1">Meh</h3>
-
 <ul>
 <li>Faking requires manual implementation.
 Might be resolved with code-generation though.</li>
 </ul>
-
 <h1 id="lessons-learned-again">Lessons Learned (Again!)</h1>
-
 <p>I think mocking vs. faking is a classic easy vs. simple scenario.
 It is relatively easy to mock things left and right but is it simple
 on the scale of the entire codebase? Is it understandable and maintainable?

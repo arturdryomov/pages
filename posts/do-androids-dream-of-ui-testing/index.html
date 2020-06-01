@@ -63,48 +63,38 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>Automation is a foundation stone of the software development.
 People didn’t like counting numbers themselves, so they invented calculators.
 Calculators went to be computers and here we go, waiting for AI to take over,
 <a href="https://en.wikipedia.org/wiki/Blade_Runner_2049">watching movies</a>
 about transhumanism on our way here.</p>
-
 <p>Automation related to UI testing seems to be a Holy Grail from that standpoint.
 Sure thing, it can replace manual QA procedures with automated ones! Like, completely!
 You just need to have a local backend&hellip; And maybe disable animations.
 And&hellip; you know, somehow wait for backend responses. And don’t forget about the infrastructure.</p>
-
 <p>Actually, we’ve done all of that. A lot of UI tests, a fleet of emulators — you name it.
 It kind of worked but eventually we’ve come to a tough decision
 to remove them from the CI pipeline. This article is a <em>lessons learned</em> kind of thing.</p>
-
 <p>Let’s go over all testing layers from
 <a href="https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html">the testing pyramid</a> first:
 Unit, Integration, UI. The general suggested split is
 70% (Unit), 20% (Integration) and 10% (UI). This ratio is justified by rising
 maintenance cost, flakiness and run speed.</p>
-
 <h1 id="unit-tests">Unit Tests</h1>
-
 <p>This is a majority of tests a project should have.
 Honestly saying, almost everything can be unit-tested.
 Things impossible to unit-test most likely shouldn’t be tested in the first place —
 like the Android framework code.</p>
-
 <p>The OS is a black box — it consumes instructions and does its best job
 to run them. It might be widgets rendering on a device screen, sending Bluetooth
 packets or reading <a href="https://en.wikipedia.org/wiki/Sysfs"><code>sysfs</code></a>.
 The whole point of the framework API is to
 shield application developers from the OS. Use this advantage.</p>
-
 <p>The easy thing to forget is that the framework was already tested
 by Google internally. There is no need to test an external contract.
 If there is a need to do so it is an indicator that the contract provider
 breaks it. These things should be reported to the provider, otherwise,
 there will be a constant battle with the environment.</p>
-
 <p>If the application code references the framework, there is still a way to test
 the interaction with it using abstractions.
 More abstractions available, easier it gets to write a maintainable testable code.
@@ -126,31 +116,27 @@ use everything anyway.</p>
             <span class="p">.</span><span class="n">cache</span><span class="p">()</span>
             <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBluetooth</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBluetooth</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">supportsLeResult</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
 
     <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">supportsLeResult</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="n">singleOrError</span><span class="p">()</span>
-<span class="p">}</span></code></pre></div>
-<p>The <code>Bluetooth</code> instance should be provided via the Inversion of Control
+<span class="p">}</span>
+</code></pre></div><p>The <code>Bluetooth</code> instance should be provided via the Inversion of Control
 implementation. <code>AndroidBluetooth</code> is for the real use and <code>TestBluetooth</code> is for tests.</p>
-
 <p>About UI-related things — the topic was beaten
 to death over and over again. MVP, MVVM, MVI — everything works. The <code>V</code> part
 isolates framework widgets and related interactions, so it is possible to test
 everything except it. Create a <code>TestView</code>, provide <code>Test*</code>
 dependencies and here we go, unit tests for the presentation!</p>
-
 <h2 id="tech-stack">Tech Stack</h2>
-
 <p>The stability of unit tests comes directly from the environment.
 The thing is — unit tests do not need anything extra in terms of
 control. There is no need to run an extra OS and change a lot of conditions.</p>
-
 <p>Tests are executed as a regular JVM application on the JVM itself.
 Nothing extra is required. Throw a bunch of bytecode at the JVM and it’s done.
 And, since the JVM is a pretty much stable product, there is only a single thing to care about —
 the project codebase. Actually, the supplied code since most likely external libraries would be used.</p>
-
 <ul>
 <li>Runners: <a href="https://github.com/junit-team/junit4">JUnit 4</a>,
 <a href="https://github.com/junit-team/junit5">JUnit 5</a>,
@@ -160,18 +146,14 @@ the project codebase. Actually, the supplied code since most likely external lib
 <a href="https://github.com/google/truth">Truth</a>.</li>
 <li>Mocks: <a href="https://github.com/mockito/mockito">Mockito</a>.</li>
 </ul>
-
 <p>All these have one thing in common — they are a JVM bytecode produced by Java and (or) Kotlin compilers.
 Since it is a regular code pretty similar to the one from the project codebase,
 it is easy to understand it, modify it and even replace it.
 In other words, there is a total control of the environment.
 This statement might sound obvious but it is precious.</p>
-
 <h1 id="integration-tests">Integration Tests</h1>
-
 <p>This category is an interesting one. Mostly because it is in a limbo between
 unit tests and UI tests.</p>
-
 <ul>
 <li>Compose multiple components and make a test about
 how do they work together using the same
@@ -179,14 +161,10 @@ JVM-based approach as for unit tests.</li>
 <li>Make a UI test but do not use a real backend
 (which makes the test a non-End-to-End one).</li>
 </ul>
-
 <p>Both of these are actually integration tests since they test integration between components.
 The UI test will test a much more sophisticated combination though.</p>
-
 <p>In other words, a UI test is always an integration test, but a unit test is never an integration test.</p>
-
 <h1 id="ui-tests">UI Tests</h1>
-
 <blockquote>
 <p>UI testing differs from unit testing in fundamental ways.
 Unit testing enables you to work within your app&rsquo;s scope and allows you
@@ -195,25 +173,19 @@ UI testing exercises your app&rsquo;s UI in the same way that users do without a
 to your app&rsquo;s internal methods, functions, and variables.
 This enables your tests to see the app the same way a user does,
 exposing UI problems that users encounter.</p>
-
 <p>&ndash; <a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html"><em>Apple documentation</em></a></p>
 </blockquote>
-
 <p>Sounds like a dream come true, right? Manual QA processes can be completely automated!</p>
-
 <p>The difference from manual procedures is in a programmatic-ish approach.
 Test scenarios are getting described as a regular test suite.
 The resulting suite gets executed.
 Scenarios generally consist of a number of steps:</p>
-
 <ul>
 <li>preparation — stub network responses, create files;</li>
 <li>actions — clicks on widgets, scrolls, gestures;</li>
 <li>checks — assertions that UI was changed appropriately.</li>
 </ul>
-
 <h2 id="tech-stack-1">Tech Stack</h2>
-
 <p>Android has a single official way to describe tests —
 <a href="https://developer.android.com/training/testing/espresso/">Espresso</a>.
 It is kind of meh in terms of declarative description, so generally
@@ -223,7 +195,8 @@ on top of Espresso. The result looks something like that.</p>
     <span class="k">val</span> <span class="py">incrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_increment</span><span class="p">)</span> <span class="p">}</span>
     <span class="k">val</span> <span class="py">decrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_decrement</span><span class="p">)</span> <span class="p">}</span>
     <span class="k">val</span> <span class="py">numberText</span> <span class="p">=</span> <span class="n">KTextView</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">text_number</span><span class="p">)</span> <span class="p">}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">CounterScreenTest</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">CounterScreenTest</span> <span class="p">{</span>
     <span class="n">@Test</span> <span class="k">fun</span> <span class="nf">`it works`</span><span class="p">()</span> <span class="p">{</span>
         <span class="n">CounterScreen</span> <span class="p">{</span>
             <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s">&#34;0&#34;</span><span class="p">)</span>
@@ -235,21 +208,17 @@ on top of Espresso. The result looks something like that.</p>
             <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s">&#34;0&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>This kind of setup works well. It is readable and maintainable.
+<span class="p">}</span>
+</code></pre></div><p>This kind of setup works well. It is readable and maintainable.
 Unfortunately, the world around us is highly connected, so almost every action we do
 leads to network requests and responses, database reads and writes and so on.</p>
-
-<h3 id="async-await"><code>async</code> + <code>await</code></h3>
-
+<h3 id="async--await"><code>async</code> + <code>await</code></h3>
 <p>Espresso has its own way to deal with async operations and it is called
 <a href="https://developer.android.com/training/testing/espresso/idling-resource"><code>IdlingResource</code></a>.
 Basically saying it is an advanced <code>await</code>. Developers just need to integrate <code>IdlingResource</code>
 all over the application. Send a request? Provide a way to <code>await</code> for its completion.</p>
-
 <p>Honestly saying it is a fair solution. There is no silver bullet to magically
 <code>await</code> for an <code>async</code> operation without accessing some entry points.</p>
-
 <p>This approach sounds tedious though so there are tools to help with that.
 For RxJava operations it is possible to use
 <a href="https://github.com/square/RxIdler">RxIdler</a>.
@@ -261,29 +230,21 @@ listening to a WebSocket and so on. Using general approaches can lead to a succe
 for the network response on a background thread and then getting stuck on another
 network request being done somewhere in the application since there is an <code>await</code>
 for all background processes and all network responses.</p>
-
 <p>The same thing goes for animations. For example, clicking a button invokes
 showing a next screen. The application actually does that but includes a complex
 animation for an undefined time interval. It is possible to provide
 an <code>IdlingResource</code> for the animation or disable animations in the application
 altogether, which leads to far less intrusion in the main codebase.</p>
-
 <blockquote>
 <p>⚠️ Disabling animations makes tests more stable but less honest —
 they do not check how animations work and to which events they might lead.</p>
 </blockquote>
-
 <h3 id="backend-communication">Backend Communication</h3>
-
 <h4 id="real-backend">Real Backend</h4>
-
 <p>This is <a href="https://www.youtube.com/watch?v=siwpn14IE7E">the danger zone</a> of End-to-End tests.</p>
-
 <h5 id="regular-shared-instance">Regular Shared Instance</h5>
-
 <p>Using a real environment, not controlled in any way by tests,
 brings a couple of painpoints on the table.</p>
-
 <ul>
 <li>Conflicts between tests. Running two tests in parallel
 using same credentials? Prepare to be kicked out if the backend doesn’t
@@ -292,71 +253,53 @@ a different one in another? Tough luck!</li>
 <li>Conflicts with backend itself. Running a test when
 a backend team wipes a database? Backend is offline? Too bad!</li>
 </ul>
-
 <p>These two seem to be harmless and theoretical but they do exist in practice.
 The lack of control brings points of failure as a neat bonus.</p>
-
 <h5 id="test-controlled-isolated-instances">Test-Controlled Isolated Instances</h5>
-
 <p>Using a real environment, controlled by tests, is a good idea.
 Unfortunately, it requires cooperation from the backend team.</p>
-
 <ul>
 <li>Implement an API to mutate the remote environment in tests.
 Like, <code>POST /end-to-end/users/remove</code>.</li>
 <li>Provide a way to start and stop the entire backend infrastructure
 per test.</li>
 </ul>
-
 <p>In the era of 100 microservices acting as a single backend system
 these tasks become almost impossible. Personally, I’ve observed
 a progression from <em>can be run on a single machine</em> to <em>no way it runs on a single machine</em>.
 This kind of resource consumption can be an unachievable luxury —
 starting a whole backend cluster per test is too much.</p>
-
 <h4 id="mocked-backend">Mocked Backend</h4>
-
 <p>Who needs a real backend? We’ll implement our own one!
 And we have options.</p>
-
 <ul>
 <li>Pick <a href="https://github.com/square/okhttp/tree/master/mockwebserver"><code>MockWebServer</code></a>
 and describe responses necessary for tests.
 The same can be achieved with a clever blocking OkHttp <code>Interceptor</code>.</li>
 <li>Replace network communication code with a mocked one.</li>
 </ul>
-
 <blockquote>
 <p>⚠️ Replacing network-related code makes tests less honest
 from the integration standpoint.</p>
 </blockquote>
-
 <p>Any attempt to have a separate backend implementation brings
 a significant downside though — following the contract.</p>
-
 <p>In ideal world, the backend team follows a shared documented contract
 describing public API calls in detail. Even then the mobile team should
 stick to it to the letter, updating the implementation all the time.
 Fortunately, it can be semi-automated using tools like
 <a href="https://thrift.apache.org/">Apache Thrift</a>.</p>
-
 <p>Since nobody is perfect and people communication remains one of the toughest issues in CS
 there might be issues. The contract was updated but the implementation
 doesn’t follow that? Prepare for issues in production. Tests will be fine though.</p>
-
 <h3 id="infrastructure">Infrastructure</h3>
-
 <p>Since the application is being run as-is, just like a regular one on a consumer device,
 JVM is not enough. Prepare to run an entire OS!</p>
-
 <h4 id="devices">Devices</h4>
-
 <p>It doesn’t work. Moving on&hellip;
 All right, all right, there is actually a motivation.</p>
-
 <p>The thing is — consumer devices are not ready for the workload
 of thousands of tests being run on them constantly.</p>
-
 <ul>
 <li>Hardware will fail. Displays burn out, CPUs overheat, USB ports stop working.
 It is actually true and not an urban legend.</li>
@@ -364,20 +307,15 @@ It is actually true and not an urban legend.</li>
 during a test run? Maybe a dialog of some system application?
 It will be there eventually.</li>
 </ul>
-
 <h4 id="emulators">Emulators</h4>
-
 <p>The good thing about emulators is their dirt cheap resource cost.</p>
-
 <ul>
 <li>Each test run can use a brand-new emulator instance since the state
 can be wiped without consequences.</li>
 <li>Phone hardware is not required since emulators run on a host desktop OS
 essentially being a virtual machine.</li>
 </ul>
-
 <p>Unfortunately, the tooling around emulators can be&hellip; cruel.</p>
-
 <p>I’ve spent a couple of months (yes, you are reading this right)
 debugging <a href="https://issuetracker.google.com/issues/66884503">emulators crashing on test runs</a>.
 The worst thing with emulators instability is that almost anything
@@ -387,7 +325,6 @@ The debugging loop is extremely painful. It requires constantly monitoring
 emulators, collecting kernel dumps, analyzing OS conditions and hardware state.
 Some approaches helped for some time, then everything started all over again.
 It takes quite an effort to maintain the workable state of emulators because&hellip;</p>
-
 <p>The versioning in Android <code>sdkmanager</code>
 <a href="https://issuetracker.google.com/issues/38045649">is seriously messed up</a>.
 All packages have a name, i.e. <code>emulator</code>, and a revision, i.e. <code>4</code>.
@@ -403,62 +340,46 @@ As a bonus, there is a weird
 we have to live with.
 Oh, have I mentioned that there are
 <a href="https://issuetracker.google.com/issues/66886035">multiple <code>emulator</code> binaries</a>?</p>
-
 <p>One can suggest picking a stable hardware, a stable <code>emulator</code> binary,
 a stable emulator <code>system-image</code> and stick to it using a Docker image.
 Well, it doesn’t work this way. If the application
 uses Google Play Services package there is a need to update the emulator <code>system-image</code>
 from time to time since that package is actually bundled into it and
 cannot be updated separately.</p>
-
 <h2 id="forgot-about-dre-selenium">Forgot about <del>Dre</del> Selenium</h2>
-
 <p>It is hard to imagine that, but we are falling into the same trap all over again.
 Our colleagues from the web world struggle with
 <a href="https://sqa.stackexchange.com/questions/32542/how-to-make-selenium-tests-more-stable">UI tests instability</a>
 for a long time. Just ask your coworkers for an honest opinion.</p>
-
 <p>OK, don’t trust random people from the internet? Do you trust a huge company
 with millions of tests and the statistical data about flakiness?
 <a href="https://testing.googleblog.com/2017/04/where-do-our-flaky-tests-come-from.html">Here we go</a>.</p>
-
 <p>Why are we still doing this to ourselves?</p>
-
 <blockquote>
 <p>The bigger the trick and older the trick, the easier it is to pull.
 People think it can’t be that old and it can’t be that big for so many people to have fallen for it.</p>
-
 <p>The more the person invests, the less chance they will turn back.
 Eventually, when one is challenged or questioned, it means its investment
 and thus intelligence is questioned. No one can accept that. Not even to themselves.</p>
-
 <p>&ndash; <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p>
 </blockquote>
-
 <h1 id="automation-is-a-lie">Automation is a Lie?</h1>
-
 <p>There is nothing wrong with the concept of UI testing. In theory, it sounds great.
 Unfortunately, the practice breaks it easily. Taking a look at a bigger picture
 gives a reason for that.</p>
-
 <p>Introducing non-controlled environments does not work well in real life.
 UI tests introduce at least two of them:</p>
-
 <ul>
 <li>remote communication — network-accessible backend API;</li>
 <li>local communication — interaction with the OS.</li>
 </ul>
-
 <p>There are methods to control both of them, but the domain can be an overkill
 for small and medium-sized teams. Not everybody is a backend developer
 and a Linux DevOps engineer. It is a complex work, requiring effort and precision.
 Running QEMU emulators in a Docker container on a Linux host machine —
 it is not for everyone, believe me. I’ve been there.</p>
-
 <h1 id="integration-tests-vs-ui-tests">Integration Tests vs. UI Tests</h1>
-
 <p>Let’s compare two things.</p>
-
 <p>There is an application with a lot of abstractions over everything imaginable.
 Platform-specific code is contained behind a mockable interface (remember <code>Bluetooth</code>?).
 UI-related components are behind interfaces as well (like in MVP, MVVM, MVI).
@@ -471,19 +392,15 @@ Of course. Checking UI state? Yep.
 In other words, this is a JVM-based integration testing covering
 the majority of the application. Fast, reliable and understandable.
 It even forces good abstractions as a bonus.</p>
-
 <p>There is a UI tests suite. The backend is mocked locally. UI interactions
 are made in a usual manner. There is a fleet of emulators either in the cloud
 or as a local infrastructure. Sometimes it works, sometimes it doesn’t.
 Runs are slow even with a state of the art sharding. Almost everything is tested,
 even the OS framework that was tested via the company which provides it.</p>
-
 <p><em>Which one would you choose?</em></p>
-
 <p>Personally, I would pick a stable JVM-based integration test covering 70% of possible
 scenarios over any UI test running on an actual OS covering 90% with a chance of flakiness.
 The difference is just not worth it.</p>
-
 <ul>
 <li>Development resources spent trying to stabilize non-controlled environments
 is a waste.</li>
@@ -491,7 +408,6 @@ is a waste.</li>
 People just press the Restart button all over again, because at this point
 they are sure that the issue is with the environment and not the test itself.</li>
 </ul>
-
 <p>There is an element of compromise with JVM-based tests of course.
 Platform-specific code would not be tested since it is out of control.
 It is necessary to keep this in mind to establish a business-logic-to-platform-specifics ratio.
@@ -502,39 +418,31 @@ such as maps, notifications, location and tricky runtime permissions interaction
 These things are impossible to control from a UI test without hacks or
 a process restart which will kill a test run. It is trivial to test these
 using thin abstractions over the framework code though.</p>
-
 <p>Besides, there is a technique called <em>Testing in Production</em>. This is not a joke.
 Monitoring, feature flags, A/B experiments and more — all of these are actually
 related to the in-production testing.
 There is <a href="https://medium.com/@copyconstruct/testing-in-production-the-safe-way-18ca102d0ef1">a great article</a>
 about it.</p>
-
 <p>Recently I’ve done a technical exit interview with a former co-worker of mine.
 One of the questions I’ve asked was about the best thing in the project
 and the worst one from the technical perspective.</p>
-
 <ul>
 <li>The best thing — BDD-style <a href="https://github.com/spekframework/spek">Spek</a>
 unit tests. It was a pure joy to write and read them.</li>
 <li>The worst thing — UI tests. Their flakiness and constant battles
 with environments wore the person down. <em>It was a useless waste of time.</em></li>
 </ul>
-
 <p>Fun fact. I’ve monitored UI tests for a couple of months with a goal to note
 all bugs caught by them. The number was zero in the end. The majority
 of risky code was caught by an extensive unit tests suite.</p>
-
 <h1 id="the-fall">The Fall</h1>
-
 <blockquote>
 <p>I’ve seen things you people wouldn’t believe.
 Attack ships on fire off the shoulder of Orion.
 I watched C-beams glitter in the dark near the Tannhäuser Gate.
 All those moments will be lost in time, like tears in rain.</p>
-
 <p>&ndash; <a href="https://en.wikipedia.org/wiki/Tears_in_rain_monologue"><em>Roy Batty</em></a></p>
 </blockquote>
-
 <p>It is always hard to let go. A lot of effort was put into writing
 <a href="https://github.com/gojuno/composer">a custom test runner</a>,
 <a href="https://github.com/gojuno/swarmer">a custom emulators manager</a>,
@@ -543,16 +451,11 @@ on maintaining emulator-running nodes based on Linux and Docker.
 A lot of knowledge was put into creating a number of Espresso tests.
 Disabling UI tests from a CI pipeline was a painful experience.
 Like waving goodbye to a good friend.</p>
-
 <p><em>Do Androids Dream of Integration Testing?</em></p>
-
-<hr />
-
+<hr>
 <p>Title is a reference to <a href="https://en.wikipedia.org/wiki/Blade_Runner">the Blade Runner movie</a>
 and to <a href="https://en.wikipedia.org/wiki/Do_Androids_Dream_of_Electric_Sheep%3F">the original novel</a>.</p>
-
-<hr />
-
+<hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a>,
 <a href="https://twitter.com/sockeqwe">Hannes Dorfmann</a>
 and <a href="https://www.linkedin.com/in/igor-gomonov-a66903b7/">Igor Gomonov</a> for the review!</p>

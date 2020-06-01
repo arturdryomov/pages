@@ -63,29 +63,22 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>Who knows how many test suites were not created because of a classic parry.</p>
-
 <blockquote>
 <p>It cannot be tested — it uses a platform call!</p>
 </blockquote>
-
 <p>Well, it is not actually true all the time.
 Unit testing something that only a human eye and neural networks
 can catch — like animations — doesn’t make sense.
 On the other hand, retrying a network request on a re-established connection
 can and should be tested. As a bonus, it is possible to gain a couple of perks.</p>
-
 <h1 id="theory">Theory</h1>
-
 <p>The main advice I can give Android developers about testing —
 start thinking about the codebase as a platform-agnostic environment.
 Not in a ridiculous way but in a more pragmatic one — otherwise, it is too
 easy to slip on a dark cross-platform path. Associating the codebase
 with the JVM platform and not specifically Android is a better idea.
 Framework-related interactions can be plugged-in as composable blocks.</p>
-
 <p>Another advice — embrace abstractions available on hand.
 Samples in this article are based on RxJava but it is possible to replace it
 with <code>Future</code>, <code>Promise</code> or Kotlin coroutines.
@@ -94,15 +87,11 @@ Believe me, it is not wise to do everything from scratch if there is a good tech
 available. Moreover, it is easier to maintain consistency
 in the codebase if each component speaks using the same constructs.
 Do not repeat the <a href="https://en.wikipedia.org/wiki/Tower_of_Babel">Tower of Babel</a> fall.</p>
-
 <h1 id="practice">Practice</h1>
-
 <p>Lke it or not — platform interactions leak into the business logic.
 It is understandable — the environment capabilities should be embraced.</p>
-
 <p>At the same time, it is essential to test the logic of the final product —
 otherwise, there will be no product at all, only issues and undefined behavior.</p>
-
 <p>Fortunately enough, the mankind have dealt with such issues for a while.
 Let’s use a weight measurement example. How much does a brick weight?
 Well, certainly less than a space station and more than an atom.
@@ -113,27 +102,22 @@ It is possible to take this completely (but collectively) made up measurement un
 and apply it everywhere. Well, except
 <a href="http://mentalfloss.com/article/55895/countries-havent-adopted-metric-system">three countries</a>
 that do not use <a href="https://en.wikipedia.org/wiki/Metric_system">metric system</a>.</p>
-
 <p>Software development provides means to create abstractions easy-as.
 It is not necessary to create
 an <a href="https://www.iso.org/">ISO</a> committee to create one — a programming language is enough.
 Android is not an exception — and it never was.</p>
-
 <h2 id="connectivity">Connectivity</h2>
-
 <p>It can be useful to retry stalled network requests when OS reconnects
 to a network access point. In fact,
 <a href="https://developer.android.com/reference/android/net/ConnectivityManager"><code>ConnectivityManager</code></a>
 was there for centuries:</p>
-
 <blockquote>
 <p>The primary responsibilities of this class are to:
 monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
 </blockquote>
-
 <p>The usage of the potential abstraction looks like this.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span></code></pre></div>
-<p>Seems like a single stream will be enough. Let’s do it!</p>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
+</code></pre></div><p>Seems like a single stream will be enough. Let’s do it!</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Connectivity</span> <span class="p">{</span>
 
     <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span>
@@ -156,22 +140,21 @@ monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
             <span class="n">emitter</span><span class="p">.</span><span class="n">setCancellable</span> <span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">removeDefaultNetworkActiveListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span> <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>Marvelous! A couple of things to notice here.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>Marvelous! A couple of things to notice here.</p>
 <p>The <code>Observable</code> itself handles proper <code>Listener</code> setting on subscription and
 unsetting on unsubscription. It uses the
 <a href="https://en.wikipedia.org/wiki/Dispose_pattern">Dispose pattern</a>,
 i. e. the RxJava <code>Disposable</code>. Since all <code>Observable</code> behave the same
 the end-user of the <code>Connectivity</code> will work with it as with any other
 <code>Observable</code>.</p>
-
 <p>Since there is an <code>interface</code> it is easy to provide a <code>Test*</code> implementation
 for unit tests. Just a single call to simulate the real-world behavior and that’s it —
 it is possible to test code which works with the platform framework.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestConnectivity</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;()</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span>
@@ -180,9 +163,8 @@ it is possible to test code which works with the platform framework.</p>
     <span class="n">it</span><span class="p">(</span><span class="s">&#34;refreshes&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">refresh</span><span class="p">).</span><span class="n">run</span><span class="p">()</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="launching">Launching</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="launching">Launching</h2>
 <p>What about starting something via <code>Intent</code>? The operation itself is trivial,
 but it is necessary to keep in mind that there might be an <code>ActivityNotFoundException</code>.
 This exception is being thrown when nobody can handle our intention.</p>
@@ -193,8 +175,8 @@ This exception is being thrown when nobody can handle our intention.</p>
             <span class="n">Result</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showSuccessAlert</span><span class="p">()</span>
             <span class="n">Result</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showFailureAlert</span><span class="p">()</span>
         <span class="p">}</span>
-    <span class="p">}</span></code></pre></div>
-<p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
+    <span class="p">}</span>
+</code></pre></div><p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
 Doing so will hide the complexity and will help to avoid a copy-paste
 of the same <code>Intent</code> building over and over again.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Launcher</span> <span class="p">{</span>
@@ -237,21 +219,20 @@ of the same <code>Intent</code> building over and over again.</p>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>We are controlling the thread under the hood so the consumer does not need to know
+<span class="p">}</span>
+</code></pre></div><p>We are controlling the thread under the hood so the consumer does not need to know
 implementation details.</p>
-
 <p>An attentive reader might notice that we are using
 another abstraction — <code>Application#currentActivity</code>. It is trivial to implement using
 <a href="https://developer.android.com/reference/android/app/Application.ActivityLifecycleCallbacks"><code>ActivityLifecycleCallbacks</code></a> and
 <code>Connectivity</code>-like approach to listeners and callbacks.</p>
-
 <p>Of course, we can test the behavior.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestLauncher</span><span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;()</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">result</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
@@ -271,21 +252,19 @@ another abstraction — <code>Application#currentActivity</code>. It is trivial
     <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows failure alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showFailureAlert</span><span class="p">()</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="google-play-services">Google Play Services</h2>
-
+<span class="p">}</span>
+</code></pre></div><h2 id="google-play-services">Google Play Services</h2>
 <p>The concept works well not only with the platform
 but with all third-party information sources — such as various SDK.
 In such cases, it is possible to improve the external API — for example,
 provide proper nullability handling if the SDK is not annotated with <code>@Nullable</code> and <code>@NonNull</code>.</p>
-
 <p>Let’s say it is necessary to show a warning if Google Play Services
 is not installed.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
     <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="k">false</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
-    <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="o">::</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">)</span></code></pre></div>
-<p>Implementation:</p>
+    <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="o">::</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">)</span>
+</code></pre></div><p>Implementation:</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">GooglePlayServices</span> <span class="p">{</span>
 
     <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
@@ -300,14 +279,14 @@ is not installed.</p>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="n">ConnectionResult</span><span class="p">.</span><span class="n">SUCCESS</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>The work is done on IO thread since retrieving the information can take an undefined amount of time.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>The work is done on IO thread since retrieving the information can take an undefined amount of time.</p>
 <p>As always, it is possible to test the behavior without mocking static
 <code>GoogleApiAvailability</code> <code>getInstance()</code> method.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestGooglePlayServices</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;()</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
@@ -327,32 +306,25 @@ is not installed.</p>
     <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">()</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h1 id="retrospective">Retrospective</h1>
-
+<span class="p">}</span>
+</code></pre></div><h1 id="retrospective">Retrospective</h1>
 <p>The beautiful thing about abstractions is that the idea is universal and can be applied everywhere:</p>
-
 <ul>
 <li>Runtime permissions.</li>
 <li>Requesting data via <code>startActivityForResult</code>.</li>
 <li>Notifications and push messages processing.</li>
 <li>Location updates, accessibility, battery and Bluetooth checks&hellip;</li>
 </ul>
-
 <p>At the same time, using a high-level abstraction — like the reactive approach
 (RxJava in particular) — brings a couple of benefits.</p>
-
 <ul>
 <li>Proper multi-threading maintained by producers.</li>
 <li>Ease of testing via producer-consumer components such as <code>Subject</code>.</li>
 </ul>
-
 <p>The ironic thing about abstractions is that developers create them all the time
 for their own domain. But&hellip; tend to avoid it for external sources.
 Do not make this mistake.</p>
-
-<hr />
-
+<hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a> for the review!</p>
 
 </main>

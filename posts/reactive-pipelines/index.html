@@ -63,49 +63,38 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>Human beings are reactive by nature — fortunately or not.
 The reason is mostly physiology. The dopamine hormone helps us
 to feel comfortable and secure while we do familiar things.
 Eating a sandwich sounds and feels far better than gardening, doesn’t it?
 Essentially it is a fight between psychology (the mind, proactive actions)
 and physiology (the body, reactive actions).</p>
-
 <p>The same thing happens in CS. Object-oriented programming (OOP) is the king of the hill and
 functional programming (FP) is on the outskirts. Well, it is this way because
 the OOP is more comfortable for the majority. We, as a society, made it this way.
 The educational system includes a mandatory OOP course and rarely there
 is an FP one. And then there is reactive programming which forms a wild beast
 called functional-reactive programming (FRP)&hellip;</p>
-
 <p>Taking everything above into the account makes it easy&hellip; to give up.
 Is it even worth it to maintain a consistent reactive system?
 Let’s see how it might look and decide.</p>
-
 <h1 id="concepts">Concepts</h1>
-
 <p>Don’t worry, I’m not going to explain FP and FRP all over again. We’ll need only two terms.</p>
-
 <ul>
 <li>Producer. Produces events, an output: <code>Observable&lt;T&gt;</code>, <code>Flowable&lt;T&gt;</code>, <code>Single&lt;T&gt;</code>, <code>Completable</code>, <code>Maybe&lt;T&gt;</code>.</li>
 <li>Consumer. Consumes events, an input: <code>Consumer&lt;T&gt;</code>, <code>Action&lt;T&gt;</code>.</li>
 </ul>
-
 <p>The success of our enterprise
 (not to be confused with <a href="https://en.wikipedia.org/wiki/Starship_Enterprise">the USS one</a>)
 depends on providing enough abstractions to connect producers and consumers,
 forming Pipelines.</p>
-
 <blockquote>
 <p>📖 Suggestions about abstractions are available in
 <a href="https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/">Reactive Abstractions in Android World</a>.</p>
 </blockquote>
-
 <p>Honestly saying, I find reactive pipelines beautiful. There is something deeply
 satisfying in understanding that a complete flow can be tracked via a single
 stream from a producer to a consumer.</p>
-
 <ul>
 <li>A connectivity change restarts a stalled network request,
 which produces a new data state, which triggers a UI redraw.</li>
@@ -113,37 +102,33 @@ which produces a new data state, which triggers a UI redraw.</li>
 which starts a network request, which again produces a new data state,
 which triggers a UI redraw.</li>
 </ul>
-
 <p>These actions are done without ad-hoc solutions and concepts. The flow is consistent.</p>
-
 <blockquote>
 <p>The formula has infinite depth in its efficacy and application
 but it’s staggeringly simple and completely consistent.</p>
-
 <p>– <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p>
 </blockquote>
-
 <h1 id="structure">Structure</h1>
-
 <blockquote>
 <p>📖 We’ll use Data-Domain-Presentation
 <a href="https://en.wikipedia.org/wiki/Multitier_architecture">multitier architecture</a>.
 Please refer to Martin Fowler
 <a href="https://martinfowler.com/bliki/PresentationDomainDataLayering.html">for details</a>.</p>
 </blockquote>
-
 <h2 id="data">Data</h2>
-
 <p>Network-related data sources (especially on Android) most likely use
 <a href="https://github.com/square/retrofit">Retrofit</a> or something similar.
 However, often there is an in-house handling for common tasks.</p>
-
 <ul>
-<li>Connectivity. Restart requests on re-established network connections.</li>
-<li>Retries. Restart requests <code>N</code> times or (and) transform error responses
-to manually-retryable actions.</li>
-
-<li><p>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</p>
+<li>
+<p>Connectivity. Restart requests on re-established network connections.</p>
+</li>
+<li>
+<p>Retries. Restart requests <code>N</code> times or (and) transform error responses
+to manually-retryable actions.</p>
+</li>
+<li>
+<p>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">BookResponse</span> <span class="p">{</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
     <span class="k">object</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
@@ -157,17 +142,19 @@ to manually-retryable actions.</li>
         <span class="k">private</span> <span class="k">val</span> <span class="py">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">,</span>
         <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
     <span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre></div></li>
-
-<li><p><code>getBooks</code> method returns an <code>Observable</code> and not a <code>Single</code> since the request
+<span class="p">}</span>
+</code></pre></div></li>
+<li>
+<p><code>getBooks</code> method returns an <code>Observable</code> and not a <code>Single</code> since the request
 is automatically resubmitted on an available network if it wasn’t available
-initially.</p></li>
-
-<li><p><code>getBookReviews</code> method returns a <code>Flowable</code> since it is a continuous
+initially.</p>
+</li>
+<li>
+<p><code>getBookReviews</code> method returns a <code>Flowable</code> since it is a continuous
 stream of server-sent events which can be a source of issues with backpressure.
-It is up to a consumer to decide how to manage it based on current needs.</p></li>
+It is up to a consumer to decide how to manage it based on current needs.</p>
+</li>
 </ul>
-
 <p>Storage-related data sources are easier.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorageSource</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooksPageSize</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
@@ -177,18 +164,16 @@ It is up to a consumer to decide how to manage it based on current needs.</p></l
         <span class="k">private</span> <span class="k">val</span> <span class="py">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">,</span>
         <span class="k">private</span> <span class="k">val</span> <span class="py">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
     <span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>Notice that <code>setBooksPageSize</code> is a <code>Completable</code> and not a <code>Consumer</code>.
+<span class="p">}</span>
+</code></pre></div><p>Notice that <code>setBooksPageSize</code> is a <code>Completable</code> and not a <code>Consumer</code>.
 A <code>Consumer</code> makes more sense as an interaction — it is an input after all.
 In real life it needs to be async to not block the caller (most likely UI) thread.
 There are use cases when it is necessary to ensure that changes were applied
 before proceeding with another action. A classic example is a sign out procedure —
 everything needs to be cleaned up before a different account is being signed in.
 There are no such guarantees with a <code>Consumer</code>.</p>
-
 <p>Both sources receive a worker <code>Scheduler</code> as a constructor argument.
 It is done this way for two reasons.</p>
-
 <ul>
 <li>Only producer-level components should control producer-related threading.
 Having IO <code>Scheduler</code> on the consumer level means taking unnecessary responsibility
@@ -197,12 +182,9 @@ about <code>subscribeOn</code> at the presentation level.</li>
 <li>Inversion of control and simplified testing — just provide <code>Schedulers.trampoline()</code>
 to make all the work sync or <code>TestScheduler</code> to control time-related operations.</li>
 </ul>
-
 <h2 id="domain">Domain</h2>
-
 <p>We’ll use a stateful example, but essentially this level is a mediator
 between the data and the presentation. Business-related decisions are done here.</p>
-
 <blockquote>
 <p>📖 Suggestions about state mutations are available in
 <a href="https://arturdryomov.dev/posts/reactive-state-mutations/">Reactive State Mutations via CQRS</a>.</p>
@@ -226,19 +208,15 @@ between the data and the presentation. Business-related decisions are done here.
         <span class="k">private</span> <span class="k">val</span> <span class="py">networkSource</span><span class="p">:</span> <span class="n">BooksNetworkSource</span><span class="p">,</span>
         <span class="k">private</span> <span class="k">val</span> <span class="py">storageSource</span><span class="p">:</span> <span class="n">BooksStorageSource</span>
     <span class="p">):</span> <span class="n">BooksService</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>Notice that the service does not receive a <code>Scheduler</code>.</p>
-
+<span class="p">}</span>
+</code></pre></div><p>Notice that the service does not receive a <code>Scheduler</code>.</p>
 <ul>
 <li>Producer-level components (data) know which thread is necessary for producing.</li>
 <li>Consumer-level components (presentation) know which thread is necessary for consuming.</li>
 </ul>
-
 <h2 id="presentation">Presentation</h2>
-
 <p>MVWhatever will do the trick, but I highly suggest giving
 <a href="https://cycle.js.org/model-view-intent.html">MVI</a> a shot.</p>
-
 <p>I see presentation components as consumers, but it will be ignorant
 to forget that user actions are actually producers. This is not a bad thing
 because embracing the reactive approach makes this a benefit.</p>
@@ -288,8 +266,8 @@ because embracing the reactive approach makes this a benefit.</p>
     <span class="k">fun</span> <span class="nf">unbind</span><span class="p">()</span> <span class="p">=</span> <span class="n">disposable</span><span class="p">.</span><span class="n">clear</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="k">class</span> <span class="nc">ViewImpl</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="n">AndroidView</span><span class="p">)</span> <span class="p">:</span> <span class="n">View</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span></code></pre></div>
-<ul>
+<span class="k">class</span> <span class="nc">ViewImpl</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="n">AndroidView</span><span class="p">)</span> <span class="p">:</span> <span class="n">View</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">}</span>
+</code></pre></div><ul>
 <li>The <code>Scheduler</code> is being passed as an argument for inversion of control purposes.
 Also, the presentation components know best what should be executed on the UI thread.
 This is where <code>observeOn</code> should be used and probably nowhere else.</li>
@@ -298,11 +276,8 @@ The reactive feedback from <code>BooksService</code> redraws the UI, which is aw
 since the state is managed by a component with a broader scope.
 It makes the presentation component do the presenting job and nothing else.</li>
 </ul>
-
 <h2 id="levels-combined">Levels Combined</h2>
-
 <p>What have we got as a result?</p>
-
 <ul>
 <li>There are separate levels of abstraction and organization.
 Each of them can be developed and tested in isolation.</li>
@@ -311,18 +286,13 @@ The code is declarative and understandable both in isolation and as a pipeline.<
 <li>Pipelines are ready for either async or sync execution out of the box.
 This simplifies tuning both for real environments and for testing.</li>
 </ul>
-
 <h1 id="is-it-worth-it">Is It Worth It?</h1>
-
 <p>I cannot say for everyone, but my answer is a definitive Yes.</p>
-
 <p>Thinking about reproducing the same interactions as above using callbacks and listeners
 cause a headache. Replicating a reactive feedback without reactive approach
 most likely will lead to an unscalable mess. Nobody on a team will eventually know
 what is going on.</p>
-
 <p>There is a number of concepts FRP brings on a table which are hard to beat or just replace.</p>
-
 <ul>
 <li>Declarative scalable API. Operators mutate the state from the input and provide
 the output. No side-effects, no unpredictable behavior. The process is streamlined.</li>
@@ -335,15 +305,11 @@ No need to assign callbacks to <code>null</code> at the right moment or interrup
 <li>Unified terms across implementations. RxJava people understand RxSwift people really well.
 The same cannot be said even about Go and goroutines and Kotlin and coroutines.</li>
 </ul>
-
 <p>It is a no-brainer. Embracing the concept and unifying the codebase behind it
 brings benefits on a conceptual level in a long run. Isn’t that what we want
 as developers and human beings?</p>
-
 <p><em>Be proactive about being reactive!</em></p>
-
-<hr />
-
+<hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a> for the review!</p>
 
 </main>

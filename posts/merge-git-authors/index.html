@@ -63,32 +63,27 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>Stats! Stats are awesome. You can collect them, you can analyze and visualize them,
 you can boil, grill and fry them&hellip; Wait, that’s not food, right?</p>
-
 <h1 id="git-shortlog"><code>git shortlog</code></h1>
-
 <p>Let’s say we have a Git repository. We want to count commits per author.
 There is a Git command for that!</p>
-<div class="highlight"><pre class="chroma"><code class="language-console" data-lang="console">$ git shortlog --summary --numbered
+<pre><code class="language-console" data-lang="console">$ git shortlog --summary --numbered
 
   2  Bender Rodriguez
   2  Philip J. Fry
   1  Bending Unit 22
-  1  Turanga Leela</code></pre></div>
-<p>There are actually three authors but since names are non-consistent
+  1  Turanga Leela
+</code></pre><p>There are actually three authors but since names are non-consistent
 Git makes it look like there are four. It gets worse with emails.</p>
-<div class="highlight"><pre class="chroma"><code class="language-console" data-lang="console">$ git shortlog --summary --numbered --email
+<pre><code class="language-console" data-lang="console">$ git shortlog --summary --numbered --email
 
   2  Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;
   1  Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
   1  Bender Rodriguez &lt;bending-unit-22@mom.corp&gt;
   1  Bending Unit 22 &lt;bender.rodriguez@planet-express.earth&gt;
-  1  Turanga Leela &lt;turanga.leela@planet-express.earth&gt;</code></pre></div>
-<p>Bender has three identities:</p>
-
+  1  Turanga Leela &lt;turanga.leela@planet-express.earth&gt;
+</code></pre><p>Bender has three identities:</p>
 <table>
 <thead>
 <tr>
@@ -96,48 +91,38 @@ Git makes it look like there are four. It gets worse with emails.</p>
 <th>Email</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Bender Rodriguez</td>
-<td>bender.rodriguez@planet-express.earth</td>
+<td><a href="mailto:bender.rodriguez@planet-express.earth">bender.rodriguez@planet-express.earth</a></td>
 </tr>
-
 <tr>
 <td>Bender Rodriguez</td>
-<td>bending-unit-22@mom.corp</td>
+<td><a href="mailto:bending-unit-22@mom.corp">bending-unit-22@mom.corp</a></td>
 </tr>
-
 <tr>
 <td>Bending Unit 22</td>
-<td>bender.rodriguez@planet-express.earth</td>
+<td><a href="mailto:bender.rodriguez@planet-express.earth">bender.rodriguez@planet-express.earth</a></td>
 </tr>
 </tbody>
 </table>
-
 <p>This is a made-up repository but the underlying issue is very real.
 Git history gets messed up. Reasons are different: a new computer,
 multiple Git identities on a single machine, a company domain change, dog ate it.
 The result is always the same — the history is not consistent.</p>
-
 <p>The deal here is not actually stats-related (although it is useful).
 A more frequent task is researching, finding a person who made a change and
 the motivation behind it. I’m talking about <code>git blame</code> and
 <a href="https://www.jetbrains.com/help/idea/investigate-changes.html#annotate">tooling around it</a>.</p>
-
 <p>Fortunately enough Git provides an instrument to deal with such conditions.
 It is called <a href="https://github.com/git/git/blob/master/Documentation/mailmap.txt"><code>.mailmap</code></a>.
 Like <code>HashMap</code> and <code>ConcurrentHashMap</code>, but <code>MailMap</code>.</p>
-
 <p>The following <code>.mailmap</code> content will resolve our consistency issues.</p>
-
 <pre><code>Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
 Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt; &lt;bending-unit-22@mom.corp&gt;
-</code></pre>
-
-<p>We are associating the primary name with the primary email address and
+</code></pre><p>We are associating the primary name with the primary email address and
 aliasing secondary email to the primary identity. Let’s check.</p>
-<div class="highlight"><pre class="chroma"><code class="language-console" data-lang="console">$ git shortlog --summary --numbered
+<pre><code class="language-console" data-lang="console">$ git shortlog --summary --numbered
 
   3  Bender Rodriguez
   2  Philip J. Fry
@@ -147,41 +132,36 @@ $ git shortlog --summary --numbered --email
 
   3  Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
   2  Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;
-  1  Turanga Leela &lt;turanga.leela@planet-express.earth&gt;</code></pre></div>
-<h1 id="git-log"><code>git log</code></h1>
-
+  1  Turanga Leela &lt;turanga.leela@planet-express.earth&gt;
+</code></pre><h1 id="git-log"><code>git log</code></h1>
 <p>There is a catch. Log will not show mail-mapped values.</p>
-<div class="highlight"><pre class="chroma"><code class="language-console" data-lang="console">$ git log --format=&#34;%an &lt;%ae&gt;: %s&#34;
+<pre><code class="language-console" data-lang="console">$ git log --format=&quot;%an &lt;%ae&gt;: %s&quot;
 
 Bender Rodriguez &lt;bending-unit-22@mom.corp&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
 Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to D. Frosted Wang.
 Bending Unit 22 &lt;bender.rodriguez@planet-express.earth&gt;: 01100001 01101100 01101100
 Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101011 01101001 01101100 01101100
 Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to I. C. Wiener.
-Turanga Leela &lt;turanga.leela@planet-express.earth&gt;: Blast off!</code></pre></div>
-<p>The thing is — <code>git shortlog</code> uses <code>.mailmap</code> by default, so does <code>git blame</code>.
+Turanga Leela &lt;turanga.leela@planet-express.earth&gt;: Blast off!
+</code></pre><p>The thing is — <code>git shortlog</code> uses <code>.mailmap</code> by default, so does <code>git blame</code>.
 Not <code>git log</code> though.</p>
-
 <ul>
 <li>There is a <code>--use-mailmap</code> flag for <code>git log</code></li>
 <li>There is a <code>git config</code> option — <code>git config --global log.mailmap true</code>.</li>
 <li>Custom <code>--format</code> ignores both options above and requires formatting arguments change.
 <code>%an</code> to <code>%aN</code> for author name, <code>%ae</code> to <code>%aE</code> for author email address.</li>
 </ul>
-
 <p>Yeah, that’s complicated. It works though!</p>
-<div class="highlight"><pre class="chroma"><code class="language-console" data-lang="console">$ git log --format=&#34;%aN &lt;%aE&gt;: %s&#34;
+<pre><code class="language-console" data-lang="console">$ git log --format=&quot;%aN &lt;%aE&gt;: %s&quot;
 
 Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
 Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to D. Frosted Wang.
 Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01100001 01101100 01101100
 Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101011 01101001 01101100 01101100
 Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to I. C. Wiener.
-Turanga Leela &lt;turanga.leela@planet-express.earth&gt;: Blast off!</code></pre></div>
-<h1 id="tools">Tools</h1>
-
+Turanga Leela &lt;turanga.leela@planet-express.earth&gt;: Blast off!
+</code></pre><h1 id="tools">Tools</h1>
 <p><code>.mailmap</code> is nice and all but tools handling is a hit-and-miss.</p>
-
 <ul>
 <li><a href="https://jonas.github.io/tig/"><code>tig</code></a>
 has <a href="https://github.com/jonas/tig/blob/93ea97087749d08fcb94f797d22948aaea16f50c/tigrc#L120">a turned off by default option</a>.</li>
@@ -190,27 +170,22 @@ but <a href="https://youtrack.jetbrains.com/issue/IDEA-160677">does not support 
 <li>Neither <a href="https://www.git-tower.com/mac">Git Tower 3.3.0</a> nor
 <a href="http://gitx.github.io/">GitX 0.15</a> seem to support it.</li>
 </ul>
-
 <p>Nevertheless, it is better to have it than not. Such projects as
 <a href="https://github.com/gradle/gradle/blob/master/.mailmap">Gradle</a>,
 <a href="https://github.com/sympy/sympy/blob/master/.mailmap">SymPy</a>,
 <a href="https://github.com/Microsoft/TypeScript/blob/master/.mailmap">TypeScript</a>
 and <a href="https://github.com/git/git/blob/master/.mailmap">Git itself</a> have and maintain them.</p>
-
 <h1 id="preemptive-strike">Preemptive Strike</h1>
-
 <p><code>.mailmap</code> is an after-the-fact measure. Ideally it is better to have before-the-fact measures in place.</p>
-
 <p>Bitbucket has <a href="https://marketplace.atlassian.com/apps/1211854/yet-another-commit-checker">a plugin for that</a> —
 it checks that a Git author email address matches Bitbucket account email address.
 Surprisingly I haven’t found anything close for GitHub.</p>
-
 <p><a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">A pre-commit Git hook</a> will do the trick as well.</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="k">$(</span>git config user.email<span class="k">)</span><span class="s2">&#34;</span> !<span class="o">=</span> *<span class="s2">&#34;@planet-express.earth&#34;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
     <span class="nb">echo</span> <span class="s2">&#34;Danger! High Voltage!&#34;</span>
     <span class="nb">exit</span> <span class="m">1</span>
-<span class="k">fi</span></code></pre></div>
-<p>Obviously such checks will not work in the OSS world but
+<span class="k">fi</span>
+</code></pre></div><p>Obviously such checks will not work in the OSS world but
 for companies — seems like a way to go.</p>
 
 </main>

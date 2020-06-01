@@ -63,10 +63,7 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>What’s the motivation behind organizing the code? Two points come to mind.</p>
-
 <ul>
 <li>Help humans. Consistent environments are easier to understand and adapt.
 Storing the source code in <code>src/</code> instead of <code>_k_/</code> makes it easier to find.</li>
@@ -74,16 +71,12 @@ Storing the source code in <code>src/</code> instead of <code>_k_/</code> makes 
 assembled all the time, while <code>test/</code> is test-specific and shouldn’t make it
 to a production environment.</li>
 </ul>
-
 <p>Sounds empathic. Where do we start?</p>
-
 <h1 id="sdl">SDL</h1>
-
 <p>Maven introduced a concept of <a href="https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html">the Standard Directory Layout</a>.
 Gradle <a href="https://docs.gradle.org/current/userguide/organizing_gradle_projects.html">tends to follow it</a>
 bringing so-called <a href="https://docs.gradle.org/current/userguide/building_java_projects.html#sec:java_source_sets">source sets</a>
 along the way. The following file system tree is SDL-compliant.</p>
-
 <pre><code>.
 ├── main
 │   ├── java
@@ -99,9 +92,7 @@ along the way. The following file system tree is SDL-compliant.</p>
     │   └── KodeTests.kt
     └── resources
         └── test.xml
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li><code>main</code>, <code>test</code> — source sets. Include everything related to the code scope —
 like the production application (<code>main</code>), unit tests (<code>test</code>) and more
 (<code>androidTest</code> and friends).</li>
@@ -109,15 +100,11 @@ like the production application (<code>main</code>), unit tests (<code>test</cod
 Unit tests can be written in Kotlin and Groovy at the same time,
 the production code might be a Java + Scala mix.</li>
 </ul>
-
 <p>This two-level structure allows us to organize the code based on a functional target
 (production, tests) and on implementation details (language, tools).
 Let’s leverage this.</p>
-
 <h1 id="tips">Tips</h1>
-
-<h2 id="src-sourceset-kotlin"><code>src/{sourceSet}/kotlin</code></h2>
-
+<h2 id="srcsourcesetkotlin"><code>src/{sourceSet}/kotlin</code></h2>
 <p>Storing Kotlin files in the Kotlin-specific directory sounds obvious
 but a lot of projects are 100% Kotlin and store the source code
 as Java. Take a look at
@@ -129,7 +116,6 @@ as Java. Take a look at
 <a href="https://github.com/InflationX/ViewPump/tree/8dbefccc27dce258b391efa5adfb94ec5ebbbadd/viewpump/src/main">ViewPump</a>,
 <a href="https://github.com/square/workflow/tree/3cec6d22c4d0ba6ef858e71338d8f68985443ce4/kotlin/workflow-core/src">Workflow</a>
 and more. I see a number of reasons behind this.</p>
-
 <ul>
 <li>The Kotlin compiler supports mixing Java and Kotlin code,
 so there is no punishment from the tooling.</li>
@@ -138,41 +124,33 @@ forget to change the source set configuration.</li>
 <li>The Gradle Android plugin requires additional configuration
 which might be not trivial.</li>
 </ul>
-
 <p>To be honest, there is nothing outright wrong with mixing Java and Kotlin code.
 It’s more accurate and expectable to store them separately.
 Also, it might help with Java → Kotlin migration efforts — it’s easier to observe
 that the Java directory is shrinking and the Kotlin one is growing than
 running <a href="https://github.com/AlDanial/cloc"><code>cloc</code></a> all the time.</p>
-
-<h2 id="src-sourceset-kotlinx"><code>src/{sourceSet}/kotlinX</code></h2>
-
+<h2 id="srcsourcesetkotlinx"><code>src/{sourceSet}/kotlinX</code></h2>
 <p>There is a common issue of organizing Kotlin extensions.
 I’ve seen a lot of projects with the <code>Extensions.kt</code> garbage fire. When everything is in
 a single file — it’s easier to overlook an extension and write a new one placed at&hellip;
 <code>extensions/Extensions.kt</code>. Guess what happens next.</p>
-
 <p>I suggest storing extensions using the target class package and file names.
 Plus — move them to the <code>kotlinX/</code> directory
 as a separation of the project code from additions to the external one. This approach leads
 to a better separation of concerns.</p>
-
 <p>For example, the following <code>io.reactivex.functions.Consumer</code> extension should be placed at
 <code>src/main/kotlinX/io/reactivex/functions/Consumer.kt</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">io.reactivex.functions</span>
 
-<span class="k">fun</span> <span class="nf">Consumer</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;.</span><span class="n">asAction</span><span class="p">()</span> <span class="p">=</span> <span class="n">Action</span> <span class="p">{</span> <span class="n">accept</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span></code></pre></div>
-<p>Bonus — imports start to make sense.</p>
+<span class="k">fun</span> <span class="nf">Consumer</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;.</span><span class="n">asAction</span><span class="p">()</span> <span class="p">=</span> <span class="n">Action</span> <span class="p">{</span> <span class="n">accept</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div><p>Bonus — imports start to make sense.</p>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- import hello.there.asAction
 </span><span class="gd"></span><span class="gi">+ import io.reactivex.functions.asAction
-</span></code></pre></div>
-<h2 id="src-testfixtures-kotlin"><code>src/testFixtures/kotlin</code></h2>
-
+</span></code></pre></div><h2 id="srctestfixtureskotlin"><code>src/testFixtures/kotlin</code></h2>
 <p>A growing test / specification suite might be not pleasant to look at.
 <a href="https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/">Using fakes</a>
 is great but there is a possibility of having a huge file tree with mixed
 tests and fakes.</p>
-
 <pre><code>.
 └── src
     └── test
@@ -181,11 +159,8 @@ tests and fakes.</p>
             ├── FakeApplication.kt
             ├── FakePermissions.kt
             └── PermissionsSpec.kt
-</code></pre>
-
-<p>Since fakes and tests are different things — I suggest to split them
+</code></pre><p>Since fakes and tests are different things — I suggest to split them
 in the digital world as well.</p>
-
 <pre><code>.
 └── src
     ├── test
@@ -196,38 +171,28 @@ in the digital world as well.</p>
         └── kotlin
             ├── FakeApplication.kt
             └── FakePermissions.kt
-</code></pre>
-
-<p>In fact, <a href="https://docs.gradle.org/current/userguide/java_testing.html#sec:java_test_fixtures">Gradle supports this approach for the Java code</a>
+</code></pre><p>In fact, <a href="https://docs.gradle.org/current/userguide/java_testing.html#sec:java_test_fixtures">Gradle supports this approach for the Java code</a>
 and with benefits — it’s possible to share <code>testFixtures</code> across modules.
 However, it doesn’t work with Gradle <a href="https://youtrack.jetbrains.com/issue/KT-33877">Kotlin</a>
 and <a href="https://issuetracker.google.com/issues/139438142">Android</a> plugins.</p>
-
 <h1 id="gradle-api">Gradle API</h1>
-
 <p>The code below will use the Gradle Kotlin DSL but it can be adapted to the Groovy DSL as well.
 The code was run against Gradle 6.1.1, Gradle Kotlin plugin 1.3.61 and Gradle Android plugin 3.5.3.</p>
-
 <h2 id="jvm">JVM</h2>
-
 <p>Gradle uses a couple of classes as an API to configure the source code location:</p>
-
 <ul>
 <li><code>SourceDirectorySet</code> — a set of source code files;</li>
 <li><code>SourceSet</code> — a group of <code>SourceDirectorySet</code>s for Java code and resources.</li>
 </ul>
-
 <p>The Gradle Kotlin for JVM plugin adds another one.</p>
-
 <ul>
 <li><code>KotlinSourceSet</code> — like <code>SourceSet</code>, but for Kotlin sources.
 Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin</code> automatically.</li>
 </ul>
-
 <p>The DSL works with those classes.</p>
-
 <ul>
-<li><p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
+<li>
+<p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
 
 <span class="c1">// Get a SourceSet collection
@@ -240,9 +205,10 @@ Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin<
 </span><span class="c1"></span>            <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div></li>
-
-<li><p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
+<span class="p">}</span>
+</code></pre></div></li>
+<li>
+<p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
 
 <span class="n">subprojects</span> <span class="p">{</span>
@@ -254,15 +220,13 @@ Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin<
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div></li>
+<span class="p">}</span>
+</code></pre></div></li>
 </ul>
-
 <h2 id="android">Android</h2>
-
 <p>Gradle Android plugin ignores native Gradle source set infrastructure and introduces its own.
 To be fair, the Android API tries to mimic the Gradle one, so I suspect
 the reinvention was done for a reason.</p>
-
 <ul>
 <li><code>AndroidSourceDirectorySet</code> (mimics Gradle <code>SourceDirectorySet</code>) —
 a set of source code files;</li>
@@ -270,15 +234,13 @@ a set of source code files;</li>
 a group of <code>AndroidSourceDirectorySet</code>s for Java code and resources,
 Android resources, assets, AIDL, RenderScript files and more.</li>
 </ul>
-
 <p>The Gradle Kotlin for Android plugin doesn’t provide a <code>KotlinAndroidSourceSet</code>
 (like <code>KotlinSourceSet</code> for JVM). Fortunately enough we can use the Java <code>AndroidSourceSet</code> instead
 (thanks to mixing).</p>
-
 <p>The DSL is similar to the JVM one.</p>
-
 <ul>
-<li><p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
+<li>
+<p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">android</span> <span class="p">{</span>
     <span class="c1">// Get an AndroidSourceSet collection
 </span><span class="c1"></span>    <span class="n">sourceSets</span> <span class="p">{</span>
@@ -288,9 +250,10 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
 </span><span class="c1"></span>            <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div></li>
-
-<li><p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
+<span class="p">}</span>
+</code></pre></div></li>
+<li>
+<p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">com.android.build.gradle.AppPlugin</span>
 <span class="k">import</span> <span class="nn">com.android.build.gradle.BaseExtension</span>
 <span class="k">import</span> <span class="nn">com.android.build.gradle.LibraryPlugin</span>
@@ -307,15 +270,13 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div></li>
+<span class="p">}</span>
+</code></pre></div></li>
 </ul>
-
 <h1 id="gradle-implementation">Gradle Implementation</h1>
-
 <p>Nice, we can use the Gradle API to apply our tips!
 Snippets below are DSL declarations that can be used in both single and multiple module
 configurations described above.</p>
-
 <h2 id="jvm-1">JVM</h2>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
@@ -329,17 +290,16 @@ configurations described above.</p>
         <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/test/kotlin&#34; on its own
 </span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="android-1">Android</h2>
+<span class="p">}</span>
+</code></pre></div><h2 id="android-1">Android</h2>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/main/kotlin&#34;</span><span class="p">,</span> <span class="s">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="n">named</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/test/kotlin&#34;</span><span class="p">,</span> <span class="s">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<h1 id="next">Next?</h1>
-
+<span class="p">}</span>
+</code></pre></div><h1 id="next">Next?</h1>
 <p>Don’t afraid to configure source sets — think about what can be done better
 and adapt. The Gradle API might be not intuitive at first glance —
 especially when Kotlin and Android are brought in the mix — but almost everything can be achieved.</p>

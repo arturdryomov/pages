@@ -63,19 +63,13 @@ if (!doNotTrack) {
 </div>
 
 <main>
-
-
 <p>An average working day of an Android developer involves doing something with UI.
 Pushing widgets around, changing text and images&hellip;</p>
-
 <p>The colleges of mine convert SVG images to <code>VectorDrawable</code> via
 a specific converter and I use Android Studio.
 Which tool does the job better? Let’s find out!</p>
-
 <h1 id="tools">Tools</h1>
-
 <p>Converters (do optimizations under the hood):</p>
-
 <ul>
 <li>Android Studio (3.1.4) — IDE.</li>
 <li><a href="http://inloop.github.io/svg2android/"><code>svg2android</code></a> — website,
@@ -83,132 +77,108 @@ Which tool does the job better? Let’s find out!</p>
 in favor of Android Studio.</li>
 <li><a href="http://a-student.github.io/SvgToVectorDrawableConverter.Web/"><code>svg2vector</code></a> — website.</li>
 </ul>
-
 <p>Optimizers:</p>
-
 <ul>
 <li><a href="https://github.com/alexjlockwood/avocado/">Avocado</a> (1.0.0) — command line tool, optimizes <code>VectorDrawable</code> XML files.</li>
 <li><a href="https://github.com/svg/svgo">SVGO</a> (1.0.5) — command line tool, optimizes SVG files.</li>
 </ul>
-
 <blockquote>
 <p>💡 Zeplin exports SVG assets
 <a href="https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin">using SVGO under the hood</a>.</p>
 </blockquote>
-
 <h1 id="images">Images</h1>
-
-<h2 id="octicons-https-octicons-github-com"><a href="https://octicons.github.com/">Octicons</a></h2>
-
+<h2 id="octiconshttpsocticonsgithubcom"><a href="https://octicons.github.com/">Octicons</a></h2>
 <p>These are examples of semi-complicated web icons.
 Image sizes are unconventional — more than <code>1024</code> <code>dp</code>.
 <a href="https://developer.android.com/studio/write/vector-asset-studio#when">It is not advisable to use vector images of such size</a>,
 but let’s look at it as a push-to-the-limit approach.</p>
-
 <ul>
 <li><a href="https://octicons.github.com/icon/octoface/"><code>octicon-octoface</code></a></li>
 <li><a href="https://octicons.github.com/icon/repo/"><code>octicon-repo</code></a></li>
 </ul>
-
-<h2 id="material-https-material-io-tools-icons"><a href="https://material.io/tools/icons/">Material</a></h2>
-
+<h2 id="materialhttpsmaterialiotoolsicons"><a href="https://material.io/tools/icons/">Material</a></h2>
 <p>I suspect that these icons were designed with mobile in mind
 and were pre-optimized for mobile rendering, but that might be completely false.
 Both of them are conventionally sized to <code>24</code> <code>dp</code>.</p>
-
 <ul>
 <li><a href="https://material.io/tools/icons/?icon=android"><code>material-android</code></a></li>
 <li><a href="https://material.io/tools/icons/?icon=store"><code>material-store</code></a></li>
 </ul>
-
 <h1 id="comparison">Comparison</h1>
-
 <h2 id="xml">XML</h2>
-
 <p>It is not surprising, but files produced by different tools are different.
 Especially when it comes to the most important thing — <code>android:pathData</code>.
 This <code>&lt;path&gt;</code> attribute serves as an instructions set in terms
 of <em>go there, paint this</em>.</p>
-
 <p>It reminds me of the very first programming language
 I’ve used — <a href="https://en.wikipedia.org/wiki/Logo_(programming_language)">Logo</a>.
 It can be used to teach basic programming concepts
 using so-called <a href="https://en.wikipedia.org/wiki/Turtle_graphics">turtle graphics</a>.</p>
-
 <blockquote>
 <p>📖 <code>android:pathData</code> uses the exact same format as <code>d</code> attribute in SVG files.
 Mozilla provides <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">great documentation</a>
 for it with neat samples.</p>
 </blockquote>
-
 <p>Let’s see how it looks in action.</p>
-
 <ul>
-<li><p>Android Studio:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z</code></pre></div></li>
-
-<li><p><code>svg2android</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z</code></pre></div></li>
-
-<li><p><code>svg2vector</code>:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z</code></pre></div></li>
-
-<li><p>Android Studio + Avocado:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z</code></pre></div></li>
-
-<li><p>SVGO + Android Studio:</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z</code></pre></div>
-<p>Not the best example since SVGO hadn’t optimized anything
-and looks identical to Android Studio. It doesn’t hold true with other icons.</p></li>
+<li>
+<p>Android Studio:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
+</code></pre></div></li>
+<li>
+<p><code>svg2android</code>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z
+</code></pre></div></li>
+<li>
+<p><code>svg2vector</code>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z
+</code></pre></div></li>
+<li>
+<p>Android Studio + Avocado:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z
+</code></pre></div></li>
+<li>
+<p>SVGO + Android Studio:</p>
+<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
+</code></pre></div><p>Not the best example since SVGO hadn’t optimized anything
+and looks identical to Android Studio. It doesn’t hold true with other icons.</p>
+</li>
 </ul>
-
 <p><a href="https://www.w3.org/TR/SVG/paths.html#PathDataGeneralInformation">The SVG specification does not care about separators</a>,
 so commas can be replaced with spaces and vice-versa.
 In other words, <code>M20,4L4,4</code> from Android Studio is exactly the same as <code>M20 4L4 4</code> from <code>svg2vector</code>.</p>
-
 <p>Taking separators out of the picture, further changes go to squashing
 and replacing operations. For example, <code>L4,4 4,6</code> from <code>svg2android</code>
 is the same as <code>L4,4 v2</code> from Android Studio.</p>
-
 <ul>
 <li><code>L</code> draws a line to the point <code>(x = 4, y = 4)</code> and another one to <code>(x = 4, y = 6)</code>.</li>
 <li><code>v</code> draws a vertical line using the shift, which is <code>6 - 4 = 2</code> in our case.</li>
 </ul>
-
 <p>Operations squashing helps with optimizing drawing performance since the renderer can make
 more efficient decisions based on the instruction. At the same time, fewer commands
 mean more efficient execution. Actually, Android Lint
 <a href="http://tools.android.com/tips/lint-checks">has a <code>VectorPath</code> check</a>
 for such cases.</p>
-
 <blockquote>
 <p>📖 The maximum instructions count for Lint is <code>800</code>.
 See <a href="https://android.googlesource.com/platform/tools/base/+/studio-master-dev/lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/VectorPathDetector.java">the source code</a>
 for details.</p>
 </blockquote>
-
 <p>Do not forget that <code>#apksizematters</code>! Less instructions → less text → less file size.</p>
-
 <p>Besides <code>pathData</code> differences, there are some minor deviations as well.</p>
-
 <ul>
 <li><code>svg2android</code> tends to keep useless <code>&lt;path&gt;</code> — ones that draw nothing, i. e. transparent lines.
 Other tools remove them.</li>
 <li><code>svg2vector</code> tends to keep <code>&lt;group&gt;</code> containers.
 Other tools merge it with inner <code>&lt;path&gt;</code> when possible.</li>
 </ul>
-
 <h2 id="performance">Performance</h2>
-
 <h3 id="method">Method</h3>
-
 <p>Most of the time <code>VectorDrawable</code> goes straight into <code>ImageView</code>.
 Restarting application over and over to get necessary numbers
 is kind of tedious, especially if there are going to be thousands of passes.
 The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
-
-<p><details>
-  <summary><em>Click to expand the benchmark code.</em></summary></p>
+<!-- raw HTML omitted -->
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
 <span class="p">}</span>
@@ -267,29 +237,23 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">Measurement</span><span class="p">(</span><span class="n">parseTime</span><span class="p">,</span> <span class="n">renderTime</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<p></details></p>
-
+<span class="p">}</span>
+</code></pre></div><!-- raw HTML omitted -->
 <h3 id="environment">Environment</h3>
-
 <ul>
 <li>MacBook Pro: Intel Core i5 @ 2.7 GHz, 8 GB 1867 MHz DDR3.</li>
 <li>Emulator: 27.3.10.</li>
 <li>Emulator system image: Nexus 4, Android 8.0.</li>
 <li>Iterations count: 10 000.</li>
 </ul>
-
 <blockquote>
 <p>📖 Seems like in Android 7.0 <code>VectorDrawable</code>
 <a href="https://android.googlesource.com/platform/frameworks/base/+/804618d0863a5d8ad1b08a846bd5319be864a1cb">was re-implemented to use native rendering</a>.
 Relative numbers remain the same, but be advised that absolute performance
 might differ between API versions.</p>
 </blockquote>
-
 <h3 id="results">Results</h3>
-
 <h4 id="octicon-octoface"><code>octicon-octoface</code></h4>
-
 <table>
 <thead>
 <tr>
@@ -298,32 +262,27 @@ might differ between API versions.</p>
 <th>Average Parse Duration, ms</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Android Studio</td>
 <td>24.5128</td>
 <td>0.0594</td>
 </tr>
-
 <tr>
 <td><code>svg2android</code></td>
 <td>20.1871</td>
 <td>0.0570</td>
 </tr>
-
 <tr>
 <td><code>svg2vector</code></td>
 <td>24.5424</td>
 <td>0.0581</td>
 </tr>
-
 <tr>
 <td>Android Studio + Avocado</td>
 <td>24.5393</td>
 <td>0.0596</td>
 </tr>
-
 <tr>
 <td>SVGO + Android Studio</td>
 <td>24.5721</td>
@@ -331,12 +290,9 @@ might differ between API versions.</p>
 </tr>
 </tbody>
 </table>
-
 <p><code>svg2android</code> looks like the fastest one but it imported SVG incorrectly.
 Resulting <code>VectorDrawable</code> produced an invisible image.</p>
-
 <h4 id="octicon-repo"><code>octicon-repo</code></h4>
-
 <table>
 <thead>
 <tr>
@@ -345,32 +301,27 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 <th>Average Parse Duration, ms</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Android Studio</td>
 <td>18.1411</td>
 <td>0.0575</td>
 </tr>
-
 <tr>
 <td><code>svg2android</code></td>
 <td>18.1608</td>
 <td>0.0604</td>
 </tr>
-
 <tr>
 <td><code>svg2vector</code></td>
 <td>18.3110</td>
 <td>0.0562</td>
 </tr>
-
 <tr>
 <td>Android Studio + Avocado</td>
 <td>18.1604</td>
 <td>0.0554</td>
 </tr>
-
 <tr>
 <td>SVGO + Android Studio</td>
 <td>18.1699</td>
@@ -378,9 +329,7 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 </tr>
 </tbody>
 </table>
-
 <h4 id="material-android"><code>material-android</code></h4>
-
 <table>
 <thead>
 <tr>
@@ -389,32 +338,27 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 <th>Average Parse Duration, ms</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Android Studio</td>
 <td>0.0848</td>
 <td>0.0241</td>
 </tr>
-
 <tr>
 <td><code>svg2android</code></td>
 <td>0.1197</td>
 <td>0.0395</td>
 </tr>
-
 <tr>
 <td><code>svg2vector</code></td>
 <td>0.1275</td>
 <td>0.0420</td>
 </tr>
-
 <tr>
 <td>Android Studio + Avocado</td>
 <td>0.1189</td>
 <td>0.0348</td>
 </tr>
-
 <tr>
 <td>SVGO + Android Studio</td>
 <td>0.1287</td>
@@ -422,9 +366,7 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 </tr>
 </tbody>
 </table>
-
 <h4 id="material-store"><code>material-store</code></h4>
-
 <table>
 <thead>
 <tr>
@@ -433,32 +375,27 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 <th>Average Parse Duration, ms</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Android Studio</td>
 <td>0.0936</td>
 <td>0.0408</td>
 </tr>
-
 <tr>
 <td><code>svg2android</code></td>
 <td>0.0892</td>
 <td>0.0390</td>
 </tr>
-
 <tr>
 <td><code>svg2vector</code></td>
 <td>0.0915</td>
 <td>0.0366</td>
 </tr>
-
 <tr>
 <td>Android Studio + Avocado</td>
 <td>0.0898</td>
 <td>0.0405</td>
 </tr>
-
 <tr>
 <td>SVGO + Android Studio</td>
 <td>0.0944</td>
@@ -466,27 +403,21 @@ Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 </tr>
 </tbody>
 </table>
-
 <h1 id="conclusion">Conclusion</h1>
-
 <p>It is hard to declare a winner with XML. I like that Android Studio
 removes useless instructions and attributes. It doesn’t matter
 how <code>android:pathData</code> looks though since it is not getting modified by hand
 on a regular basis. At the same time, it helps if it is more compact, which
 Studio does relatively better than others.</p>
-
 <p>About performance — there is no clear winner as well.
 Android Studio shows good results with small icons and SVGO helps with
 huge web images. It is understandable — SVG is a mature standard
 with known optimization techniques. Knowing that <code>android:pathData</code> is
 SVG <code>path.d</code> it is obvious that relying on a more mature optimizer makes more sense.</p>
-
 <p>In other words, Android Studio is <em>good enough</em>, at least from my point of view.
 Besides, it makes the SVG import easy-as — open it in IDE and that’s it.
 If there is a need to optimize an image — SVGO is a good choice.</p>
-
-<hr />
-
+<hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a> and
 <a href="https://twitter.com/alexjlockwood">Alex Lockwood</a> for the review!</p>
 
