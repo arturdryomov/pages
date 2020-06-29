@@ -13,7 +13,10 @@ echo ":: Removing [${DIRECTORY}] directory."
 rm -rf "${DIRECTORY}"
 
 echo ":: Removing [${DIRECTORY}] Git working tree."
-git worktree remove "${DIRECTORY}"
+set +e
+# This command produced an error if there is no worktree, even with the force option.
+git worktree remove "${DIRECTORY}" --force
+set -e
 
 echo ":: Re-creating [${DIRECTORY}] Git working tree."
 git worktree add -B "${GITHUB_BRANCH}" "${DIRECTORY}" origin/"${GITHUB_BRANCH}"
