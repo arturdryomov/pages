@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eou pipefail
 
-VERSION="0.72.0"
+VERSION="0.73.0"
 PACKAGE="hugo.tar.gz"
 DIRECTORY="hugo"
 BINARY="hugo"
