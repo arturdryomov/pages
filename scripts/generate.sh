@@ -1,5 +1,5 @@
 #!/bin/bash
-set -u
+set -eou pipefail
 
 VERSION="0.72.0"
 PACKAGE="hugo.tar.gz"
