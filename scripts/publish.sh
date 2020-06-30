@@ -35,7 +35,7 @@ if [[ -n "${CI}" ]]; then
   git config user.email "publisher@localhost"
 fi
 
-git commit --message "Publish Hugo-generated contents."
+git commit --message "Publish Hugo-generated contents." --allow-empty
 
 echo ":: Pushing..."
 if [[ -z "${GITHUB_TOKEN}" || -z "${GITHUB_REPO}" ]]; then
