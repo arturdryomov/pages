@@ -42,3 +42,8 @@ disableKinds:
 
 pygmentsCodeFences: true
 pygmentsUseClasses: true
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
