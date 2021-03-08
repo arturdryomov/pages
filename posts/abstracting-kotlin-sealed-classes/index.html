@@ -83,13 +83,13 @@ of the Java baggage. Which one is the best?</p>
 </code></pre></div><p>This is a fine piece of code but <code>Shape</code> drawing is a bit messy.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">draw</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">paint</span> <span class="p">=</span> <span class="n">Paint</span><span class="p">(</span><span class="n">antialias</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span> <span class="n">color</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="p">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="p">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
+        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
+        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
     <span class="p">})</span>
 
     <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="p">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawCircle</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="p">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawSquare</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
+        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawCircle</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
+        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawSquare</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>The <code>Paint</code> part looks weird. The <code>color</code> is common for both shapes
@@ -103,8 +103,8 @@ This way we can use it everywhere.</p>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
 
     <span class="k">val</span> <span class="py">commonColor</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Circle</span> <span class="p">-&gt;</span> <span class="n">color</span>
-        <span class="k">is</span> <span class="n">Square</span> <span class="p">-&gt;</span> <span class="n">color</span>
+        <span class="k">is</span> <span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">color</span>
+        <span class="k">is</span> <span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">color</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>There is a number of issues with this approach.</p>

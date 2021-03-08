@@ -189,27 +189,27 @@ At the same time, it is possible to reuse files across builds, which can
 be adapted to include Gradle build cache, dependencies — you name it.</p>
 <p>Of course the configuration is declarative and understandable.
 There is no need to be a DevOps to read it.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">trigger_map</span><span class="p">:</span><span class="w">
-</span><span class="w"></span>- <span class="k">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v*&#34;</span><span class="w">
-</span><span class="w">  </span><span class="k">workflow</span><span class="p">:</span><span class="w"> </span>release<span class="w">
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">trigger_map</span><span class="p">:</span><span class="w">
+</span><span class="w"></span>- <span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v*&#34;</span><span class="w">
+</span><span class="w">  </span><span class="nt">workflow</span><span class="p">:</span><span class="w"> </span><span class="l">release</span><span class="w">
 </span><span class="w">
-</span><span class="w"></span><span class="k">workflows</span><span class="p">:</span><span class="w">
-</span><span class="w"> </span><span class="k">release</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="k">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="k">git-clone</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="k">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Clone Git repository.&#34;</span><span class="w">
-</span><span class="w">    </span>- <span class="k">cache-pull</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="k">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Pull cache.&#34;</span><span class="w">
-</span><span class="w">    </span>- <span class="k">script</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="k">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Run.&#34;</span><span class="w">
-</span><span class="w">        </span><span class="k">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="k">content</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash ci/jobs/release.sh&#34;</span><span class="w">
-</span><span class="w">    </span>- <span class="k">deploy-to-bitrise-io</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span><span class="k">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Attach artifacts.&#34;</span><span class="w">
-</span><span class="w">        </span><span class="k">is_always_run</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span><span class="w">        </span><span class="k">inputs</span><span class="p">:</span><span class="w">
-</span><span class="w">        </span>- <span class="k">deploy_path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;artifacts/&#34;</span><span class="w">
-</span><span class="w">        </span>- <span class="k">is_enable_public_page</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="w"></span><span class="nt">workflows</span><span class="p">:</span><span class="w">
+</span><span class="w"> </span><span class="nt">release</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">git-clone</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Clone Git repository.&#34;</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">cache-pull</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Pull cache.&#34;</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">script</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Run.&#34;</span><span class="w">
+</span><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash ci/jobs/release.sh&#34;</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">deploy-to-bitrise-io</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Attach artifacts.&#34;</span><span class="w">
+</span><span class="w">        </span><span class="nt">is_always_run</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span><span class="w">        </span>- <span class="nt">deploy_path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;artifacts/&#34;</span><span class="w">
+</span><span class="w">        </span>- <span class="nt">is_enable_public_page</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
 </span></code></pre></div><p>The transition from Jenkins to Bitrise was seamless. For a while we used
 both in parallel and after a month I’ve quetly shut down Jenkins with no
 consequences for the team.</p>

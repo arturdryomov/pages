@@ -1,150 +1,92 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>https://arturdryomov.dev/</loc>
     <lastmod>2020-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/kotlin-code-organization/</loc>
     <lastmod>2020-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/on-technical-writing/</loc>
     <lastmod>2019-12-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/kotlin-enum-recipes/</loc>
     <lastmod>2019-10-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/midnight-in-android-themes/</loc>
     <lastmod>2019-08-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-managing-production/</loc>
     <lastmod>2019-07-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/namespacing-in-kotlin/</loc>
     <lastmod>2019-07-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-cleaning-up/</loc>
     <lastmod>2019-06-06T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/abstracting-kotlin-sealed-classes/</loc>
     <lastmod>2019-06-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-need-for-speed/</loc>
     <lastmod>2019-04-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/modern-times/</loc>
     <lastmod>2019-04-15T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-check-checks/</loc>
     <lastmod>2019-03-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/merge-git-authors/</loc>
     <lastmod>2019-03-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</loc>
     <lastmod>2019-02-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/filling-android-autofill-gaps/</loc>
     <lastmod>2019-02-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/superior-testing-stop-stopping/</loc>
     <lastmod>2019-01-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/acceptance-criteria-bureaucracy/</loc>
     <lastmod>2019-01-20T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/designing-errors-with-kotlin/</loc>
     <lastmod>2018-12-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/abandon-jenkins/</loc>
     <lastmod>2018-12-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/reactive-pipelines/</loc>
     <lastmod>2018-11-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/reactive-state-mutations/</loc>
     <lastmod>2018-10-21T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/optimizing-android-vector-images/</loc>
     <lastmod>2018-09-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</loc>
     <lastmod>2018-08-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/how-the-pull-request-is-built/</loc>
     <lastmod>2018-07-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/mobile-developer-morning-fun/</loc>
     <lastmod>2018-06-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/do-androids-dream-of-ui-testing/</loc>
     <lastmod>2018-05-26T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/a-dagger-to-remember/</loc>
     <lastmod>2018-04-22T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/art-of-a-dependency-upgrade/</loc>
     <lastmod>2018-03-18T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://arturdryomov.dev/posts/kotlin-the-problem-with-null/</loc>
     <lastmod>2018-01-10T00:00:00+00:00</lastmod>
   </url>
-  
 </urlset>

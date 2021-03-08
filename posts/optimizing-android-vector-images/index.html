@@ -178,7 +178,8 @@ Other tools merge it with inner <code>&lt;path&gt;</code> when possible.</li>
 Restarting application over and over to get necessary numbers
 is kind of tedious, especially if there are going to be thousands of passes.
 The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
-<!-- raw HTML omitted -->
+<details>
+  <summary>_Click to expand the benchmark code._</summary>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
     <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
 <span class="p">}</span>
@@ -192,7 +193,7 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
             <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2vector</span><span class="p">,</span>
             <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio_and_avocado</span><span class="p">,</span>
             <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svgo_and_android_studio</span>
-    <span class="p">).</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">drawableRes</span> <span class="p">-&gt;</span>
+    <span class="p">).</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">drawableRes</span> <span class="o">-&gt;</span>
 
         <span class="k">val</span> <span class="py">drawableName</span> <span class="p">=</span> <span class="n">resources</span><span class="p">.</span><span class="n">getResourceEntryName</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
 
@@ -200,19 +201,19 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">measure</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span> <span class="p">}</span>
 
         <span class="k">val</span> <span class="py">averageParseMillis</span> <span class="p">=</span> <span class="n">measurements</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">parseTimeMillis</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">parseTimeMillis</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">average</span><span class="p">()</span>
         <span class="k">val</span> <span class="py">averageRenderMillis</span> <span class="p">=</span> <span class="n">measurements</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">renderTimeMillis</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">renderTimeMillis</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">average</span><span class="p">()</span>
 
-        <span class="n">println</span><span class="p">(</span><span class="s">&#34;:: [$drawableName]. Parse: $averageParseMillis ms. Render: $averageRenderMillis ms.&#34;</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;:: [</span><span class="si">$drawableName</span><span class="s2">]. Parse: </span><span class="si">$averageParseMillis</span><span class="s2"> ms. Render: </span><span class="si">$averageRenderMillis</span><span class="s2"> ms.&#34;</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">private</span> <span class="k">data</span> <span class="k">class</span> <span class="nc">Measurement</span><span class="p">(</span><span class="k">val</span> <span class="py">parseTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">,</span> <span class="k">val</span> <span class="py">renderTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">)</span>
 
-<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">(</span><span class="n">@DrawableRes</span> <span class="n">drawableRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Measurement</span> <span class="p">{</span>
+<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">(</span><span class="nd">@DrawableRes</span> <span class="n">drawableRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Measurement</span> <span class="p">{</span>
     <span class="k">lateinit</span> <span class="k">var</span> <span class="py">drawable</span><span class="p">:</span> <span class="n">Drawable</span>
 
     <span class="k">val</span> <span class="py">parseTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
@@ -220,8 +221,8 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 </span><span class="c1"></span>        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="p">!</span><span class="k">is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s">&#34;Drawable is supposed to be VectorDrawable.&#34;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="o">!is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s2">&#34;Drawable is supposed to be VectorDrawable.&#34;</span><span class="p">)</span>
     <span class="p">}</span>
 
     <span class="c1">// Change tint to prevent internal render internal caching.
@@ -238,7 +239,7 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 
     <span class="k">return</span> <span class="n">Measurement</span><span class="p">(</span><span class="n">parseTime</span><span class="p">,</span> <span class="n">renderTime</span><span class="p">)</span>
 <span class="p">}</span>
-</code></pre></div><!-- raw HTML omitted -->
+</code></pre></div></details>
 <h3 id="environment">Environment</h3>
 <ul>
 <li>MacBook Pro: Intel Core i5 @ 2.7 GHz, 8 GB 1867 MHz DDR3.</li>

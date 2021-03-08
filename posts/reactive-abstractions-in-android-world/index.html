@@ -116,7 +116,7 @@ was there for centuries:</p>
 monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
 </blockquote>
 <p>The usage of the potential abstraction looks like this.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
 </code></pre></div><p>Seems like a single stream will be enough. Let’s do it!</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Connectivity</span> <span class="p">{</span>
 
@@ -130,10 +130,10 @@ monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
 
         <span class="k">private</span> <span class="k">val</span> <span class="py">current</span> <span class="p">=</span> <span class="n">Observable</span>
             <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">manager</span><span class="p">.</span><span class="n">isDefaultNetworkActive</span><span class="p">()</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="k">true</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="k">it</span> <span class="o">==</span> <span class="k">true</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">Unit</span> <span class="p">}</span>
 
-        <span class="k">private</span> <span class="k">val</span> <span class="py">updates</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">emitter</span> <span class="p">-&gt;</span>
+        <span class="k">private</span> <span class="k">val</span> <span class="py">updates</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">emitter</span> <span class="o">-&gt;</span>
             <span class="k">val</span> <span class="py">listener</span> <span class="p">=</span> <span class="n">OnNetworkActiveListener</span> <span class="p">{</span> <span class="n">emitter</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span>
 
             <span class="n">manager</span><span class="p">.</span><span class="n">addDefaultNetworkActiveListener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
@@ -154,13 +154,13 @@ it is possible to test code which works with the platform framework.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestConnectivity</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;()</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;refreshes&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;refreshes&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">refresh</span><span class="p">).</span><span class="n">run</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -168,12 +168,12 @@ it is possible to test code which works with the platform framework.</p>
 <p>What about starting something via <code>Intent</code>? The operation itself is trivial,
 but it is necessary to keep in mind that there might be an <code>ActivityNotFoundException</code>.
 This exception is being thrown when nobody can handle our intention.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">launcher</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span><span class="p">(</span><span class="s">&#34;Ping!&#34;</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">launcher</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span><span class="p">(</span><span class="s2">&#34;Ping!&#34;</span><span class="p">))</span>
     <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span> <span class="p">{</span>
         <span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">Result</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showSuccessAlert</span><span class="p">()</span>
-            <span class="n">Result</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showFailureAlert</span><span class="p">()</span>
+            <span class="n">Result</span><span class="p">.</span><span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showSuccessAlert</span><span class="p">()</span>
+            <span class="n">Result</span><span class="p">.</span><span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">view</span><span class="p">.</span><span class="n">showFailureAlert</span><span class="p">()</span>
         <span class="p">}</span>
     <span class="p">}</span>
 </code></pre></div><p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
@@ -197,7 +197,7 @@ of the same <code>Intent</code> building over and over again.</p>
         <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">application</span><span class="p">.</span><span class="n">currentActivity</span>
                 <span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
                 <span class="p">.</span><span class="n">singleOrError</span><span class="p">()</span>
-                <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">activity</span> <span class="p">-&gt;</span>
+                <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">activity</span> <span class="o">-&gt;</span>
                     <span class="k">try</span> <span class="p">{</span>
                         <span class="n">activity</span><span class="p">.</span><span class="n">startActivity</span><span class="p">(</span><span class="n">createIntent</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
                         <span class="n">Result</span><span class="p">.</span><span class="n">Success</span>
@@ -208,10 +208,10 @@ of the same <code>Intent</code> building over and over again.</p>
                 <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
 
         <span class="k">private</span> <span class="k">inline</span> <span class="k">fun</span> <span class="nf">createIntent</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">is</span> <span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span> <span class="p">-&gt;</span> <span class="p">{</span>
+            <span class="k">is</span> <span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span> <span class="o">-&gt;</span> <span class="p">{</span>
                 <span class="k">val</span> <span class="py">intent</span> <span class="p">=</span> <span class="n">Intent</span><span class="p">(</span><span class="n">Intent</span><span class="p">.</span><span class="n">ACTION_SEND</span><span class="p">).</span><span class="n">apply</span> <span class="p">{</span>
                     <span class="n">flags</span> <span class="p">=</span> <span class="n">Intent</span><span class="p">.</span><span class="n">FLAG_ACTIVITY_NEW_TASK</span>
-                    <span class="n">type</span> <span class="p">=</span> <span class="s">&#34;text/plain&#34;</span>
+                    <span class="n">type</span> <span class="p">=</span> <span class="s2">&#34;text/plain&#34;</span>
                     <span class="n">putExtra</span><span class="p">(</span><span class="n">Intent</span><span class="p">.</span><span class="n">EXTRA_TEXT</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">text</span><span class="p">)</span>
                 <span class="p">}</span>
 
@@ -232,24 +232,24 @@ another abstraction — <code>Application#currentActivity</code>. It is trivial
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">result</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows success alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;shows success alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showSuccessAlert</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">context</span><span class="p">(</span><span class="s">&#34;launch result is failure&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">context</span><span class="p">(</span><span class="s2">&#34;launch result is failure&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Failure</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows failure alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;shows failure alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showFailureAlert</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -260,8 +260,8 @@ In such cases, it is possible to improve the external API — for example,
 provide proper nullability handling if the SDK is not annotated with <code>@Nullable</code> and <code>@NonNull</code>.</p>
 <p>Let’s say it is necessary to show a warning if Google Play Services
 is not installed.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
-    <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="k">false</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
+    <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="k">it</span> <span class="o">==</span> <span class="k">false</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="o">::</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">)</span>
 </code></pre></div><p>Implementation:</p>
@@ -276,7 +276,7 @@ is not installed.</p>
 
         <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">Single</span>
             <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">GoogleApiAvailability</span><span class="p">.</span><span class="n">getInstance</span><span class="p">().</span><span class="n">isGooglePlayServicesAvailable</span><span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span> <span class="p">==</span> <span class="n">ConnectionResult</span><span class="p">.</span><span class="n">SUCCESS</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span> <span class="o">==</span> <span class="n">ConnectionResult</span><span class="p">.</span><span class="n">SUCCESS</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -286,24 +286,24 @@ is not installed.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestGooglePlayServices</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;()</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;does not show warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;does not show warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verifyNever</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">context</span><span class="p">(</span><span class="s">&#34;Google Play Services is not available&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">context</span><span class="p">(</span><span class="s2">&#34;Google Play Services is not available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">false</span><span class="p">)</span>
     <span class="p">}</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;shows warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;shows warning alert&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">verify</span><span class="p">(</span><span class="n">view</span><span class="p">).</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>

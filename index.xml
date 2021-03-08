@@ -6,11 +6,7 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 27 Jan 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 27 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kotlin Code Organization</title>
       <link>https://arturdryomov.dev/posts/kotlin-code-organization/</link>

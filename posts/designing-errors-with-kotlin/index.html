@@ -188,9 +188,9 @@ with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it 
 <a href="https://kotlinlang.org/docs/reference/exceptions.html#checked-exceptions">does not have checked exceptions</a>.
 Well, actually <a href="https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html#checked-exceptions">it does</a>,
 mostly for Java interop purposes.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Throws</span><span class="p">(</span><span class="n">IOException</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Throws</span><span class="p">(</span><span class="n">IOException</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
 <span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">File</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="n">IOException</span><span class="p">(</span><span class="s">&#34;This is a checked, checked world.&#34;</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="n">IOException</span><span class="p">(</span><span class="s2">&#34;This is a checked, checked world.&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><p>Since Kotlin runs on the JVM platform, there are unchecked exceptions.
 However, Kotlin is not Java — it has a couple of benefits.
@@ -201,11 +201,11 @@ to return a union of values and use it. Yep, just like the <code>Result</code> t
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Failure</span><span class="p">(</span><span class="k">val</span> <span class="py">error</span><span class="p">:</span> <span class="n">Error</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">Result</span><span class="p">&lt;</span><span class="n">File</span><span class="p">,</span> <span class="n">String</span><span class="p">&gt;</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="k">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="k">open</span><span class="p">(</span><span class="s2">&#34;file.txt&#34;</span><span class="p">)</span>
 
 <span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">is</span> <span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">path</span><span class="p">)</span>
-    <span class="k">is</span> <span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">is</span> <span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">is</span> <span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">error</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><p>In fact, there is <a href="https://github.com/Kotlin/KEEP/blob/master/proposals/stdlib/result.md">an accepted proposal</a>
 to include a similar type in the standard library, but it is a bit weird

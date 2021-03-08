@@ -193,12 +193,12 @@ a dark theme or not. Colors change all the time but animation files
 are not changed with the same frequency.</p>
 <p>The implementation is actually a breeze. The awkward part is finding
 correct <code>KeyPath</code> combinations — it is better to do that with a design team.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="n">AnimationComponent</span><span class="p">(</span><span class="k">val</span> <span class="py">path</span><span class="p">:</span> <span class="n">KeyPath</span><span class="p">,</span> <span class="n">@ColorRes</span> <span class="k">val</span> <span class="py">colorRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
-   <span class="n">Circle</span><span class="p">(</span><span class="n">KeyPath</span><span class="p">(</span><span class="s">&#34;circle-group-42&#34;</span><span class="p">),</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_black</span><span class="p">),</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="n">AnimationComponent</span><span class="p">(</span><span class="k">val</span> <span class="py">path</span><span class="p">:</span> <span class="n">KeyPath</span><span class="p">,</span> <span class="nd">@ColorRes</span> <span class="k">val</span> <span class="py">colorRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">Circle</span><span class="p">(</span><span class="n">KeyPath</span><span class="p">(</span><span class="s2">&#34;circle-group-42&#34;</span><span class="p">),</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_black</span><span class="p">),</span>
 <span class="p">}</span>
 
-<span class="n">AnimationComponent</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">component</span> <span class="p">-&gt;</span>
-    <span class="n">@ColorInt</span> <span class="k">val</span> <span class="py">componentColor</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">color</span><span class="p">(</span><span class="n">component</span><span class="p">.</span><span class="n">color</span><span class="p">)</span>
+<span class="n">AnimationComponent</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">component</span> <span class="o">-&gt;</span>
+    <span class="nd">@ColorInt</span> <span class="k">val</span> <span class="py">componentColor</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">color</span><span class="p">(</span><span class="n">component</span><span class="p">.</span><span class="n">color</span><span class="p">)</span>
 
     <span class="n">animationView</span><span class="p">.</span><span class="n">addValueCallback</span><span class="p">(</span><span class="n">component</span><span class="p">.</span><span class="n">path</span><span class="p">,</span> <span class="n">LottieProperty</span><span class="p">.</span><span class="n">COLOR</span><span class="p">)</span> <span class="p">{</span> <span class="n">componentColor</span> <span class="p">}</span>
 <span class="p">}</span>
@@ -231,7 +231,7 @@ It is possible to supply it with the elevation to achieve the desired effect.
 Actually this is what Material Components use under the hood.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Surface</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="n">AttributeSet</span><span class="p">)</span> <span class="p">:</span> <span class="n">FrameLayout</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span> <span class="p">{</span>
 
-    <span class="n">init</span> <span class="p">{</span>
+    <span class="k">init</span> <span class="p">{</span>
         <span class="n">background</span> <span class="p">=</span> <span class="n">MaterialShapeDrawable</span><span class="p">.</span><span class="n">createWithElevationOverlay</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">elevation</span><span class="p">)</span>
     <span class="p">}</span>
 
@@ -248,7 +248,7 @@ triangle edges and more via custom <code>EdgeTreatment</code> and <code>CornerTr
 <p>What about gradients and color transitions on elevated surfaces?
 <code>ElevationOverlayProvider</code> helps with that. This class is used under the hood
 of <code>MaterialShapeDrawable</code>. The following extension is a shortcut.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@ColorInt</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@ColorInt</span>
 <span class="k">fun</span> <span class="nf">Context</span><span class="p">.</span><span class="n">surfaceColor</span><span class="p">(</span><span class="n">elevation</span><span class="p">:</span> <span class="n">Float</span><span class="p">):</span> <span class="n">Int</span> <span class="p">{</span>
     <span class="k">return</span> <span class="n">ElevationOverlayProvider</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="n">compositeOverlayWithThemeSurfaceColorIfNeeded</span><span class="p">(</span><span class="n">elevation</span><span class="p">)</span>
 <span class="p">}</span>
@@ -261,11 +261,11 @@ The math behind <code>ElevationOverlayProvider</code> is a bit tricky,
 especially when it comes to ARGB colors with defined alpha channel.</p>
 <p>The solution here is the color subtraction. To get a color for <code>elevationOverlayColor</code>
 subtract <code>S</code> from <code>ES</code>. For example, using the surface color
-<code>#000000</code> <!-- raw HTML omitted -->■<!-- raw HTML omitted -->
+<code>#000000</code> <span style="color: #000000">■</span>
 and the elevated surface color
-<code>#5b5f65</code> <!-- raw HTML omitted -->■<!-- raw HTML omitted -->
+<code>#5b5f65</code> <span style="color: #5b5f65">■</span>
 we’ll get
-<code>#e6f0ff</code> <!-- raw HTML omitted -->■<!-- raw HTML omitted -->.
+<code>#e6f0ff</code> <span style="color: #e6f0ff">■</span>.
 Using the resulting color is usually close enough to the design vision without compromising
 the ability to automatically change surface color depending on the current elevation.
 Oh, please don’t subtract colors manually,
@@ -313,15 +313,15 @@ it is possible to use templates.</p>
 }
 </code></pre><p>This is <a href="https://mustache.github.io">a Mustache-like template</a>.
 <code>{{color_background}}</code> is replaced in runtime with a local color.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CssColor</span><span class="p">(</span><span class="k">val</span> <span class="py">mask</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">@ColorRes</span> <span class="n">res</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Background</span><span class="p">(</span><span class="s">&#34;color_background&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_white</span><span class="p">),</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CssColor</span><span class="p">(</span><span class="k">val</span> <span class="py">mask</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="nd">@ColorRes</span> <span class="n">res</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Background</span><span class="p">(</span><span class="s2">&#34;color_background&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">themed_white</span><span class="p">),</span>
 <span class="p">}</span>
 
-<span class="k">val</span> <span class="py">css</span> <span class="p">=</span> <span class="n">CssColor</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">fold</span><span class="p">(</span><span class="n">cssTemplate</span><span class="p">)</span> <span class="p">{</span> <span class="n">css</span><span class="p">,</span> <span class="n">cssColor</span> <span class="p">-&gt;</span>
-    <span class="n">css</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#34;{{${cssColor.mask}}}&#34;</span><span class="p">,</span> <span class="s">&#34;#${context.color(cssColor.res).colorHexRgba()}&#34;</span><span class="p">)</span>
+<span class="k">val</span> <span class="py">css</span> <span class="p">=</span> <span class="n">CssColor</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">fold</span><span class="p">(</span><span class="n">cssTemplate</span><span class="p">)</span> <span class="p">{</span> <span class="n">css</span><span class="p">,</span> <span class="n">cssColor</span> <span class="o">-&gt;</span>
+    <span class="n">css</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;{{</span><span class="si">${cssColor.mask}</span><span class="s2">}}&#34;</span><span class="p">,</span> <span class="s2">&#34;#</span><span class="si">${context.color(cssColor.res).colorHexRgba()}</span><span class="s2">&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="k">fun</span> <span class="nf">Int</span><span class="p">.</span><span class="n">colorHexRgba</span><span class="p">()</span> <span class="p">=</span> <span class="n">String</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;%08x&#34;</span><span class="p">,</span> <span class="n">shl</span><span class="p">(</span><span class="m">8</span><span class="p">)</span> <span class="p">+</span> <span class="n">ushr</span><span class="p">(</span><span class="m">24</span><span class="p">))</span>
+<span class="k">fun</span> <span class="nf">Int</span><span class="p">.</span><span class="n">colorHexRgba</span><span class="p">()</span> <span class="p">=</span> <span class="n">String</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&#34;%08x&#34;</span><span class="p">,</span> <span class="n">shl</span><span class="p">(</span><span class="m">8</span><span class="p">)</span> <span class="p">+</span> <span class="n">ushr</span><span class="p">(</span><span class="m">24</span><span class="p">))</span>
 </code></pre></div><blockquote>
 <p>💡 Notice the <code>colorHexRgba</code> extension. It is not possible to use Android colors as-is
 since HTML uses the RGBA notation while Android uses the ARGB one.</p>

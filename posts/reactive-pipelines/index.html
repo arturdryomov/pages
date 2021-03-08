@@ -237,7 +237,7 @@ because embracing the reactive approach makes this a benefit.</p>
     <span class="k">private</span> <span class="k">val</span> <span class="py">disposable</span> <span class="p">=</span> <span class="n">CompositeDisposable</span><span class="p">()</span>
 
     <span class="k">fun</span> <span class="nf">bind</span><span class="p">(</span><span class="n">view</span><span class="p">:</span> <span class="n">View</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+        <span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
             <span class="p">.</span><span class="n">merge</span><span class="p">(</span>
                 <span class="n">view</span><span class="p">.</span><span class="n">refreshButton</span><span class="p">.</span><span class="n">clicks</span><span class="p">,</span>
                 <span class="n">view</span><span class="p">.</span><span class="n">errorRefreshButton</span><span class="p">.</span><span class="n">clicks</span>
@@ -245,20 +245,20 @@ because embracing the reactive approach makes this a benefit.</p>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">booksService</span><span class="p">.</span><span class="n">command</span><span class="p">)</span>
 
-        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
+        <span class="n">disposable</span> <span class="o">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
             <span class="p">.</span><span class="n">map</span> <span class="p">{</span>
-                <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span>
-                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span>
-                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span> <span class="p">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span>
+                <span class="k">when</span> <span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span> <span class="o">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Progress</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span> <span class="o">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span>
+                    <span class="k">is</span> <span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span> <span class="o">-&gt;</span> <span class="n">View</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Error</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
             <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">stateSwitcher</span><span class="p">.</span><span class="n">state</span><span class="p">)</span>
 
-        <span class="n">disposable</span> <span class="p">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
+        <span class="n">disposable</span> <span class="o">+=</span> <span class="n">booksService</span><span class="p">.</span><span class="n">state</span>
             <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">BooksService</span><span class="p">.</span><span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">&gt;</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">books</span> <span class="p">}</span>
+            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">books</span> <span class="p">}</span>
             <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainScheduler</span><span class="p">)</span>
             <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
     <span class="p">}</span>

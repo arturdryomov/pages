@@ -198,11 +198,11 @@ Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin<
 <span class="c1">// Get a SourceSet collection
 </span><span class="c1"></span><span class="n">sourceSets</span> <span class="p">{</span>
     <span class="c1">// Get a SourceSet by name
-</span><span class="c1"></span>    <span class="n">named</span><span class="p">(</span><span class="s">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span>    <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Resolve a KotlinSourceSet
 </span><span class="c1"></span>        <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// Configure Kotlin SourceDirectorySet
-</span><span class="c1"></span>            <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
+</span><span class="c1"></span>            <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -214,9 +214,9 @@ Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin<
 <span class="n">subprojects</span> <span class="p">{</span>
     <span class="c1">// The sourceSets function is not available at root so we use a different syntax
 </span><span class="c1"></span>    <span class="n">configure</span><span class="p">&lt;</span><span class="n">SourceSetContainer</span><span class="p">&gt;</span> <span class="p">{</span>
-        <span class="n">named</span><span class="p">(</span><span class="s">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
             <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
+                <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -245,9 +245,9 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
     <span class="c1">// Get an AndroidSourceSet collection
 </span><span class="c1"></span>    <span class="n">sourceSets</span> <span class="p">{</span>
         <span class="c1">// Get an AndroidSourceSet by name
-</span><span class="c1"></span>        <span class="n">named</span><span class="p">(</span><span class="s">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span>        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
             <span class="c1">// Configure Java AndroidSourceDirectorySet
-</span><span class="c1"></span>            <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
+</span><span class="c1"></span>            <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -260,12 +260,12 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
 
 <span class="n">subprojects</span> <span class="p">{</span>
     <span class="c1">// Since the API comes from a plugin we have to wait for it
-</span><span class="c1"></span>    <span class="n">plugins</span><span class="p">.</span><span class="n">matching</span> <span class="p">{</span> <span class="n">it</span> <span class="k">is</span> <span class="n">AppPlugin</span> <span class="p">||</span> <span class="n">it</span> <span class="k">is</span> <span class="n">LibraryPlugin</span> <span class="p">}.</span><span class="n">whenPluginAdded</span> <span class="p">{</span>
+</span><span class="c1"></span>    <span class="n">plugins</span><span class="p">.</span><span class="n">matching</span> <span class="p">{</span> <span class="k">it</span> <span class="k">is</span> <span class="n">AppPlugin</span> <span class="o">||</span> <span class="k">it</span> <span class="k">is</span> <span class="n">LibraryPlugin</span> <span class="p">}.</span><span class="n">whenPluginAdded</span> <span class="p">{</span>
         <span class="c1">// The android function is not available at root so we use a different syntax
 </span><span class="c1"></span>        <span class="n">configure</span><span class="p">&lt;</span><span class="n">BaseExtension</span><span class="p">&gt;</span> <span class="p">{</span>
             <span class="n">sourceSets</span> <span class="p">{</span>
-                <span class="n">named</span><span class="p">(</span><span class="s">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;path A&#34;</span><span class="p">,</span> <span class="s">&#34;path B&#34;</span><span class="p">,</span> <span class="s">&#34;path C&#34;</span><span class="p">)</span>
+                <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -278,26 +278,26 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
 Snippets below are DSL declarations that can be used in both single and multiple module
 configurations described above.</p>
 <h2 id="jvm-1">JVM</h2>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/main/kotlin&#34; on its own
-</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
+</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">named</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/test/kotlin&#34; on its own
-</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
+</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><h2 id="android-1">Android</h2>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/main/kotlin&#34;</span><span class="p">,</span> <span class="s">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="n">named</span><span class="p">(</span><span class="s">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s">&#34;src/test/kotlin&#34;</span><span class="p">,</span> <span class="s">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
+<span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><h1 id="next">Next?</h1>
 <p>Don’t afraid to configure source sets — think about what can be done better

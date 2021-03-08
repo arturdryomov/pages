@@ -162,10 +162,10 @@ with syntax sugar on top.</p>
     <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">)</span> <span class="p">:</span> <span class="n">Time</span> <span class="p">{</span>
 
         <span class="k">private</span> <span class="k">val</span> <span class="py">initializer</span><span class="p">:</span> <span class="n">Unit</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span>
-            <span class="n">AndroidThreeTen</span><span class="p">.</span><span class="n">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+            <span class="n">AndroidThreeTen</span><span class="p">.</span><span class="k">init</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
         <span class="p">}</span>
 
-        <span class="k">private</span> <span class="k">inline</span> <span class="k">fun</span> &lt;T&gt; <span class="nf">initialized</span><span class="p">(</span><span class="k">crossinline</span> <span class="n">func</span><span class="p">:</span> <span class="p">()</span> <span class="p">-&gt;</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">{</span>
+        <span class="k">private</span> <span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">initialized</span><span class="p">(</span><span class="k">crossinline</span> <span class="n">func</span><span class="p">:</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">{</span>
             <span class="k">return</span> <span class="n">initializer</span><span class="p">.</span><span class="n">let</span> <span class="p">{</span> <span class="n">func</span><span class="p">()</span> <span class="p">}</span>
         <span class="p">}</span>
 

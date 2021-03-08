@@ -93,7 +93,7 @@ Unfortunately this mechanism <a href="https://github.com/mockito/mockito/issues/
 At the same time the issue is so tricky <a href="https://static.javadoc.io/org.mockito/mockito-core/2.27.0/org/mockito/MockitoFramework.html#clearInlineMocks--">a new API</a>
 was introduced to mitigate this since it was not possible to resolve it automatically.
 Use it!</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@After</span> <span class="k">fun</span> <span class="nf">clearMockito</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@After</span> <span class="k">fun</span> <span class="nf">clearMockito</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">Mockito</span><span class="p">.</span><span class="n">framework</span><span class="p">().</span><span class="n">clearInlineMocks</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><h3 id="stubs">Stubs</h3>
@@ -105,7 +105,7 @@ which do not track invocations.
 Use it to make dumb objects which will not be verified in the future.
 Or not use Mockito at all for this, just create objects by hand.</p>
 <p>We can make a handy Kotlin function which will reduce the boilerplate.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> &lt;reified T : Any&gt; <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="k">reified</span> <span class="nc">T</span> <span class="p">:</span> <span class="nc">Any</span><span class="p">&gt;</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">actionStub</span> <span class="p">=</span> <span class="n">stub</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&gt;()</span>
 </code></pre></div><h1 id="files">Files</h1>
 <p>Dealing with files in tests is straightforward.</p>
@@ -125,7 +125,7 @@ instead. It is not even necessary to use JUnit 4 to use it.</p>
     <span class="n">fileSystem</span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="n">it</span><span class="p">(</span><span class="s">&#34;creates file system&#34;</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">it</span><span class="p">(</span><span class="s2">&#34;creates file system&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">assertThat</span><span class="p">(</span><span class="n">fileSystem</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">exists</span><span class="p">()</span>
 <span class="p">}</span>
 

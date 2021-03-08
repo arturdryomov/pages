@@ -239,9 +239,9 @@ The refresh command is pretty straightforward.</p>
     <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">&gt;()</span>
     <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">getBooks</span><span class="p">()</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">map</span> <span class="p">{</span>
-        <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
-            <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Error</span>
+        <span class="k">when</span> <span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">(</span><span class="k">it</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
+            <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Error</span>
         <span class="p">}</span>
     <span class="p">}</span>
 </code></pre></div><p>Create and delete commands are a bit more tricky since the implementation depends
@@ -253,21 +253,21 @@ on our needs.</p>
 <p>In this implementation I’m gonna go with the first one.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">createResultCommand</span> <span class="p">=</span> <span class="n">command</span>
     <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Create</span><span class="p">&gt;()</span>
-    <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">createBook</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">book</span><span class="p">)</span> <span class="p">}</span>
+    <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">createBook</span><span class="p">(</span><span class="k">it</span><span class="p">.</span><span class="n">book</span><span class="p">)</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">switchMapSingle</span> <span class="p">{</span>
-        <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">)</span>
-            <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">never</span><span class="p">()</span>
+        <span class="k">when</span> <span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">)</span>
+            <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">never</span><span class="p">()</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-<span class="k">val</span> <span class="py">deleteResultCommand</span> <span class="p">=</span> <span class="n">TODO</span><span class="p">(</span><span class="s">&#34;Basically the same as the create one.&#34;</span><span class="p">)</span>
+<span class="k">val</span> <span class="py">deleteResultCommand</span> <span class="p">=</span> <span class="n">TODO</span><span class="p">(</span><span class="s2">&#34;Basically the same as the create one.&#34;</span><span class="p">)</span>
 </code></pre></div><p>And now it is time to combine commands and states.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
     <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">refreshState</span><span class="p">,</span> <span class="n">refreshResultState</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
-<span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+<span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
     <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">createResultCommand</span><span class="p">,</span> <span class="n">deleteResultCommand</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 </code></pre></div><p>Done!</p>
@@ -293,7 +293,7 @@ on our needs.</p>
         <span class="k">override</span> <span class="k">val</span> <span class="py">state</span> <span class="p">=</span> <span class="n">BehaviorRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
         <span class="k">override</span> <span class="k">val</span> <span class="py">command</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
 
-        <span class="n">init</span> <span class="p">{</span>
+        <span class="k">init</span> <span class="p">{</span>
             <span class="k">val</span> <span class="py">refreshState</span> <span class="p">=</span> <span class="n">command</span>
                 <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">&gt;()</span>
                 <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">State</span><span class="p">.</span><span class="n">Progress</span> <span class="p">}</span>
@@ -302,29 +302,29 @@ on our needs.</p>
                 <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">&gt;()</span>
                 <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">getBooks</span><span class="p">()</span> <span class="p">}</span>
                 <span class="p">.</span><span class="n">map</span> <span class="p">{</span>
-                    <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
-                        <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Error</span>
+                    <span class="k">when</span> <span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Content</span><span class="p">(</span><span class="k">it</span><span class="p">.</span><span class="n">books</span><span class="p">)</span>
+                        <span class="k">is</span> <span class="n">BooksResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">.</span><span class="n">Error</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
 
             <span class="k">val</span> <span class="py">createResultCommand</span> <span class="p">=</span> <span class="n">command</span>
                 <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Create</span><span class="p">&gt;()</span>
-                <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">createBook</span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="n">book</span><span class="p">)</span> <span class="p">}</span>
+                <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">createBook</span><span class="p">(</span><span class="k">it</span><span class="p">.</span><span class="n">book</span><span class="p">)</span> <span class="p">}</span>
                 <span class="p">.</span><span class="n">switchMapSingle</span> <span class="p">{</span>
-                    <span class="k">when</span> <span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Success</span> <span class="p">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">)</span>
-                        <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="p">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">never</span><span class="p">()</span>
+                    <span class="k">when</span> <span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">)</span>
+                        <span class="k">is</span> <span class="n">BookCreateResponse</span><span class="p">.</span><span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">Single</span><span class="p">.</span><span class="n">never</span><span class="p">()</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
 
-            <span class="k">val</span> <span class="py">deleteResultCommand</span> <span class="p">=</span> <span class="n">TODO</span><span class="p">(</span><span class="s">&#34;Basically the same as the create one.&#34;</span><span class="p">)</span>
+            <span class="k">val</span> <span class="py">deleteResultCommand</span> <span class="p">=</span> <span class="n">TODO</span><span class="p">(</span><span class="s2">&#34;Basically the same as the create one.&#34;</span><span class="p">)</span>
 
-            <span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+            <span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
                 <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">refreshState</span><span class="p">,</span> <span class="n">refreshResultState</span><span class="p">)</span>
                 <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
-            <span class="n">disposable</span> <span class="p">+=</span> <span class="n">Observable</span>
+            <span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
                 <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">createResultCommand</span><span class="p">,</span> <span class="n">deleteResultCommand</span><span class="p">)</span>
                 <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
         <span class="p">}</span>

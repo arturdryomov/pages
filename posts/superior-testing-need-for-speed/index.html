@@ -108,7 +108,7 @@ But a lot of systems do not use it at all. Moreover, there is
 a good chance that developers do not use these reports at all.
 <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/reporting/Report.html#setEnabled-boolean-">Let’s nuke them</a>!</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="n">reports</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">report</span> <span class="p">-&gt;</span> <span class="n">report</span><span class="p">.</span><span class="n">isEnabled</span> <span class="p">=</span> <span class="k">false</span> <span class="p">}</span>
+    <span class="n">reports</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">report</span> <span class="o">-&gt;</span> <span class="n">report</span><span class="p">.</span><span class="n">isEnabled</span> <span class="p">=</span> <span class="k">false</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><table>
 <thead>

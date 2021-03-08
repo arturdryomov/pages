@@ -91,7 +91,7 @@ the <a href="https://google.github.io/truth/comparison">thorough comparison</a>.
 <p>Assertions fail short with side effects though. For example, we need to check
 not only the result of the function but the analytics call underneath.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">calculate</span><span class="p">():</span> <span class="n">Result</span> <span class="p">{</span>
-    <span class="n">analytics</span><span class="p">.</span><span class="n">trackEvent</span><span class="p">(</span><span class="s">&#34;Calc&#34;</span><span class="p">)</span>
+    <span class="n">analytics</span><span class="p">.</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">businessResult</span><span class="p">()</span>
 <span class="p">}</span>
@@ -108,7 +108,7 @@ it calls weird SDK and we are not interested in workings behind it.</p>
 
 <span class="n">calculate</span><span class="p">()</span>
 
-<span class="n">verify</span><span class="p">(</span><span class="n">analytics</span><span class="p">).</span><span class="n">trackEvent</span><span class="p">(</span><span class="s">&#34;Calc&#34;</span><span class="p">)</span>
+<span class="n">verify</span><span class="p">(</span><span class="n">analytics</span><span class="p">).</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
 </code></pre></div><p>Looks like magic, right? Well, it kinda is — a lot of reflection is involved,
 intercepting invocations and a bit of salt. It works though and works well.</p>
 <p>Let’s take a look at another example.</p>
@@ -124,7 +124,7 @@ intercepting invocations and a bit of salt. It works though and works well.</p>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">onPlus</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;&gt;()</span>
     <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="n">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
 
@@ -160,14 +160,14 @@ For your reference, here is the list of all invocations ([?] - means unverified)
 <ul>
 <li>
 <p>Forget about <code>verify</code>. Use this Kotlin extension instead.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> &lt;T&gt; <span class="nf">verifyOnly</span><span class="p">(</span><span class="n">mock</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">verify</span><span class="p">(</span><span class="n">mock</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">only</span><span class="p">())</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">verifyOnly</span><span class="p">(</span><span class="n">mock</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">verify</span><span class="p">(</span><span class="n">mock</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">only</span><span class="p">())</span>
 </code></pre></div></li>
 <li>
 <p>Learn about <a href="https://static.javadoc.io/org.mockito/mockito-core/2.25.1/org/mockito/Mockito.html#clearInvocations-T...-"><code>clearInvocations</code></a>.
 It is useful for tests where there is an interest in checking behavior
 after a particular state and all interactions before this state are irrelevant.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testCalculate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">repeat</span><span class="p">(</span><span class="m">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="n">it</span><span class="p">)</span> <span class="p">}</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testCalculate</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">repeat</span><span class="p">(</span><span class="m">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
     <span class="n">clearInvocations</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
 
     <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
@@ -193,7 +193,7 @@ Observe!</p>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">valueObserver</span> <span class="p">=</span> <span class="n">TestObserver</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;()</span>
     <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="n">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
         <span class="n">value</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">valueObserver</span><span class="p">)</span>

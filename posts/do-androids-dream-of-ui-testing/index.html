@@ -197,15 +197,15 @@ on top of Espresso. The result looks something like that.</p>
     <span class="k">val</span> <span class="py">numberText</span> <span class="p">=</span> <span class="n">KTextView</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">text_number</span><span class="p">)</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">CounterScreenTest</span> <span class="p">{</span>
-    <span class="n">@Test</span> <span class="k">fun</span> <span class="nf">`it works`</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">`it works`</span><span class="p">()</span> <span class="p">{</span>
         <span class="n">CounterScreen</span> <span class="p">{</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s">&#34;0&#34;</span><span class="p">)</span>
+            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
 
             <span class="n">incrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s">&#34;1&#34;</span><span class="p">)</span>
+            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
 
             <span class="n">decrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s">&#34;0&#34;</span><span class="p">)</span>
+            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>

@@ -89,12 +89,12 @@ We don’t have <a href="https://en.wikipedia.org/wiki/BASIC">BASIC</a> syntax c
 </code></pre></div><h2 id="commas">Commas</h2>
 <p>Let’s say we have a <code>Screen</code> enumeration.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Screen</span><span class="p">(</span><span class="k">val</span> <span class="py">analyticsName</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SignIn</span><span class="p">(</span><span class="s">&#34;Sign In&#34;</span><span class="p">)</span>
+    <span class="n">SignIn</span><span class="p">(</span><span class="s2">&#34;Sign In&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><p>At some point we need to add another case to the <code>Screen</code> — <code>SignUp</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Screen</span><span class="p">(</span><span class="k">val</span> <span class="py">analyticsName</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SignIn</span><span class="p">(</span><span class="s">&#34;Sign In&#34;</span><span class="p">),</span>
-    <span class="n">SignUp</span><span class="p">(</span><span class="s">&#34;Sign Up&#34;</span><span class="p">)</span>
+    <span class="n">SignIn</span><span class="p">(</span><span class="s2">&#34;Sign In&#34;</span><span class="p">),</span>
+    <span class="n">SignUp</span><span class="p">(</span><span class="s2">&#34;Sign Up&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><p>Looks fine, but the change from a VCS perspective will be like this:</p>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- SignIn(&#34;Sign In&#34;)
@@ -104,8 +104,8 @@ We don’t have <a href="https://en.wikipedia.org/wiki/BASIC">BASIC</a> syntax c
 The last <code>SignIn</code> change is now tied to the <code>SignUp</code> one which doesn’t make sense.
 We can solve this by putting commas after each enumeration case.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Screen</span><span class="p">(</span><span class="k">val</span> <span class="py">analyticsName</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">SignIn</span><span class="p">(</span><span class="s">&#34;Sign In&#34;</span><span class="p">),</span>
-    <span class="n">SignUp</span><span class="p">(</span><span class="s">&#34;Sign Up&#34;</span><span class="p">),</span>
+    <span class="n">SignIn</span><span class="p">(</span><span class="s2">&#34;Sign In&#34;</span><span class="p">),</span>
+    <span class="n">SignUp</span><span class="p">(</span><span class="s2">&#34;Sign Up&#34;</span><span class="p">),</span>
 <span class="p">}</span>
 </code></pre></div><p>This way the VCS change becomes minimal.</p>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ SignUp(&#34;Sign Up&#34;),
@@ -113,42 +113,42 @@ We can solve this by putting commas after each enumeration case.</p>
 <h2 id="constants-namespacing">Constants Namespacing</h2>
 <p>The barbarian approach to create namespaces is using prefixes.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="k">val</span> <span class="py">SHARED_PREFERENCE_KEY_TOKEN</span> <span class="p">=</span> <span class="s">&#34;token&#34;</span>
-    <span class="k">const</span> <span class="k">val</span> <span class="py">SHARED_PREFERENCE_KEY_SESSIONS_COUNT</span> <span class="p">=</span> <span class="s">&#34;sessions-count&#34;</span>
+    <span class="k">const</span> <span class="k">val</span> <span class="py">SHARED_PREFERENCE_KEY_TOKEN</span> <span class="p">=</span> <span class="s2">&#34;token&#34;</span>
+    <span class="k">const</span> <span class="k">val</span> <span class="py">SHARED_PREFERENCE_KEY_SESSIONS_COUNT</span> <span class="p">=</span> <span class="s2">&#34;sessions-count&#34;</span>
 <span class="p">}</span>
 </code></pre></div><p>The next step — named <code>companion object</code>.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="n">SharedPreferenceKeys</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="k">val</span> <span class="py">TOKEN</span> <span class="p">=</span> <span class="s">&#34;token&#34;</span>
-    <span class="k">const</span> <span class="k">val</span> <span class="py">SESSIONS_COUNT</span> <span class="p">=</span> <span class="s">&#34;sessions-count&#34;</span>
+    <span class="k">const</span> <span class="k">val</span> <span class="py">TOKEN</span> <span class="p">=</span> <span class="s2">&#34;token&#34;</span>
+    <span class="k">const</span> <span class="k">val</span> <span class="py">SESSIONS_COUNT</span> <span class="p">=</span> <span class="s2">&#34;sessions-count&#34;</span>
 <span class="p">}</span>
 </code></pre></div><p>There is catch though — a class can have a single <code>companion object</code>, named or not.
 <code>enum</code> doesn’t have such limitations.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">SharedPreferenceKey</span><span class="p">(</span><span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Token</span><span class="p">(</span><span class="s">&#34;token&#34;</span><span class="p">),</span>
-    <span class="n">SessionsCount</span><span class="p">(</span><span class="s">&#34;sessions-count&#34;</span><span class="p">),</span>
+    <span class="n">Token</span><span class="p">(</span><span class="s2">&#34;token&#34;</span><span class="p">),</span>
+    <span class="n">SessionsCount</span><span class="p">(</span><span class="s2">&#34;sessions-count&#34;</span><span class="p">),</span>
 <span class="p">}</span>
 </code></pre></div><h2 id="abstraction">Abstraction</h2>
 <h3 id="api">API</h3>
 <p>Let’s imagine that a backend returns codes in error responses.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">data</span> <span class="k">class</span> <span class="nc">ErrorResponse</span><span class="p">(</span><span class="n">@SerializedName</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">)</span> <span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">data</span> <span class="k">class</span> <span class="nc">ErrorResponse</span><span class="p">(</span><span class="nd">@SerializedName</span><span class="p">(</span><span class="s2">&#34;code&#34;</span><span class="p">)</span> <span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
 </code></pre></div><p>This is a fine declaration but the usage becomes repetitive and error-prone to typos.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="p">==</span> <span class="s">&#34;not_found&#34;</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">==</span> <span class="s2">&#34;not_found&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="n">RuntimeException</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="c1">// ... 1_000_000 LOC ...
 </span><span class="c1"></span>
 <span class="c1">// Oops!
-</span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="p">==</span> <span class="s">&#34;not__found&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">.</span><span class="n">code</span> <span class="o">==</span> <span class="s2">&#34;not__found&#34;</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="n">RuntimeException</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><p>Enumerations are perfect for this.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">ErrorCode</span><span class="p">(</span><span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">@SerializedName</span><span class="p">(</span><span class="s">&#34;not_found&#34;</span><span class="p">)</span> <span class="n">NotFound</span><span class="p">,</span>
-    <span class="n">@SerializedName</span><span class="p">(</span><span class="s">&#34;unauthorized&#34;</span><span class="p">)</span> <span class="n">Unauthorized</span><span class="p">,</span>
+    <span class="nd">@SerializedName</span><span class="p">(</span><span class="s2">&#34;not_found&#34;</span><span class="p">)</span> <span class="n">NotFound</span><span class="p">,</span>
+    <span class="nd">@SerializedName</span><span class="p">(</span><span class="s2">&#34;unauthorized&#34;</span><span class="p">)</span> <span class="n">Unauthorized</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">data</span> <span class="k">class</span> <span class="nc">ErrorResponse</span><span class="p">(</span><span class="n">@SerializedName</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">)</span> <span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">ErrorCode</span><span class="p">?)</span>
+<span class="k">data</span> <span class="k">class</span> <span class="nc">ErrorResponse</span><span class="p">(</span><span class="nd">@SerializedName</span><span class="p">(</span><span class="s2">&#34;code&#34;</span><span class="p">)</span> <span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">ErrorCode</span><span class="p">?)</span>
 </code></pre></div><blockquote>
 <p>⚠️ Gson will write unknown <code>enum</code> values as <code>null</code> —
 ignoring the Kotlin nullability — since the Java reflection doesn’t know about Kotlin.
@@ -177,25 +177,25 @@ to declare an <code>enum</code> as a direct XML mirror.</p>
 <span class="p">}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">defaultIcon</span> <span class="p">=</span> <span class="n">NavigationIcon</span><span class="p">.</span><span class="n">Back</span>
 
-<span class="k">val</span> <span class="py">icon</span> <span class="p">=</span> <span class="n">attrs</span><span class="p">.</span><span class="n">getInt</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">styleable</span><span class="p">.</span><span class="n">NavigationBar_navigationIcon</span><span class="p">,</span> <span class="n">defaultIcon</span><span class="p">.</span><span class="n">attrValue</span><span class="p">).</span><span class="n">let</span> <span class="p">{</span> <span class="n">attrValue</span> <span class="p">-&gt;</span>
-    <span class="n">NavigationIcon</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">find</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">attrValue</span> <span class="p">==</span> <span class="n">attrValue</span> <span class="p">}</span> <span class="o">?:</span> <span class="n">defaultIcon</span>
+<span class="k">val</span> <span class="py">icon</span> <span class="p">=</span> <span class="n">attrs</span><span class="p">.</span><span class="n">getInt</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">styleable</span><span class="p">.</span><span class="n">NavigationBar_navigationIcon</span><span class="p">,</span> <span class="n">defaultIcon</span><span class="p">.</span><span class="n">attrValue</span><span class="p">).</span><span class="n">let</span> <span class="p">{</span> <span class="n">attrValue</span> <span class="o">-&gt;</span>
+    <span class="n">NavigationIcon</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">find</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">attrValue</span> <span class="o">==</span> <span class="n">attrValue</span> <span class="p">}</span> <span class="o">?:</span> <span class="n">defaultIcon</span>
 <span class="p">}</span>
 </code></pre></div><h3 id="even-more">Even More</h3>
 <p>Map markers:</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Marker</span><span class="p">(</span><span class="n">@DrawableRes</span> <span class="k">val</span> <span class="py">icon</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">elevation</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Marker</span><span class="p">(</span><span class="nd">@DrawableRes</span> <span class="k">val</span> <span class="py">icon</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">elevation</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">Airport</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">ic_map_airport</span><span class="p">,</span> <span class="n">elevation</span> <span class="p">=</span> <span class="m">4</span><span class="p">),</span>
     <span class="n">Underground</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">ic_map_underground</span><span class="p">,</span> <span class="n">elevation</span> <span class="p">=</span> <span class="m">0</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="k">data</span> <span class="k">class</span> <span class="nc">ViewState</span><span class="p">(</span><span class="k">val</span> <span class="py">marker</span><span class="p">:</span> <span class="n">Marker</span><span class="p">,</span> <span class="k">val</span> <span class="py">location</span><span class="p">:</span> <span class="n">LatLng</span><span class="p">)</span>
 </code></pre></div><p>List sections:</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">@StringRes</span> <span class="k">val</span> <span class="py">title</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">from</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">to</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="nd">@StringRes</span> <span class="k">val</span> <span class="py">title</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">from</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">to</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">Dozen</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">Section_Dozen</span><span class="p">,</span> <span class="n">from</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">to</span> <span class="p">=</span> <span class="m">10</span><span class="p">),</span>
     <span class="n">Dozens</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">string</span><span class="p">.</span><span class="n">Section_Dozens</span><span class="p">,</span> <span class="n">from</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span> <span class="n">to</span> <span class="p">=</span> <span class="n">Int</span><span class="p">.</span><span class="n">MAX_VALUE</span><span class="p">),</span>
 <span class="p">}</span>
 
-<span class="n">listOf</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">42</span><span class="p">).</span><span class="n">groupBy</span> <span class="p">{</span> <span class="n">number</span> <span class="p">-&gt;</span>
-    <span class="n">Section</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">find</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">from</span> <span class="p">&lt;=</span> <span class="n">number</span> <span class="p">&amp;&amp;</span> <span class="n">number</span> <span class="p">&lt;=</span> <span class="n">it</span><span class="p">.</span><span class="n">to</span> <span class="p">}</span>
+<span class="n">listOf</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">42</span><span class="p">).</span><span class="n">groupBy</span> <span class="p">{</span> <span class="n">number</span> <span class="o">-&gt;</span>
+    <span class="n">Section</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">find</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">from</span> <span class="o">&lt;=</span> <span class="n">number</span> <span class="o">&amp;&amp;</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="k">it</span><span class="p">.</span><span class="n">to</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>The idea remains the same — use the declarative <code>enum</code> nature when it fits.</p>
 <h2 id="iterating">Iterating</h2>
@@ -204,9 +204,9 @@ to declare an <code>enum</code> as a direct XML mirror.</p>
 and HTML colors in sync, we need to translate resources to RGBA hex values.</p>
 <p>This is where the <code>enum</code> <code>values()</code> method becomes helpful. We can declare
 color associations, go over all of them and get processed CSS.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CssTemplateColor</span><span class="p">(</span><span class="k">val</span> <span class="py">mask</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="n">@ColorRes</span> <span class="k">val</span> <span class="py">res</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">Background</span><span class="p">(</span><span class="s">&#34;color_background&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">white</span><span class="p">),</span>
-    <span class="n">Text</span><span class="p">(</span><span class="s">&#34;color_text&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">black</span><span class="p">),</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">CssTemplateColor</span><span class="p">(</span><span class="k">val</span> <span class="py">mask</span><span class="p">:</span> <span class="n">String</span><span class="p">,</span> <span class="nd">@ColorRes</span> <span class="k">val</span> <span class="py">res</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">Background</span><span class="p">(</span><span class="s2">&#34;color_background&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">white</span><span class="p">),</span>
+    <span class="n">Text</span><span class="p">(</span><span class="s2">&#34;color_text&#34;</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">color</span><span class="p">.</span><span class="n">black</span><span class="p">),</span>
 <span class="p">}</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">cssTemplate</span> <span class="p">=</span>
     <span class="s">&#34;&#34;&#34;
@@ -216,21 +216,21 @@ color associations, go over all of them and get processed CSS.</p>
 </span><span class="s">    }
 </span><span class="s">    &#34;&#34;&#34;</span>
 
-<span class="k">val</span> <span class="py">css</span> <span class="p">=</span> <span class="n">CssTemplateColor</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">fold</span><span class="p">(</span><span class="n">cssTemplate</span><span class="p">)</span> <span class="p">{</span> <span class="n">css</span><span class="p">,</span> <span class="n">color</span> <span class="p">-&gt;</span>
-    <span class="n">css</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#34;{{${color.mask}}}&#34;</span><span class="p">,</span> <span class="s">&#34;#${color.res.hexRgba()}&#34;</span><span class="p">)</span>
+<span class="k">val</span> <span class="py">css</span> <span class="p">=</span> <span class="n">CssTemplateColor</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">fold</span><span class="p">(</span><span class="n">cssTemplate</span><span class="p">)</span> <span class="p">{</span> <span class="n">css</span><span class="p">,</span> <span class="n">color</span> <span class="o">-&gt;</span>
+    <span class="n">css</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;{{</span><span class="si">${color.mask}</span><span class="s2">}}&#34;</span><span class="p">,</span> <span class="s2">&#34;#</span><span class="si">${color.res.hexRgba()}</span><span class="s2">&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre></div><h3 id="tests">Tests</h3>
 <p>This is not as useful for JUnit-based approaches but enumerations shine with
 anything specification-related.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">ErrorCode</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">errorCode</span> <span class="p">-&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">ErrorCode</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">errorCode</span> <span class="o">-&gt;</span>
 
-    <span class="n">it</span><span class="p">(</span><span class="s">&#34;creates error response from error code [${errorCode.name}]&#34;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">it</span><span class="p">(</span><span class="s2">&#34;creates error response from error code [</span><span class="si">${errorCode.name}</span><span class="s2">]&#34;</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">assertThat</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">response</span><span class="p">(</span><span class="n">errorCode</span><span class="p">)).</span><span class="n">isEqualTo</span><span class="p">(</span><span class="n">ErrorResponse</span><span class="p">(</span><span class="n">errorCode</span><span class="p">))</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>This is a rough equivalent of this JUnit test:</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">@Test</span> <span class="k">fun</span> <span class="nf">`it creates error response`</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ErrorCode</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">errorCode</span> <span class="p">-&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">`it creates error response`</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ErrorCode</span><span class="p">.</span><span class="n">values</span><span class="p">().</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">errorCode</span> <span class="o">-&gt;</span>
         <span class="n">assertThat</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">response</span><span class="p">(</span><span class="n">errorCode</span><span class="p">)).</span><span class="n">isEqualTo</span><span class="p">(</span><span class="n">ErrorResponse</span><span class="p">(</span><span class="n">errorCode</span><span class="p">))</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -248,12 +248,12 @@ since values are stored as bit vectors internally.</p>
 </code></pre></div><p>This is a <code>java.util</code> class and unfortunately there nothing
 like this in Kotlin for cases when the endgame is multiplatform.
 Most likely it is possible to solve this using platform-specific declarations.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">expect</span> <span class="k">fun</span> &lt;T&gt; <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">expect</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span>
 </code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="c1">// JVM
-</span><span class="c1"></span><span class="k">actual</span> <span class="k">fun</span> &lt;T&gt; <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">EnumSet</span><span class="p">.</span><span class="n">of</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+</span><span class="c1"></span><span class="k">actual</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">EnumSet</span><span class="p">.</span><span class="n">of</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
 
 <span class="c1">// Not JVM
-</span><span class="c1"></span><span class="k">actual</span> <span class="k">fun</span> &lt;T&gt; <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">setOf</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
+</span><span class="c1"></span><span class="k">actual</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">enumSetOf</span><span class="p">(</span><span class="k">vararg</span> <span class="n">elements</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">=</span> <span class="n">setOf</span><span class="p">(</span><span class="n">elements</span><span class="p">)</span>
 </code></pre></div><h2 id="anti-abusing-sealed-class">Anti-Abusing <code>sealed class</code></h2>
 <p>I see the following <code>sealed class</code> usage from time to time and it kind of hurts.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Color</span> <span class="p">{</span>
@@ -302,21 +302,21 @@ which I’m gonna refactor step-by-step.</p>
 <p>We can inline method result values into <code>enum</code> since both are matching operations and nothing else.</p>
 <div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">private</span> <span class="k">fun</span> <span class="nf">getPageForRiskLevel</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">:</span> <span class="n">RiskLevel</span><span class="p">):</span> <span class="n">Int</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">when</span> <span class="p">(</span><span class="n">riskLevel</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Low</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_risk_error_pages</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Medium</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">High</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Low</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_risk_error_pages</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Medium</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">High</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">private</span> <span class="k">fun</span> <span class="nf">getStyleForRiskLevel</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">:</span> <span class="n">RiskLevel</span><span class="p">):</span> <span class="n">Int</span> <span class="p">{</span>
     <span class="k">return</span> <span class="k">when</span> <span class="p">(</span><span class="n">riskLevel</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Low</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Medium</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span>
-        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">High</span> <span class="p">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">high_risk_error_style</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Low</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">Medium</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span>
+        <span class="n">RiskLevel</span><span class="p">.</span><span class="n">High</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">high_risk_error_style</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>⬇️</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">RiskLevel</span><span class="p">(</span><span class="n">@RawRes</span> <span class="k">val</span> <span class="py">html</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="n">@RawRes</span> <span class="k">val</span> <span class="py">css</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">enum</span> <span class="k">class</span> <span class="nc">RiskLevel</span><span class="p">(</span><span class="nd">@RawRes</span> <span class="k">val</span> <span class="py">html</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="nd">@RawRes</span> <span class="k">val</span> <span class="py">css</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">Low</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_risk_error_pages</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span><span class="p">),</span>
     <span class="n">Medium</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span><span class="p">),</span>
     <span class="n">High</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span><span class="p">,</span> <span class="n">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">high_risk_error_style</span><span class="p">),</span>

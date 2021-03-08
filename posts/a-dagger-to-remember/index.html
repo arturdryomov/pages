@@ -153,7 +153,7 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
     <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">ServiceContent</span><span class="p">&gt;</span>
 
     <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">)</span> <span class="p">:</span> <span class="n">Service</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">toServiceContent</span><span class="p">()</span> <span class="p">}</span>
+        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">toServiceContent</span><span class="p">()</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -161,24 +161,24 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 </span><span class="c1"></span>
 <span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
 
-    <span class="n">@Inject</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
+    <span class="nd">@Inject</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
 
-    <span class="n">init</span> <span class="p">{</span>
+    <span class="k">init</span> <span class="p">{</span>
         <span class="n">context</span><span class="p">.</span><span class="n">inject</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// Dagger
 </span><span class="c1"></span>
-<span class="n">@Module</span>
+<span class="nd">@Module</span>
 <span class="k">class</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="n">@Provides</span> <span class="n">@Singleton</span>
+    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
     <span class="k">fun</span> <span class="nf">provideRepository</span><span class="p">():</span> <span class="n">Repository</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="n">@Module</span>
+<span class="nd">@Module</span>
 <span class="k">class</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
-    <span class="n">@Provides</span> <span class="n">@Singleton</span>
+    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
     <span class="k">fun</span> <span class="nf">provideService</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">):</span> <span class="n">Service</span> <span class="p">=</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span>
 <span class="p">}</span>
 
@@ -186,8 +186,8 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
     <span class="k">fun</span> <span class="nf">inject</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">ViewModel</span><span class="p">)</span>
 <span class="p">}</span>
 
-<span class="n">@Singleton</span>
-<span class="n">@Component</span><span class="p">(</span><span class="n">modules</span> <span class="p">=</span> <span class="p">[</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="k">class</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="o">::</span><span class="k">class</span><span class="p">])</span>
+<span class="nd">@Singleton</span>
+<span class="nd">@Component</span><span class="p">(</span><span class="n">modules</span> <span class="p">=</span> <span class="p">[</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="k">class</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="o">::</span><span class="k">class</span><span class="p">])</span>
 <span class="k">interface</span> <span class="nc">ContextComponent</span> <span class="p">:</span> <span class="n">Context</span>
 </code></pre></div><p>I know, I know, that’s not how you do it, but it is just a use case I have on hand.</p>
 <p>How do you test things using this structure? Well, it is pretty simple.</p>
