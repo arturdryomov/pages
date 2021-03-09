@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>Autonomous GitHub Pull Requests</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/syntax-highlighting.css" />
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Autonomous GitHub Pull Requests"/>
+<meta name="twitter:description" content="Less actions via more Actions"/>
+<meta name="twitter:site" content="@arturdryomov"/>
+
+</head>
+
+<body>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-112239048-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Autonomous GitHub Pull Requests</span></h1>
+  <h3>March 8, 2021</h3>
+
+</div>
+
+<main>
+<p>In general, people are lazy. This is our nature — we want to achieve more by doing less.
+Developers are on the next step of this urge — we want to automate similar actions,
+patterns in human behavior. And what’s more repetitive than working on pull requests
+for each source code change we make?</p>
+<h1 id="workflow">Workflow</h1>
+<p>Over time and multiple iterations I’ve established the following workflow.</p>
+<ol>
+<li>Open a PR.
+<ul>
+<li>Assign reviewers automatically.</li>
+</ul>
+</li>
+<li>Refine the PR.
+<ul>
+<li>Run automatic checks (compiler, tests, linters):
+<ul>
+<li>on success — attempt automatic merge;</li>
+<li>on failure — push new changes.</li>
+</ul>
+</li>
+<li>Receive reviews:
+<ul>
+<li>on approve — attempt automatic merge;</li>
+<li>on decline — push new changes.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Merge the PR.
+<ul>
+<li>Update PRs targeting the same branch.</li>
+</ul>
+</li>
+</ol>
+<p>This approach reduces the manual interaction as much as possible.
+Developers provide changes and reviews, the automation handles everything else.
+There is no need to choose people for review, track checks and review statuses,
+merge and update remaining PRs.</p>
+<blockquote>
+<p>📖 The <a href="/posts/how-the-pull-request-is-built/">How the Pull Request is Built</a> article
+explains the importance of keeping pull request branches up to date with the target one.</p>
+</blockquote>
+<p>The workflow can be brought to life via GitHub and GitHub Actions with a bit of help
+from <a href="https://curl.se/"><code>curl</code></a> and <a href="https://stedolan.github.io/jq/"><code>jq</code></a>.</p>
+<h1 id="implementation">Implementation</h1>
+<blockquote>
+<p>🚩 This article is not a tutorial for GitHub Actions.
+GitHub <a href="https://docs.github.com/en/actions/learn-github-actions">has a great one</a>.</p>
+</blockquote>
+<h2 id="assign-reviewers">Assign Reviewers</h2>
+<p>Can be achieved via <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners">code owners</a>
+and <a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/organizing-members-into-teams">teams</a>.</p>
+<ol>
+<li><a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/creating-a-team">Create a GitHub team</a>.</li>
+<li>Create a GitHub <code>CODEOWNERS</code> file.
+<pre><code class="language-console" data-lang="console">$ cat .github/CODEOWNERS
+
+# Makes the team owners of everything but this can be fine-tuned (see the documentation)
+* @REPLACE_WITH_ORG_NAME/REPLACE_WITH_TEAM_NAME
+</code></pre></li>
+<li>Configure <a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-code-review-assignment-for-your-team">code review assignment</a> for the GitHub team.</li>
+</ol>
+<p>That’s it! On opening a PR GitHub will add the team as reviewers (thanks to <code>CODEOWNERS</code>)
+and immediately will replace it with individual team members according to chosen
+rules (thanks to the code review assignment).</p>
+<p>Since both team members and review assignments are configured via the UI,
+it’s possible to adjust conditions without making changes in the source code.
+This can be useful when developers go on vacation or switch teams.</p>
+<h2 id="cancel-runs">Cancel Runs</h2>
+<p>This is not mentioned in the workflow above but it’s important nevertheless.
+ATM GitHub doesn’t touch existing workflow runs on new runs of the same workflow.
+For example:</p>
+<ol>
+<li>a PR is opened with commits <code>A</code>, <code>B</code>, <code>C</code>;</li>
+<li>GitHub starts a workflow run for commit <code>C</code>;</li>
+<li>immediately after opening a PR developer notices a typo and pushes commit <code>D</code>;</li>
+<li>GitHub starts a workflow run for commit <code>D</code>;</li>
+<li>GitHub executes runs for commits <code>C</code> in <code>D</code> in parallel.</li>
+</ol>
+<p>This makes total sense but is impractical from a PR-based perspective.
+The PR should be checked using the final state, not intermediate ones.
+At the same time, more runs mean more used resources.</p>
+<p>Both <a href="https://devcenter.bitrise.io/builds/rolling-builds/">Bitrise</a>
+and <a href="https://circleci.com/docs/2.0/skip-build/#auto-cancelling-a-redundant-build">CircleCI</a>
+have the redundant runs cancellation option.
+GitHub Actions doesn’t but it can be done via
+<a href="https://docs.github.com/en/rest/reference/actions">the GitHub Actions API</a>:</p>
+<ol>
+<li><a href="https://docs.github.com/en/rest/reference/actions#get-a-workflow-run">find a workflow of the current run</a>;</li>
+<li><a href="https://docs.github.com/en/rest/reference/actions#list-workflow-runs">find runs of the workflow</a>;</li>
+<li><a href="https://docs.github.com/en/rest/reference/actions#cancel-a-workflow-run">cancel runs of the workflow except the current run</a>.</li>
+</ol>
+<p>The following script does that.</p>
+<details>
+  <summary><code>.github/workflows/pull-request-cancel-concurrent.sh</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
+
+<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+
+curl <span class="se">\
+</span><span class="se"></span>  --fail <span class="se">\
+</span><span class="se"></span>  --silent <span class="se">\
+</span><span class="se"></span>  --show-error <span class="se">\
+</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --output <span class="s2">&#34;run.json&#34;</span>
+
+<span class="nv">WORKFLOW_ID</span><span class="o">=</span><span class="k">$(</span>jq <span class="s2">&#34;.workflow_id&#34;</span> run.json<span class="k">)</span>
+
+curl <span class="se">\
+</span><span class="se"></span>  --fail <span class="se">\
+</span><span class="se"></span>  --silent <span class="se">\
+</span><span class="se"></span>  --show-error <span class="se">\
+</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/workflows/</span><span class="si">${</span><span class="nv">WORKFLOW_ID</span><span class="si">}</span><span class="s2">/runs?branch=</span><span class="si">${</span><span class="nv">GITHUB_HEAD_REF</span><span class="si">}</span><span class="s2">&amp;status=queued&amp;status=in_progress&#34;</span> <span class="se">\
+</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --output <span class="s2">&#34;runs.json&#34;</span>
+
+<span class="k">for</span> WORKFLOW_RUN_ID in <span class="k">$(</span>jq <span class="s2">&#34;.workflow_runs[] | .id&#34;</span> runs.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+
+  <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&#34;:: Cancelling workflow run #</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">...&#34;</span>
+    curl <span class="se">\
+</span><span class="se"></span>      --silent <span class="se">\
+</span><span class="se"></span>      --show-error <span class="se">\
+</span><span class="se"></span>      --request <span class="s2">&#34;POST&#34;</span> <span class="se">\
+</span><span class="se"></span>      --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">/cancel&#34;</span> <span class="se">\
+</span><span class="se"></span>      --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span>
+  <span class="k">fi</span>
+
+<span class="k">done</span>
+</code></pre></div></details>
+<p>The script should be called from a PR workflow.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull-request-cancel-concurrent</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Cancel concurrent runs&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-cancel-concurrent.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34;</span><span class="w">
+</span></code></pre></div><blockquote>
+<p>📖 The script uses
+<a href="https://docs.github.com/en/actions/reference/authentication-in-a-workflow">the GitHub-provided authentication token</a>
+via <code>secrets.GITHUB_TOKEN</code> and a good amount of GitHub-provided
+<a href="https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables">environment variables</a>.</p>
+</blockquote>
+<h2 id="merge-and-update">Merge and Update</h2>
+<blockquote>
+<p>✳️ GitHub has a feature called
+<a href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/automatically-merging-a-pull-request">Auto-Merge</a>
+but its automation part is&hellip; partial. It requires using a dedicated button
+for each opened PR making it easy to forget or even miss.</p>
+</blockquote>
+<p>Merging itself is straightforward —
+it’s <a href="https://docs.github.com/en/rest/reference/pulls#merge-a-pull-request">a single API call</a>.</p>
+<details>
+  <summary><code>.github/workflows/pull-request-merge.sh</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
+
+<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+<span class="nv">GITHUB_PR_NUMBER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
+<span class="nv">GITHUB_PR_TITLE</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">3</span><span class="si">}</span><span class="s2">&#34;</span>
+
+curl <span class="se">\
+</span><span class="se"></span>  --fail <span class="se">\
+</span><span class="se"></span>  --silent <span class="se">\
+</span><span class="se"></span>  --show-error <span class="se">\
+</span><span class="se"></span>  --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
+</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">GITHUB_PR_NUMBER</span><span class="si">}</span><span class="s2">/merge&#34;</span> <span class="se">\
+</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --header <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
+</span><span class="se"></span>  --data <span class="s2">&#34;{
+</span><span class="s2">    \&#34;merge_method\&#34;: \&#34;squash\&#34;,
+</span><span class="s2">    \&#34;commit_title\&#34;: \&#34;</span><span class="si">${</span><span class="nv">GITHUB_PR_TITLE</span><span class="si">}</span><span class="s2">\&#34;,
+</span><span class="s2">    \&#34;commit_message\&#34;: \&#34;\&#34;
+</span><span class="s2">  }&#34;</span>
+</code></pre></div></details>
+<p>Updating is a bit more interesting and consists of multiple steps:</p>
+<ol>
+<li>find the current PR target branch;</li>
+<li><a href="https://docs.github.com/en/rest/reference/pulls#list-pull-requests">find PRs with the same target branch</a>;</li>
+<li><a href="https://docs.github.com/en/rest/reference/pulls#update-a-pull-request-branch">update found PRs</a>.</li>
+</ol>
+<details>
+  <summary><code>.github/workflows/pull-request-update.sh</code></summary>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
+
+<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+<span class="nv">GITHUB_TOKEN_USER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
+
+curl <span class="se">\
+</span><span class="se"></span>  --fail <span class="se">\
+</span><span class="se"></span>  --silent <span class="se">\
+</span><span class="se"></span>  --show-error <span class="se">\
+</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls?base=</span><span class="si">${</span><span class="nv">GITHUB_BASE_REF</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>  --output <span class="s2">&#34;pull-requests.json&#34;</span>
+
+<span class="k">for</span> PULL_REQUEST_NUMBER in <span class="k">$(</span>jq <span class="s2">&#34;.[] | .number&#34;</span> pull-requests.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+
+  <span class="nb">echo</span> <span class="s2">&#34;:: Updating PR #</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">...&#34;</span>
+  curl <span class="se">\
+</span><span class="se"></span>    --silent <span class="se">\
+</span><span class="se"></span>    --show-error <span class="se">\
+</span><span class="se"></span>    --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
+</span><span class="se"></span>    --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">/update-branch&#34;</span> <span class="se">\
+</span><span class="se"></span>    --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN_USER</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span><span class="se"></span>    --header <span class="s2">&#34;Accept: application/vnd.github.lydian-preview+json&#34;</span>
+
+<span class="k">done</span>
+</code></pre></div></details>
+<blockquote>
+<p>🚩 Notice that the update script uses a user-provided GitHub token
+in addition to the GitHub-provided one. The latter
+<a href="https://docs.github.com/en/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow">does not trigger consecutive workflows</a>.
+This means that PRs will be updated but there will be no runs due to new changes.
+<a href="https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token">Create a user token</a> and
+<a href="https://docs.github.com/en/actions/reference/encrypted-secrets">store it in GitHub secrets</a> to avoid this.</p>
+</blockquote>
+<p>Both scripts should be called from a PR workflow. The integration requires a careful approach.</p>
+<ul>
+<li>A failed merge attempt should not be shown as a run failure.
+Otherwise developers might think that checks failed but it might be as trivial as insufficient review approvals.</li>
+<li>A failed merge attempt should not cause update attempts.</li>
+</ul>
+<p>These conditions can be satisfied using a combination of
+<a href="https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#using-a-specific-shell">a custom shell</a>
+and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter">an output parameter</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
+</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Merge&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
+</span><span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash --noprofile --norc {0}&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span><span class="sd">        bash .github/workflows/pull-request-merge.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ github.event.pull_request.number }}&#34; &#34;${{ github.event.pull_request.title }}&#34;
+</span><span class="sd">        echo &#34;::set-output name=merge_status::$?&#34;</span><span class="w">        
+</span><span class="w">
+</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Update remaining PRs&#34;</span><span class="w">
+</span><span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">steps.merge.outputs.merge_status == 0</span><span class="w">
+</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-update.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ secrets.USER_GITHUB_TOKEN }}&#34;</span><span class="w">
+</span></code></pre></div><p>Don’t forget to duplicate the workflow for PR reviews. This will merge PRs on approvals.</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull_request_review</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;submitted&#34;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span><span class="w">    </span><span class="l">...</span><span class="w">
+</span></code></pre></div><h1 id="overview">Overview</h1>
+<p>The following combination of files achieves the workflow described in the beginning.</p>
+<pre><code>.
+└── .github
+    ├── CODEOWNERS
+    └── workflows
+        ├── pull-request-cancel-concurrent.sh
+        ├── pull-request-merge.sh
+        ├── pull-request-review.yml
+        ├── pull-request-update.sh
+        └── pull-request.yml
+</code></pre><p>Of course, some (or all) scripts can be rewritten in JavaScript and published
+in the GitHub Actions Marketplace but the goal of this article wasn’t
+to provide the shippable <em>copy-and-use</em> solution. In fact, it’s the opposite.</p>
+<p>The GitHub API is so flexible and works so well with GitHub Actions that
+I encourage everyone to take a look at <em>their</em> workflow and see how it can be
+improved.</p>
+<p>Do not overuse someone else work. At the moment of writing this article,
+<a href="https://github.com/marketplace?type=actions&amp;query=cancel+run">there is a good dozen</a>
+of published actions that cancel a PR. What’s the difference between them?
+Is there a maintenance model behind them to follow GitHub API changes?
+Is it worth it to bend a workflow to fit them? Sometimes it’s better
+to have a couple of scripts doing <em>exactly</em> what needs to be done.</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://twitter.com/arturdryomov">Twitter</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+<script
+  data-goatcounter="https://arturdryomov.goatcounter.com/count"
+  async src="//gc.zgo.at/count.js">
+</script>
+
+</body>
+
+</html>
+

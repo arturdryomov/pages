@@ -6,7 +6,18 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 27 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 08 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Autonomous GitHub Pull Requests</title>
+      <link>https://arturdryomov.dev/posts/auto-github-pull-requests/</link>
+      <pubDate>Mon, 08 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/auto-github-pull-requests/</guid>
+      <description>In general, people are lazy. This is our nature — we want to achieve more by doing less. Developers are on the next step of this urge — we want to automate similar actions, patterns in human behavior. And what’s more repetitive than working on pull requests for each source code change we make?
+Workflow Over time and multiple iterations I’ve established the following workflow.
+ Open a PR.  Assign reviewers automatically.</description>
+    </item>
+    
     <item>
       <title>Kotlin Code Organization</title>
       <link>https://arturdryomov.dev/posts/kotlin-code-organization/</link>
