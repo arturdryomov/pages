@@ -17,15 +17,7 @@
 }
 
 body, nav {
-  /*
-   * system-ui is not supported by all browsers, but should be enough in the future.
-   * Reference: https://github.com/jonathantneal/system-font-css
-   * Currently following GitHub fonts configuration.
-   * Reference: http://markdotto.com/2018/02/07/github-system-fonts/
-   * Bootstrap is another good source.
-   * Reference: https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss
-   */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: system-ui;
 }
 
 code {
