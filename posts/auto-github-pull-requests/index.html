@@ -118,11 +118,11 @@ and <a href="https://docs.github.com/en/github/setting-up-and-managing-organizat
 <ol>
 <li><a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/creating-a-team">Create a GitHub team</a>.</li>
 <li>Create a GitHub <code>CODEOWNERS</code> file.
-<pre><code class="language-console" data-lang="console">$ cat .github/CODEOWNERS
-
-# Makes the team owners of everything but this can be fine-tuned (see the documentation)
-* @REPLACE_WITH_ORG_NAME/REPLACE_WITH_TEAM_NAME
-</code></pre></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="gp">$ </span>cat .github/CODEOWNERS
+<span class="err">
+</span><span class="err"></span><span class="gp"># </span>Makes the team owners of everything but this can be fine-tuned <span class="o">(</span>see the documentation<span class="o">)</span>
+<span class="go">* @REPLACE_WITH_ORG_NAME/REPLACE_WITH_TEAM_NAME
+</span></code></pre></div></li>
 <li>Configure <a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-code-review-assignment-for-your-team">code review assignment</a> for the GitHub team.</li>
 </ol>
 <p>That’s it! On opening a PR GitHub will add the team as reviewers (thanks to <code>CODEOWNERS</code>)
@@ -158,7 +158,7 @@ GitHub Actions doesn’t but it can be done via
 <p>The following script does that.</p>
 <details>
   <summary><code>.github/workflows/pull-request-cancel-concurrent.sh</code></summary>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
 </span><span class="cp"></span><span class="nb">set</span> -eou pipefail
 
 <span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
@@ -198,7 +198,7 @@ curl <span class="se">\
 <span class="k">done</span>
 </code></pre></div></details>
 <p>The script should be called from a PR workflow.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
 </span><span class="w">
 </span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
@@ -228,7 +228,7 @@ for each opened PR making it easy to forget or even miss.</p>
 it’s <a href="https://docs.github.com/en/rest/reference/pulls#merge-a-pull-request">a single API call</a>.</p>
 <details>
   <summary><code>.github/workflows/pull-request-merge.sh</code></summary>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
 </span><span class="cp"></span><span class="nb">set</span> -eou pipefail
 
 <span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
@@ -257,7 +257,7 @@ curl <span class="se">\
 </ol>
 <details>
   <summary><code>.github/workflows/pull-request-update.sh</code></summary>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
 </span><span class="cp"></span><span class="nb">set</span> -eou pipefail
 
 <span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
@@ -302,7 +302,7 @@ Otherwise developers might think that checks failed but it might be as trivial a
 <p>These conditions can be satisfied using a combination of
 <a href="https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#using-a-specific-shell">a custom shell</a>
 and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter">an output parameter</a>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
 </span><span class="w">
 </span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
@@ -324,7 +324,7 @@ and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-
 </span><span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">steps.merge.outputs.merge_status == 0</span><span class="w">
 </span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-update.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ secrets.USER_GITHUB_TOKEN }}&#34;</span><span class="w">
 </span></code></pre></div><p>Don’t forget to duplicate the workflow for PR reviews. This will merge PRs on approvals.</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="nt">pull_request_review</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;submitted&#34;</span><span class="w">
 </span><span class="w">
@@ -334,7 +334,7 @@ and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-
 </span><span class="w">    </span><span class="l">...</span><span class="w">
 </span></code></pre></div><h1 id="overview">Overview</h1>
 <p>The following combination of files achieves the workflow described in the beginning.</p>
-<pre><code>.
+<pre tabindex="0"><code>.
 └── .github
     ├── CODEOWNERS
     └── workflows

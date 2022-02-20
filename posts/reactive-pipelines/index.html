@@ -129,7 +129,7 @@ to manually-retryable actions.</p>
 </li>
 <li>
 <p>Authentication, validation, processing, <a href="https://en.wikipedia.org/wiki/Server-sent_events">SSE</a>, etc.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">BookResponse</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">BookResponse</span> <span class="p">{</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
     <span class="k">object</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">BookResponse</span><span class="p">()</span>
 <span class="p">}</span>
@@ -156,7 +156,7 @@ It is up to a consumer to decide how to manage it based on current needs.</p>
 </li>
 </ul>
 <p>Storage-related data sources are easier.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorageSource</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorageSource</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooksPageSize</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
     <span class="k">fun</span> <span class="nf">setBooksPageSize</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Completable</span>
 
@@ -189,7 +189,7 @@ between the data and the presentation. Business-related decisions are done here.
 <p>📖 Suggestions about state mutations are available in
 <a href="https://arturdryomov.dev/posts/reactive-state-mutations/">Reactive State Mutations via CQRS</a>.</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksService</span> <span class="p">{</span>
 
     <span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>
         <span class="k">object</span> <span class="nc">Progress</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
@@ -220,7 +220,7 @@ between the data and the presentation. Business-related decisions are done here.
 <p>I see presentation components as consumers, but it will be ignorant
 to forget that user actions are actually producers. This is not a bad thing
 because embracing the reactive approach makes this a benefit.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">View</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">View</span> <span class="p">{</span>
     <span class="k">enum</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">Content</span><span class="p">,</span> <span class="n">Error</span> <span class="p">}</span>
 
     <span class="k">val</span> <span class="py">stateSwitcher</span><span class="p">:</span> <span class="n">ViewAnimator</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;</span>

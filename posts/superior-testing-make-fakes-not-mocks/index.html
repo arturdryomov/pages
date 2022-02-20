@@ -72,7 +72,7 @@ in favor of faking and collect benefits.</p>
 <h2 id="sync">Sync</h2>
 <p>Let’s say we have a books repository allowing us to get a book based on its ID.
 The repository depends on the storage. The resulting code is simple enough.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;</span>
 <span class="p">}</span>
 
@@ -94,9 +94,9 @@ and utility use-cases (like mocking). Rephrasing
 </blockquote>
 <p>We’ll make a single test for now — to check that the repository returns <code>null</code>
 when the storage is blank.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">BooksStorage</span><span class="p">&gt;</span> <span class="p">{</span>
-        <span class="nd">`when</span><span class="err">`</span><span class="p">(</span><span class="n">getBooks</span><span class="p">()).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
+        <span class="n">`when</span><span class="err">`</span><span class="p">(</span><span class="n">getBooks</span><span class="p">()).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">emptyList</span><span class="p">())</span>
     <span class="p">}</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
@@ -106,7 +106,7 @@ when the storage is blank.</p>
 <p>Soon enough we notice that book-related operations block the main thread.
 Also, RxJava is <a href="https://www.reddit.com/r/OutOfTheLoop/comments/2ho0gy/where_di_the_so_hot_right_now_meme_come_from/">so hot right now</a>
 (or was, I have no idea). The code evolves.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
 <span class="p">}</span>
 
@@ -121,10 +121,10 @@ Also, RxJava is <a href="https://www.reddit.com/r/OutOfTheLoop/comments/2ho0gy/w
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p>The relevant test needs to be modified as well.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storageBooks</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">BooksStorage</span><span class="p">&gt;</span> <span class="p">{</span>
-        <span class="nd">`when</span><span class="err">`</span><span class="p">(</span><span class="n">getBooks</span><span class="p">()).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">storageBooks</span><span class="p">)</span>
+        <span class="n">`when</span><span class="err">`</span><span class="p">(</span><span class="n">getBooks</span><span class="p">()).</span><span class="n">thenReturn</span><span class="p">(</span><span class="n">storageBooks</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
@@ -155,13 +155,13 @@ I suggest calling them <em>test implementations</em>.</p>
 </blockquote>
 <h2 id="sync-1">Sync</h2>
 <p>The implementation is not complicated at all.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
     <span class="k">var</span> <span class="py">getBookResult</span><span class="p">:</span> <span class="n">String</span><span class="p">?</span> <span class="p">=</span> <span class="k">null</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBook</span><span class="p">(</span><span class="n">id</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">=</span> <span class="n">getBookResult</span>
 <span class="p">}</span>
 </code></pre></div><p>The relevant test changes, but not by a huge margin.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
         <span class="n">getBookResult</span> <span class="p">=</span> <span class="k">null</span>
     <span class="p">}</span>
@@ -171,12 +171,12 @@ I suggest calling them <em>test implementations</em>.</p>
 <span class="p">}</span>
 </code></pre></div><h2 id="reactive-1">Reactive</h2>
 <p>Basically the same thing as the sync variant.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">books</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">()</span> <span class="p">=</span> <span class="n">books</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">()</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 
@@ -185,14 +185,14 @@ I suggest calling them <em>test implementations</em>.</p>
 <span class="p">}</span>
 </code></pre></div><p>There is an interesting note though. If we transform <code>BooksStorage</code> to use
 <code>val</code> instead of <code>fun</code> we’ll be able to use a more compact notation.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BooksStorage</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">books</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;()</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">storage</span> <span class="p">=</span> <span class="n">TestBooksStorage</span><span class="p">()</span>
     <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">BooksRepository</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">storage</span><span class="p">)</span>
 

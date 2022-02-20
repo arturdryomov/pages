@@ -120,9 +120,9 @@ I’m gonna skip the general introduction — there is literally
 an infinity of guides.</p>
 <p>The idea from the client perspective is simple. Instead of logging plain text
 we are gonna log&hellip; JSON!</p>
-<div class="highlight"><pre class="chroma"><code class="language-text" data-lang="text">/v1/books returned 500
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">/v1/books returned 500
 </code></pre></div><p>becomes</p>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
     <span class="nt">&#34;application_version&#34;</span><span class="p">:</span> <span class="s2">&#34;1.0.2&#34;</span><span class="p">,</span>
     <span class="nt">&#34;os_version&#34;</span><span class="p">:</span> <span class="s2">&#34;7.1.1&#34;</span><span class="p">,</span>
     <span class="nt">&#34;thread&#34;</span><span class="p">:</span> <span class="s2">&#34;main&#34;</span><span class="p">,</span>
@@ -139,15 +139,15 @@ as a query language we can make all sorts of analysis.</p>
 <ul>
 <li>
 <p>Responses to <code>/v1/books</code> returned <code>500</code> across all users.</p>
-<pre><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND http_response_code:500
+<pre tabindex="0"><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND http_response_code:500
 </code></pre></li>
 <li>
 <p>Requests to <code>/v1/books</code> made from the main thread.</p>
-<pre><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND thread:&quot;main&quot;
+<pre tabindex="0"><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND thread:&quot;main&quot;
 </code></pre></li>
 <li>
 <p>Requests to <code>/v1/books</code> which took from 3 to 5 seconds.</p>
-<pre><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND http_request_duration:[3 to 5]
+<pre tabindex="0"><code class="language-lucene" data-lang="lucene">http_path:&quot;/v1/books&quot; AND http_request_duration:[3 to 5]
 </code></pre></li>
 </ul>
 <p>Those are basic examples, the possibilities are almost endless.

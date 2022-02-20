@@ -75,19 +75,19 @@ the world around us in strict terms.</p>
 <p>There is a brand-new project for book recommendations.
 The very first step is getting a list of books from a backend.
 This is enough <em>forever and ever</em>. Sounds good.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
 <span class="p">}</span>
 </code></pre></div><p>Suddenly — <em>because Agile</em> — we need to save books on the backend.
 All right.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
     <span class="k">fun</span> <span class="nf">createBook</span><span class="p">(</span><span class="n">book</span><span class="p">:</span> <span class="n">Book</span><span class="p">):</span> <span class="n">Completable</span>
 <span class="p">}</span>
 </code></pre></div><p>New features, new screens! Unfortunately, it means that
 the books fetching progress should be preserved across screens.
 A property should do the trick&hellip;</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
     <span class="k">val</span> <span class="py">getBooksProgress</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
 
@@ -97,7 +97,7 @@ A property should do the trick&hellip;</p>
 Fetching books might fail, and we need to show it on all screens
 to give the ability to re-fetch them. Just a sec, another property
 and here we go.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
     <span class="k">val</span> <span class="py">getBooksProgress</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
     <span class="k">val</span> <span class="py">getBooksFailure</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
@@ -108,7 +108,7 @@ and here we go.</p>
 the very first customer has a complaint that the book the one created has a wrong name
 and there is no way to delete it. Sounds like creating a book,
 but <a href="https://www.youtube.com/watch?v=2YTLtG4LMsM">some would say it is the reverse</a>&hellip;</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
     <span class="k">fun</span> <span class="nf">getBooks</span><span class="p">():</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;&gt;</span>
     <span class="k">val</span> <span class="py">getBooksProgress</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
     <span class="k">val</span> <span class="py">getBooksFailure</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
@@ -170,7 +170,7 @@ queries and commands work better than a number of various class methods.</li>
 <h2 id="api">API</h2>
 <p>First of all, we now know that the <code>BookService</code> is not stateless but stateful.
 The clear state representation will make the API much more explicit.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>
     <span class="k">object</span> <span class="nc">Progress</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Content</span><span class="p">(</span><span class="k">val</span> <span class="py">books</span><span class="p">:</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Book</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
     <span class="k">object</span> <span class="nc">Error</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>
@@ -187,7 +187,7 @@ actually a side effect representation.</li>
 and can be updated thanks to the signature — it is a property and the <code>Observable</code>.</li>
 </ul>
 <p>It is clear that the <code>State</code> class represents a CQRS Query. What about Commands?</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Command</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Command</span> <span class="p">{</span>
     <span class="k">object</span> <span class="nc">Refresh</span> <span class="p">:</span> <span class="n">Command</span><span class="p">()</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Create</span><span class="p">(</span><span class="k">val</span> <span class="py">book</span><span class="p">:</span> <span class="n">Book</span><span class="p">)</span> <span class="p">:</span> <span class="n">Command</span><span class="p">()</span>
     <span class="k">data</span> <span class="k">class</span> <span class="nc">Delete</span><span class="p">(</span><span class="k">val</span> <span class="py">book</span><span class="p">:</span> <span class="n">Book</span><span class="p">)</span> <span class="p">:</span> <span class="n">Command</span><span class="p">()</span>
@@ -200,7 +200,7 @@ the re-fetch action instead of an implicit <code>getBooks</code> behavior.</p>
 to receive a command result outside of the <code>State</code> —
 which will become handy for error handling.
 Potentially it can be solved with a syntax sugar.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
 
     <span class="k">enum</span> <span class="k">class</span> <span class="nc">ResultCreate</span> <span class="p">{</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span> <span class="p">}</span>
     <span class="k">enum</span> <span class="k">class</span> <span class="nc">ResultDelete</span> <span class="p">{</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span> <span class="p">}</span>
@@ -225,13 +225,13 @@ Potentially it can be solved with a syntax sugar.</p>
 <li>Commands come and go, the <code>BookService</code> reacts to them and moves on.</li>
 <li>The State is being preserved during the runtime.</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">)</span> <span class="p">:</span> <span class="n">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">api</span><span class="p">:</span> <span class="n">BooksApi</span><span class="p">)</span> <span class="p">:</span> <span class="n">BookService</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">state</span> <span class="p">=</span> <span class="n">BehaviorRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">State</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">command</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
 <span class="p">}</span>
 </code></pre></div><p>Next, we are going to react to commands and produce states based on results.
 The refresh command is pretty straightforward.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">refreshState</span> <span class="p">=</span> <span class="n">command</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">refreshState</span> <span class="p">=</span> <span class="n">command</span>
     <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Refresh</span><span class="p">&gt;()</span>
     <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">State</span><span class="p">.</span><span class="n">Progress</span> <span class="p">}</span>
 
@@ -251,7 +251,7 @@ on our needs.</p>
 <li>If we want to combine books locally we can do that by mutating the current state by hand.</li>
 </ul>
 <p>In this implementation I’m gonna go with the first one.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">createResultCommand</span> <span class="p">=</span> <span class="n">command</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">createResultCommand</span> <span class="p">=</span> <span class="n">command</span>
     <span class="p">.</span><span class="n">ofType</span><span class="p">&lt;</span><span class="n">Command</span><span class="p">.</span><span class="n">Create</span><span class="p">&gt;()</span>
     <span class="p">.</span><span class="n">switchMap</span> <span class="p">{</span> <span class="n">api</span><span class="p">.</span><span class="n">createBook</span><span class="p">(</span><span class="k">it</span><span class="p">.</span><span class="n">book</span><span class="p">)</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">switchMapSingle</span> <span class="p">{</span>
@@ -263,7 +263,7 @@ on our needs.</p>
 
 <span class="k">val</span> <span class="py">deleteResultCommand</span> <span class="p">=</span> <span class="n">TODO</span><span class="p">(</span><span class="s2">&#34;Basically the same as the create one.&#34;</span><span class="p">)</span>
 </code></pre></div><p>And now it is time to combine commands and states.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">Observable</span>
     <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">refreshState</span><span class="p">,</span> <span class="n">refreshResultState</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 
@@ -271,7 +271,7 @@ on our needs.</p>
     <span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">createResultCommand</span><span class="p">,</span> <span class="n">deleteResultCommand</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 </code></pre></div><p>Done!</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">BookService</span> <span class="p">{</span>
 
     <span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>
         <span class="k">object</span> <span class="nc">Progress</span> <span class="p">:</span> <span class="n">State</span><span class="p">()</span>

@@ -116,9 +116,9 @@ was there for centuries:</p>
 monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
 </blockquote>
 <p>The usage of the potential abstraction looks like this.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
 </code></pre></div><p>Seems like a single stream will be enough. Let’s do it!</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Connectivity</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Connectivity</span> <span class="p">{</span>
 
     <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;</span>
 
@@ -151,10 +151,10 @@ the end-user of the <code>Connectivity</code> will work with it as with any othe
 <p>Since there is an <code>interface</code> it is easy to provide a <code>Test*</code> implementation
 for unit tests. Just a single call to simulate the real-world behavior and that’s it —
 it is possible to test code which works with the platform framework.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestConnectivity</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestConnectivity</span> <span class="p">:</span> <span class="n">Connectivity</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">PublishSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;()</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;connectivity becomes available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span>
@@ -168,7 +168,7 @@ it is possible to test code which works with the platform framework.</p>
 <p>What about starting something via <code>Intent</code>? The operation itself is trivial,
 but it is necessary to keep in mind that there might be an <code>ActivityNotFoundException</code>.
 This exception is being thrown when nobody can handle our intention.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">launcher</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span><span class="p">(</span><span class="s2">&#34;Ping!&#34;</span><span class="p">))</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">launcher</span><span class="p">.</span><span class="n">launch</span><span class="p">(</span><span class="n">Request</span><span class="p">.</span><span class="n">ShareText</span><span class="p">(</span><span class="s2">&#34;Ping!&#34;</span><span class="p">))</span>
     <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span> <span class="p">{</span>
         <span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
@@ -179,7 +179,7 @@ This exception is being thrown when nobody can handle our intention.</p>
 </code></pre></div><p>To achieve this we are going to create our own abstraction over <code>Intent</code>.
 Doing so will hide the complexity and will help to avoid a copy-paste
 of the same <code>Intent</code> building over and over again.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Launcher</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Launcher</span> <span class="p">{</span>
 
     <span class="k">sealed</span> <span class="k">class</span> <span class="nc">Request</span> <span class="p">{</span>
         <span class="k">data</span> <span class="k">class</span> <span class="nc">ShareText</span><span class="p">(</span><span class="k">val</span> <span class="py">text</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span> <span class="p">:</span> <span class="n">Request</span><span class="p">()</span>
@@ -227,12 +227,12 @@ another abstraction — <code>Application#currentActivity</code>. It is trivial
 <a href="https://developer.android.com/reference/android/app/Application.ActivityLifecycleCallbacks"><code>ActivityLifecycleCallbacks</code></a> and
 <code>Connectivity</code>-like approach to listeners and callbacks.</p>
 <p>Of course, we can test the behavior.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestLauncher</span><span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestLauncher</span><span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
     <span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;()</span>
 
     <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">result</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;launch result is success&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">launcher</span><span class="p">.</span><span class="n">result</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
@@ -260,12 +260,12 @@ In such cases, it is possible to improve the external API — for example,
 provide proper nullability handling if the SDK is not annotated with <code>@Nullable</code> and <code>@NonNull</code>.</p>
 <p>Let’s say it is necessary to show a warning if Google Play Services
 is not installed.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span>
     <span class="p">.</span><span class="n">filter</span> <span class="p">{</span> <span class="k">it</span> <span class="o">==</span> <span class="k">false</span> <span class="p">}</span>
     <span class="p">.</span><span class="n">observeOn</span><span class="p">(</span><span class="n">mainThread</span><span class="p">)</span>
     <span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">view</span><span class="o">::</span><span class="n">showGooglePlayServicesWarningAlert</span><span class="p">)</span>
 </code></pre></div><p>Implementation:</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">GooglePlayServices</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">GooglePlayServices</span> <span class="p">{</span>
 
     <span class="k">val</span> <span class="py">available</span><span class="p">:</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
 
@@ -283,10 +283,10 @@ is not installed.</p>
 </code></pre></div><p>The work is done on IO thread since retrieving the information can take an undefined amount of time.</p>
 <p>As always, it is possible to test the behavior without mocking static
 <code>GoogleApiAvailability</code> <code>getInstance()</code> method.</p>
-<div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestGooglePlayServices</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestGooglePlayServices</span> <span class="p">:</span> <span class="n">GooglePlayServices</span> <span class="p">{</span>
     <span class="k">override</span> <span class="k">val</span> <span class="py">available</span> <span class="p">=</span> <span class="n">SingleSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;()</span>
 <span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">context</span><span class="p">(</span><span class="s2">&#34;Google Play Services is available&#34;</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="n">beforeEach</span> <span class="p">{</span>
         <span class="n">googlePlayServices</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">onSuccess</span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
