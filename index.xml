@@ -6,7 +6,17 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 08 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Testing Files without Files</title>
+      <link>https://arturdryomov.dev/posts/testing-files-without-files/</link>
+      <pubDate>Mon, 21 Feb 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/testing-files-without-files/</guid>
+      <description>File operations become less and less common. As users, we store more and more data in a vendor storage due to its convenience. I remember the contacts file format but cannot locate one on a local machine — I have Google Contacts instead. As developers, we use datastores — from S3 to Hive Metastore. Such datastores are scalable, fault tolerant and cheap.
+However, even if files and file systems are hidden behind various APIs — it doesn’t eliminate them.</description>
+    </item>
+    
     <item>
       <title>Autonomous GitHub Pull Requests</title>
       <link>https://arturdryomov.dev/posts/auto-github-pull-requests/</link>
