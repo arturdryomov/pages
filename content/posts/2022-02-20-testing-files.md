@@ -1,29 +1,26 @@
 ---
 title: "Testing Files without Files"
-description: "Overview of VFS on JVM"
+description: "Overview of fake VFS on JVM"
 date: 2022-02-20
 slug: testing-files-without-files
 ---
 
 File operations become less and less common. As users, we store more and more
-data in vendor-provided stores due to its convinience.
-I remember the [VCF](https://en.wikipedia.org/wiki/VCard) file format for contacts
-but cannot locate one on a local machine since I have Google Contacts.
+data in a vendor storage due to its convenience.
+I remember [the contacts file format](https://en.wikipedia.org/wiki/VCard)
+but cannot locate one on a local machine — I have Google Contacts instead.
 As developers, we use datastores —
-from [S3 buckets](https://aws.amazon.com/s3/)
-to [Hive metastores](https://hive.apache.org/).
+from [S3](https://aws.amazon.com/s3/)
+to [Hive Metastore](https://hive.apache.org/).
 Such datastores are scalable, fault tolerant and cheap.
 
-However, even if files and file systems are abstracted behind various APIs —
-it doesn’t eliminate them. As such, the development workflow involves them
-from time to time. In this article I’ll show how to use JVM virtual file systems (VFS)
+However, even if files and file systems are hidden behind various APIs —
+it doesn’t eliminate them. In this article I’ll show how to use Java fake file systems
 to test file interactions. It’s a fun approach but with its own pros and cons.
 
 # Overview
 
-Let’s imagine that there is a `Packages` API we want to test.
-It’s simple — there is a single method receiving an enumeration of files,
-it returns a file of the resulting package.
+Let’s imagine that there is a `Packages` class we want to test.
 
 ```kotlin
 interface Packages {
@@ -32,13 +29,18 @@ interface Packages {
 }
 ```
 
+The `pack` method receives an enumeration of files and returns a file of the resulting package.
+
 # Options
 
 ## Java IO
 
-A classic approach with [`java.io.File`](https://devdocs.io/openjdk~17/java.base/java/io/file).
+A classic approach using [`java.io.File`](https://devdocs.io/openjdk~17/java.base/java/io/file).
 
-The (fake) implementation is trivial.
+The (fake) implementation:
+
+* receives a `packagesRoot` argument, making it possible to switch it in tests;
+* creates a blank file at `packagesRoot`.
 
 ```kotlin
 interface Packages {
@@ -48,16 +50,18 @@ interface Packages {
     class Impl(private val packagesRoot: File) : Packages {
 
         override fun pack(files: Iterable<File>): File {
-            val packageFile = File(packagesRoot, "package")
+            val packageFile = File(packagesRoot, "package.tar")
 
-            return packageFile.apply { mkdirs() }
+            return packageFile.apply { createNewFile() }
         }
     }
 }
 ```
 
-The `packagesRoot` seems a bit redundant since a temporary directory
-can be resolved via the implementation but it is useful for the test.
+The corresponding test suite:
+
+* creates a random directory serving as `packagesRoot` before each test;
+* deletes `packagesRoot` after each test.
 
 ```kotlin
 class PackagesTests {
@@ -89,28 +93,29 @@ class PackagesTests {
 
 Pros:
 
-* familiar — the API is available from Java 1;
-* uses the same IO as the implementation.
+* `java.io.File` is available from Java 1;
+* uses the same API as the implementation (no potential surprises).
 
 Cons:
 
-* creates IRL file descriptors,
+* creates disk file descriptors,
   polluting [the `inode` space](https://en.wikipedia.org/wiki/Inode);
-* IO is slow in general and this kind of IO is not an exception;
-* too easy to forget removing files in `tearDown` which results in hanging files.
+* disk operations are blocking and are not that fast even with SSD;
+* easy to forget removing files after each test.
 
 ## Java NIO
 
-A modern approach with [`java.nio.file.Path`](https://devdocs.io/openjdk~17/java.base/java/nio/file/path)
-and [`java.nio.file.Files`](https://devdocs.io/openjdk~17/java.base/java/nio/file/files).
-It might seem new but the NIO is available from Java 7 which was shipped in 2011.
+A modern approach with [`java.nio.file.Path`](https://devdocs.io/openjdk~17/java.base/java/nio/file/path).
+It might feel new but the NIO is available from Java 7 (2011).
 
-> :bulb: Hello there, a curious Android developer. Both `Path` and `Files`
-> are available since API 26 (8.0, 2017).
-> This might make this API unusable due to minimal API requirements.
+> :bulb: Hello there, a curious Android developer.
+> `java.nio.file.*` is available from API 26 (8.0).
 
-Both the interface and the implementation need adjustments.
-`File` is replaced with `Path` and all actions are done via `Files` static methods.
+Both the interface and the implementation need changes:
+
+* `java.io.File` becomes `java.nio.file.Path`;
+* `java.io.File` mutation calls are done via `java.nio.file.Files`;
+* `java.nio.file.Path` uses `java.nio.file.FileSystem` under the hood.
 
 ```kotlin
 interface Packages {
@@ -120,19 +125,24 @@ interface Packages {
     class Impl(private val packagesRoot: Path) : Packages {
 
         override fun pack(files: Iterable<Path>): Path {
-            val packageFile = packagesRoot.resolve("package")
+            val packageFile = packagesRoot.resolve("package.tar")
 
-            return packageFile.apply { Files.createDirectory(this) }
+            return packageFile.apply { Files.createFile(this) }
         }
     }
 }
 ```
 
-For testing purposes there is a wonderful `java.nio.file.FileSystem` implementation —
-[JimFS](https://github.com/google/jimfs).
-Nope, it was not created by [Jim from The Office](https://theoffice.fandom.com/wiki/Jim_Halpert).
-It means Just In Memory File System making it a VFS. It doesn’t use OS storage primitives —
-everything is done in memory.
+The corresponding test suite:
+
+* creates a fake file system using JimFS before each test;
+* provides `packagesRoot` via the fake file system;
+* closes the fake file system after each test.
+
+[JimFS](https://github.com/google/jimfs) is
+an in-memory `java.nio.file.FileSystem` implementation.
+Nope, it wasn’t created by [Jim from The Office](https://theoffice.fandom.com/wiki/Jim_Halpert).
+It means Just In Memory File System. It doesn’t use disk at all.
 
 ```kotlin
 class PackagesTests {
@@ -169,26 +179,26 @@ class PackagesTests {
 
 Pros:
 
-* no interaction with IRL IO primitives;
-* better performance since in general all actions are RAM actions;
+* no disk interaction meaning better performance;
 * it’s possible to test different platforms behavior via
   [configurations](https://github.com/google/jimfs/blob/323826d63eade769a606faa9666b9460ccf67795/jimfs/src/main/java/com/google/common/jimfs/Configuration.java#L169-L173).
 
 Cons:
 
-* requires a migration from `java.io` to `java.nio`;
-* there is no need to remove files but there is a `close` call
-  in the `tearDown` method — it’s possible to avoid this but
-  [it’s not recommended](https://github.com/google/jimfs/issues/104#issuecomment-619123056).
+* requires a migration from `java.io.File` to `java.nio.file.*`;
+* while there is no need to remove files —
+  there is [a recommendation](https://github.com/google/jimfs/issues/104#issuecomment-619123056)
+  to close JimFS instances.
 
 ## Okio
 
-I call it a portable NIO since the Java NIO feels like an inspiration for a number of APIs there.
+I call it a portable NIO since the Java NIO feels like an inspiration for the Okio FS API.
 Also it’s [a separate artifact](https://github.com/square/okio) and supports Kotlin Multiplatform.
 
-Both the interface and the implementation gonna need changes once again.
-There is an in-house `Path` class. Also — in comparison with NIO —
-static `Files` calls are moved to the `FileSystem` class.
+Both the interface and the implementation need changes:
+
+* `java.io.File` becomes `okio.Path`;
+* `java.io.File` mutation calls are done via `okio.FileSystem`.
 
 ```kotlin
 interface Packages {
@@ -201,28 +211,32 @@ interface Packages {
     ) : Packages {
 
         override fun pack(files: Iterable<Path>): Path {
-            val packageFile = packagesRoot.resolve("package")
+            val packageFile = packagesRoot.resolve("package.tar")
 
-            return packageFile.apply { packagesFileSystem.createDirectory(this) }
+            return packageFile.apply { packagesFileSystem.write(this) {} }
         }
     }
 }
 ```
 
-Instead of JimFS there is a built-in `FakeFileSystem` class. It’s also a VFS
-without using OS calls. Neat!
+The corresponding test suite:
+
+* creates a fake file system using `FakeFileSystem` before each test;
+* provides `packagesRoot` via the fake file system.
+
+JimFS is not relevant here but there is a neat `okio.fakefilesystem.FakeFileSystem` doing the same thing.
 
 ```kotlin
 class PackagesTests {
 
     private lateinit var packagesFileSystem: FileSystem
-    private lateinit var packages: PackagesOkio
+    private lateinit var packages: Packages
 
     @BeforeEach
     fun setUp() {
         packagesFileSystem = FakeFileSystem()
 
-        packages = PackagesOkio.Impl(
+        packages = Packages.Impl(
             packagesFileSystem = packagesFileSystem,
             packagesRoot = "packages".toPath().apply {
                 packagesFileSystem.createDirectory(this)
@@ -234,7 +248,7 @@ class PackagesTests {
     fun pack() {
         val files = (0..10)
             .map { "$it.txt".toPath() }
-            .onEach { packagesFileSystem.write(it, mustCreate = true) {} }
+            .onEach { packagesFileSystem.write(it) {} }
 
         assertThat(packagesFileSystem.exists(packages.pack(files))).isTrue()
     }
@@ -243,25 +257,25 @@ class PackagesTests {
 
 Pros:
 
-* all from the Java NIO;
-* there is [an additional call](https://square.github.io/okio/3.x/okio-fakefilesystem/okio-fakefilesystem/okio.fakefilesystem/-fake-file-system/check-no-open-files.html)
-  for checking non-closed files.
+* no disk interaction meaning better performance;
+* it’s possible to test different platforms behavior via
+  [configuration calls](https://square.github.io/okio/3.x/okio-fakefilesystem/okio-fakefilesystem/okio.fakefilesystem/-fake-file-system/emulate-windows.html);
+* it’s possible to [test for hanging open files](https://square.github.io/okio/3.x/okio-fakefilesystem/okio-fakefilesystem/okio.fakefilesystem/-fake-file-system/check-no-open-files.html).
 
 Cons:
 
-* requires a migration from `java.io` to `okio`;
-* since there is no static API (`Files` from NIO) the implementation is a bit verbose
-  (notice passing `FileSystem` instances around).
+* requires a migration from `java.io.File` to `okio.*`;
+* the implementation is a bit verbose (notice passing `FileSystem` instances around).
 
-## Options Performance
+# Options Performance
 
-This is not a proper benchmark but I’ve took some measurements.
+I’ve took execution measurements but please note that this is not a benchmark.
 
 * CPU: Intel 8257U, RAM: 8 GB LPDDR3, SSD: 250 GB (APFS).
 * JVM: 17.0.2.
-* Runs: 10. Each run: creating and removing `N` files.
+* Runs: 10. Each run: create and delete `N` files.
 
-Time in the table reflects the average total duration among runs.
+Time in the table is the average run duration.
 
 `N`    | Java IO, ms | Java NIO (JimFS), ms | Okio (`FakeFileSystem`), ms
 -------|-------------|----------------------|----------------------------
@@ -270,8 +284,14 @@ Time in the table reflects the average total duration among runs.
 10000  | 1040        | 30                   | 95
 100000 | 15880       | 160                  | 860
 
-Not a surprise that in-memory VFS perform better than the IRL disk IO.
+No surprises here — RAM performs better than SSD.
 
-However, these numbers are more or less irrelevant for regular use cases —
-it’s unlikely that a test creates thousands of files. I can imagine having
-hundreds of tests (each creating dozens of files) though.
+However, tests creating thousands of files are uncommon. I can imagine having
+hundreds of tests (each creating dozens of files) though. Still — ergonomics
+might be a better choosing criteria here.
+
+# Decisions
+
+The choice depends on circumstances. As for me — I think NIO is a great choice
+for JVM services, Okio — for Android applications.
+Also — more than zero tests is awesome, that’s all that matters.
