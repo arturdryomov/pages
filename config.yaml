@@ -7,7 +7,6 @@ permalinks:
 
 params:
   description: "Artur Dryomov on software design, development and deployment."
-  googleSearchCode: "Noz-S7X4481rtWBcFiugLcNzvzXEG3Ukn-T6QVPPUOE"
 
 menu:
   left:
@@ -22,8 +21,6 @@ menu:
       weight: 1
 
 theme: "barebones"
-
-googleAnalytics: "UA-112239048-1"
 
 disableHugoGeneratorInject: true
 enableEmoji: true
