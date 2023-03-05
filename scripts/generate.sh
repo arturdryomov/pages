@@ -1,30 +1,50 @@
 #!/bin/bash
 set -eou pipefail
 
-VERSION="0.92.2"
-PACKAGE="hugo.tar.gz"
-DIRECTORY="hugo"
-BINARY="hugo"
+HUGO_VERSION="0.111.2"
 
-case "${OSTYPE}" in
-  darwin*) OS="macOS" ;;
-  linux*)  OS="Linux" ;;
-  *)       exit 1 ;;
-esac
+HUGO_PACKAGE_NAME="hugo.tar.gz"
+HUGO_PACKAGE_PATH="hugo"
 
-trap 'rm -rf "${PACKAGE}" "${DIRECTORY}"' EXIT
+trap 'rm -rf "${HUGO_PACKAGE_NAME}" "${HUGO_PACKAGE_PATH}"' EXIT
 
-echo ":: Downloading..."
-curl \
-  --silent \
-  --fail \
-  --show-error \
-  --retry 3 \
-  --location "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_${OS}-64bit.tar.gz" \
-  --output "${PACKAGE}"
+function fetch_hugo_package() {
+  echo ":: Fetching Hugo package..."
 
-echo ":: Extracting..."
-mkdir -p "${DIRECTORY}" && tar -xzf "${PACKAGE}" -C "${DIRECTORY}"
+  curl \
+    --silent \
+    --fail \
+    --show-error \
+    --retry 3 \
+    --location "$(resolve_hugo_package_url)" \
+    --output "${HUGO_PACKAGE_NAME}"
+}
 
-echo ":: Generating..."
-"${DIRECTORY}/${BINARY}"
+function resolve_hugo_package_url() {
+  echo "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_$(resolve_hugo_package_platform).tar.gz"
+}
+
+function resolve_hugo_package_platform() {
+  case "$(uname)" in
+    "Darwin")
+      echo "darwin-universal"
+      ;;
+    "Linux")
+      echo "linux-amd64"
+      ;;
+  esac
+}
+
+function unpack_hugo_package() {
+  echo ":: Unpacking Hugo package..."
+
+  mkdir -p "${HUGO_PACKAGE_PATH}" && tar -xzf "${HUGO_PACKAGE_NAME}" -C "${HUGO_PACKAGE_PATH}"
+}
+
+function execute_hugo() {
+  echo ":: Generating..."
+
+  "${HUGO_PACKAGE_PATH}/hugo"
+}
+
+fetch_hugo_package && unpack_hugo_package && execute_hugo
