@@ -115,24 +115,24 @@ for it with neat samples.</p>
 <ul>
 <li>
 <p>Android Studio:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
+</span></span></code></pre></div></li>
 <li>
 <p><code>svg2android</code>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">M20,4 L4,4 L4,6 L20,6 L20,4 Z M21,14 L21,12 L20,7 L4,7 L3,12 L3,14 L4,14 L4,20 L14,20 L14,14 L18,14 L18,20 L20,20 L20,14 L21,14 Z M12,18 L6,18 L6,14 L12,14 L12,18 Z
+</span></span></code></pre></div></li>
 <li>
 <p><code>svg2vector</code>:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">M20 4L4 4 4 6 20 6 20 4Zm1 10l0 -2 -1 -5 -16 0 -1 5 0 2 1 0 0 6 10 0 0 -6 4 0 0 6 2 0 0 -6 1 0zm-9 4l-6 0 0 -4 6 0 0 4z
+</span></span></code></pre></div></li>
 <li>
 <p>Android Studio + Avocado:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z
+</span></span></code></pre></div></li>
 <li>
 <p>SVGO + Android Studio:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
-</code></pre></div><p>Not the best example since SVGO hadn’t optimized anything
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">M20,4L4,4v2h16L20,4zM21,14v-2l-1,-5L4,7l-1,5v2h1v6h10v-6h4v6h2v-6h1zM12,18L6,18v-4h6v4z
+</span></span></code></pre></div><p>Not the best example since SVGO hadn’t optimized anything
 and looks identical to Android Studio. It doesn’t hold true with other icons.</p>
 </li>
 </ul>
@@ -172,66 +172,66 @@ is kind of tedious, especially if there are going to be thousands of passes.
 The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 <details>
   <summary>_Click to expand the benchmark code._</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS</span><span class="n">_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
-<span class="p">}</span>
-
-<span class="k">private</span> <span class="k">val</span> <span class="py">random</span> <span class="p">=</span> <span class="n">Random</span><span class="p">()</span>
-
-<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">listOf</span><span class="p">(</span>
-            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio</span><span class="p">,</span>
-            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2android</span><span class="p">,</span>
-            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2vector</span><span class="p">,</span>
-            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio_and_avocado</span><span class="p">,</span>
-            <span class="n">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svgo_and_android_studio</span>
-    <span class="p">).</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">drawableRes</span> <span class="o">-&gt;</span>
-
-        <span class="k">val</span> <span class="py">drawableName</span> <span class="p">=</span> <span class="n">resources</span><span class="p">.</span><span class="n">getResourceEntryName</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
-
-        <span class="k">val</span> <span class="py">measurements</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span> <span class="n">until</span> <span class="n">ITERATIONS_COUNT</span><span class="p">)</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">measure</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span> <span class="p">}</span>
-
-        <span class="k">val</span> <span class="py">averageParseMillis</span> <span class="p">=</span> <span class="n">measurements</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">parseTimeMillis</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
-        <span class="k">val</span> <span class="py">averageRenderMillis</span> <span class="p">=</span> <span class="n">measurements</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">renderTimeMillis</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
-
-        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;:: [</span><span class="si">$drawableName</span><span class="s2">]. Parse: </span><span class="si">$averageParseMillis</span><span class="s2"> ms. Render: </span><span class="si">$averageRenderMillis</span><span class="s2"> ms.&#34;</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">private</span> <span class="k">data</span> <span class="k">class</span> <span class="nc">Measurement</span><span class="p">(</span><span class="k">val</span> <span class="py">parseTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">,</span> <span class="k">val</span> <span class="py">renderTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">)</span>
-
-<span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">(</span><span class="nd">@DrawableRes</span> <span class="n">drawableRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Measurement</span> <span class="p">{</span>
-    <span class="k">lateinit</span> <span class="k">var</span> <span class="py">drawable</span><span class="p">:</span> <span class="n">Drawable</span>
-
-    <span class="k">val</span> <span class="py">parseTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
-        <span class="c1">// Unfortunately it seems to be impossible to disable internal caching.
-</span><span class="c1"></span>        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="o">!is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s2">&#34;Drawable is supposed to be VectorDrawable.&#34;</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="c1">// Change tint to prevent internal render internal caching.
-</span><span class="c1"></span>    <span class="n">drawable</span><span class="p">.</span><span class="n">setTint</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">nextInt</span><span class="p">())</span>
-
-    <span class="k">val</span> <span class="py">bitmap</span> <span class="p">=</span> <span class="n">Bitmap</span><span class="p">.</span><span class="n">createBitmap</span><span class="p">(</span><span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicWidth</span><span class="p">,</span> <span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicHeight</span><span class="p">,</span> <span class="n">Bitmap</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">ARGB_8888</span><span class="p">)</span>
-    <span class="k">val</span> <span class="py">canvas</span> <span class="p">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">bitmap</span><span class="p">)</span>
-
-    <span class="n">drawable</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">height</span><span class="p">)</span>
-
-    <span class="k">val</span> <span class="py">renderTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
-        <span class="n">drawable</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">Measurement</span><span class="p">(</span><span class="n">parseTime</span><span class="p">,</span> <span class="n">renderTime</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div></details>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS</span><span class="n">_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">val</span> <span class="py">random</span> <span class="p">=</span> <span class="n">Random</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">listOf</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="nc">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nc">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2android</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nc">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svg2vector</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nc">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">android_studio_and_avocado</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nc">R</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">svgo_and_android_studio</span>
+</span></span><span class="line"><span class="cl">    <span class="p">).</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">drawableRes</span> <span class="o">-&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">drawableName</span> <span class="p">=</span> <span class="n">resources</span><span class="p">.</span><span class="n">getResourceEntryName</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">measurements</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span> <span class="n">until</span> <span class="n">ITERATIONS_COUNT</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">measure</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">averageParseMillis</span> <span class="p">=</span> <span class="n">measurements</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">parseTimeMillis</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">averageRenderMillis</span> <span class="p">=</span> <span class="n">measurements</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">renderTimeMillis</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">average</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">println</span><span class="p">(</span><span class="s2">&#34;:: [</span><span class="si">$drawableName</span><span class="s2">]. Parse: </span><span class="si">$averageParseMillis</span><span class="s2"> ms. Render: </span><span class="si">$averageRenderMillis</span><span class="s2"> ms.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">data</span> <span class="k">class</span> <span class="nc">Measurement</span><span class="p">(</span><span class="k">val</span> <span class="py">parseTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">,</span> <span class="k">val</span> <span class="py">renderTimeMillis</span><span class="p">:</span> <span class="n">Long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">fun</span> <span class="nf">measure</span><span class="p">(</span><span class="nd">@DrawableRes</span> <span class="n">drawableRes</span><span class="p">:</span> <span class="n">Int</span><span class="p">):</span> <span class="n">Measurement</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">lateinit</span> <span class="k">var</span> <span class="py">drawable</span><span class="p">:</span> <span class="n">Drawable</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">parseTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Unfortunately it seems to be impossible to disable internal caching.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="o">!is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="n">IllegalArgumentException</span><span class="p">(</span><span class="s2">&#34;Drawable is supposed to be VectorDrawable.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// Change tint to prevent internal render internal caching.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">drawable</span><span class="p">.</span><span class="n">setTint</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">nextInt</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">bitmap</span> <span class="p">=</span> <span class="nc">Bitmap</span><span class="p">.</span><span class="n">createBitmap</span><span class="p">(</span><span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicWidth</span><span class="p">,</span> <span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicHeight</span><span class="p">,</span> <span class="nc">Bitmap</span><span class="p">.</span><span class="nc">Config</span><span class="p">.</span><span class="n">ARGB_8888</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">canvas</span> <span class="p">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">bitmap</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">drawable</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">height</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">renderTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">drawable</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">Measurement</span><span class="p">(</span><span class="n">parseTime</span><span class="p">,</span> <span class="n">renderTime</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></details>
 <h3 id="environment">Environment</h3>
 <ul>
 <li>MacBook Pro: Intel Core i5 @ 2.7 GHz, 8 GB 1867 MHz DDR3.</li>

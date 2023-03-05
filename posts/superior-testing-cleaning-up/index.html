@@ -85,10 +85,10 @@ Unfortunately this mechanism <a href="https://github.com/mockito/mockito/issues/
 At the same time the issue is so tricky <a href="https://static.javadoc.io/org.mockito/mockito-core/2.27.0/org/mockito/MockitoFramework.html#clearInlineMocks--">a new API</a>
 was introduced to mitigate this since it was not possible to resolve it automatically.
 Use it!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@After</span> <span class="k">fun</span> <span class="nf">clearMockito</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">Mockito</span><span class="p">.</span><span class="n">framework</span><span class="p">().</span><span class="n">clearInlineMocks</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><h3 id="stubs">Stubs</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@After</span> <span class="k">fun</span> <span class="nf">clearMockito</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nc">Mockito</span><span class="p">.</span><span class="n">framework</span><span class="p">().</span><span class="n">clearInlineMocks</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="stubs">Stubs</h3>
 <p>It might be surprising to find out how much Mockito does under the hood.
 There is basically a mini-GC tracking all invocations.
 Fortunately we can save a bit of memory using
@@ -97,9 +97,9 @@ which do not track invocations.
 Use it to make dumb objects which will not be verified in the future.
 Or not use Mockito at all for this, just create objects by hand.</p>
 <p>We can make a handy Kotlin function which will reduce the boilerplate.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="k">reified</span> <span class="nc">T</span> <span class="p">:</span> <span class="nc">Any</span><span class="p">&gt;</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">actionStub</span> <span class="p">=</span> <span class="n">stub</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&gt;()</span>
-</code></pre></div><h1 id="files">Files</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="k">reified</span> <span class="nc">T</span> <span class="p">:</span> <span class="nc">Any</span><span class="p">&gt;</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">=</span> <span class="nc">Mockito</span><span class="p">.</span><span class="n">mock</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="k">class</span><span class="p">.</span><span class="n">java</span><span class="p">,</span> <span class="nc">Mockito</span><span class="p">.</span><span class="n">withSettings</span><span class="p">().</span><span class="n">stubOnly</span><span class="p">())</span> <span class="k">as</span> <span class="n">T</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">val</span> <span class="py">actionStub</span> <span class="p">=</span> <span class="n">stub</span><span class="p">&lt;</span><span class="n">Action</span><span class="p">&gt;()</span>
+</span></span></code></pre></div><h1 id="files">Files</h1>
 <p>Dealing with files in tests is straightforward.</p>
 <ul>
 <li>Create files only in <a href="https://en.wikipedia.org/wiki/Temporary_folder">temporary directories</a>.</li>
@@ -111,20 +111,20 @@ Especially if there are hundreds of them created and removed on each run.</p>
 <p>Even better — do not repeat all necessary steps in all tests and
 use <a href="https://junit.org/junit4/javadoc/latest/org/junit/rules/TemporaryFolder.html">a JUnit rule</a>
 instead. It is not even necessary to use JUnit 4 to use it.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">fileSystem</span> <span class="k">by</span> <span class="n">memoized</span> <span class="p">{</span> <span class="n">TemporaryFolder</span><span class="p">()</span> <span class="p">}</span>
-
-<span class="n">beforeEach</span> <span class="p">{</span>
-    <span class="n">fileSystem</span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">it</span><span class="p">(</span><span class="s2">&#34;creates file system&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">assertThat</span><span class="p">(</span><span class="n">fileSystem</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">exists</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="n">afterEach</span> <span class="p">{</span>
-    <span class="n">fileSystem</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><h1 id="cleaning-up">Cleaning Up</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">val</span> <span class="py">fileSystem</span> <span class="k">by</span> <span class="n">memoized</span> <span class="p">{</span> <span class="n">TemporaryFolder</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">beforeEach</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fileSystem</span><span class="p">.</span><span class="n">create</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">it</span><span class="p">(</span><span class="s2">&#34;creates file system&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">assertThat</span><span class="p">(</span><span class="n">fileSystem</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">exists</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">afterEach</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fileSystem</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="cleaning-up">Cleaning Up</h1>
 <p>Think about test runs this way — they should not leave anything behind.
 Tests are ghosts. Or ninjas.
 And seriously — <a href="https://en.wikipedia.org/wiki/Viscera_Cleanup_Detail">play the game</a>.</p>

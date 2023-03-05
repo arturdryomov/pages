@@ -132,13 +132,13 @@ as a separation of the project code from additions to the external one. This app
 to a better separation of concerns.</p>
 <p>For example, the following <code>io.reactivex.functions.Consumer</code> extension should be placed at
 <code>src/main/kotlinX/io/reactivex/functions/Consumer.kt</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">package</span> <span class="nn">io.reactivex.functions</span>
-
-<span class="k">fun</span> <span class="nf">Consumer</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;.</span><span class="n">asAction</span><span class="p">()</span> <span class="p">=</span> <span class="n">Action</span> <span class="p">{</span> <span class="n">accept</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span>
-</code></pre></div><p>Bonus — imports start to make sense.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- import hello.there.asAction
-</span><span class="gd"></span><span class="gi">+ import io.reactivex.functions.asAction
-</span></code></pre></div><h2 id="srctestfixtureskotlin"><code>src/testFixtures/kotlin</code></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">package</span> <span class="nn">io.reactivex.functions</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">Consumer</span><span class="p">&lt;</span><span class="n">Unit</span><span class="p">&gt;.</span><span class="n">asAction</span><span class="p">()</span> <span class="p">=</span> <span class="n">Action</span> <span class="p">{</span> <span class="n">accept</span><span class="p">(</span><span class="n">Unit</span><span class="p">)</span> <span class="p">}</span>
+</span></span></code></pre></div><p>Bonus — imports start to make sense.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- import hello.there.asAction
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ import io.reactivex.functions.asAction
+</span></span></span></code></pre></div><h2 id="srctestfixtureskotlin"><code>src/testFixtures/kotlin</code></h2>
 <p>A growing test / specification suite might be not pleasant to look at.
 <a href="https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/">Using fakes</a>
 is great but there is a possibility of having a huge file tree with mixed
@@ -185,35 +185,35 @@ Bonus — it configures <code>src/main/kotlin</code> and <code>src/test/kotlin<
 <ul>
 <li>
 <p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
-
-<span class="c1">// Get a SourceSet collection
-</span><span class="c1"></span><span class="n">sourceSets</span> <span class="p">{</span>
-    <span class="c1">// Get a SourceSet by name
-</span><span class="c1"></span>    <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Resolve a KotlinSourceSet
-</span><span class="c1"></span>        <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// Configure Kotlin SourceDirectorySet
-</span><span class="c1"></span>            <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Get a SourceSet collection
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">sourceSets</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Get a SourceSet by name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Resolve a KotlinSourceSet
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Configure Kotlin SourceDirectorySet
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
 <li>
 <p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
-
-<span class="n">subprojects</span> <span class="p">{</span>
-    <span class="c1">// The sourceSets function is not available at root so we use a different syntax
-</span><span class="c1"></span>    <span class="n">configure</span><span class="p">&lt;</span><span class="n">SourceSetContainer</span><span class="p">&gt;</span> <span class="p">{</span>
-        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">subprojects</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// The sourceSets function is not available at root so we use a different syntax
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">configure</span><span class="p">&lt;</span><span class="n">SourceSetContainer</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
 </ul>
 <h2 id="android">Android</h2>
 <p>Gradle Android plugin ignores native Gradle source set infrastructure and introduces its own.
@@ -233,65 +233,65 @@ Android resources, assets, AIDL, RenderScript files and more.</li>
 <ul>
 <li>
 <p>Single module (put in the module <code>build.gradle.kts</code> file).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">android</span> <span class="p">{</span>
-    <span class="c1">// Get an AndroidSourceSet collection
-</span><span class="c1"></span>    <span class="n">sourceSets</span> <span class="p">{</span>
-        <span class="c1">// Get an AndroidSourceSet by name
-</span><span class="c1"></span>        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// Configure Java AndroidSourceDirectorySet
-</span><span class="c1"></span>            <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">android</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Get an AndroidSourceSet collection
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">sourceSets</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Get an AndroidSourceSet by name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Configure Java AndroidSourceDirectorySet
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
 <li>
 <p>Multiple modules (put in the root <code>build.gradle.kts</code> file).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">import</span> <span class="nn">com.android.build.gradle.AppPlugin</span>
-<span class="k">import</span> <span class="nn">com.android.build.gradle.BaseExtension</span>
-<span class="k">import</span> <span class="nn">com.android.build.gradle.LibraryPlugin</span>
-
-<span class="n">subprojects</span> <span class="p">{</span>
-    <span class="c1">// Since the API comes from a plugin we have to wait for it
-</span><span class="c1"></span>    <span class="n">plugins</span><span class="p">.</span><span class="n">matching</span> <span class="p">{</span> <span class="k">it</span> <span class="k">is</span> <span class="n">AppPlugin</span> <span class="o">||</span> <span class="k">it</span> <span class="k">is</span> <span class="n">LibraryPlugin</span> <span class="p">}.</span><span class="n">whenPluginAdded</span> <span class="p">{</span>
-        <span class="c1">// The android function is not available at root so we use a different syntax
-</span><span class="c1"></span>        <span class="n">configure</span><span class="p">&lt;</span><span class="n">BaseExtension</span><span class="p">&gt;</span> <span class="p">{</span>
-            <span class="n">sourceSets</span> <span class="p">{</span>
-                <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">com.android.build.gradle.AppPlugin</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">com.android.build.gradle.BaseExtension</span>
+</span></span><span class="line"><span class="cl"><span class="k">import</span> <span class="nn">com.android.build.gradle.LibraryPlugin</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">subprojects</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Since the API comes from a plugin we have to wait for it
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">plugins</span><span class="p">.</span><span class="n">matching</span> <span class="p">{</span> <span class="k">it</span> <span class="k">is</span> <span class="n">AppPlugin</span> <span class="o">||</span> <span class="k">it</span> <span class="k">is</span> <span class="n">LibraryPlugin</span> <span class="p">}.</span><span class="n">whenPluginAdded</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// The android function is not available at root so we use a different syntax
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">configure</span><span class="p">&lt;</span><span class="n">BaseExtension</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sourceSets</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">named</span><span class="p">(</span><span class="s2">&#34;source set name&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;path A&#34;</span><span class="p">,</span> <span class="s2">&#34;path B&#34;</span><span class="p">,</span> <span class="s2">&#34;path C&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
 </ul>
 <h1 id="gradle-implementation">Gradle Implementation</h1>
 <p>Nice, we can use the Gradle API to apply our tips!
 Snippets below are DSL declarations that can be used in both single and multiple module
 configurations described above.</p>
 <h2 id="jvm-1">JVM</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/main/kotlin&#34; on its own
-</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/test/kotlin&#34; on its own
-</span><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><h2 id="android-1">Android</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><h1 id="next">Next?</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/main/kotlin&#34; on its own
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">withConvention</span><span class="p">(</span><span class="n">KotlinSourceSet</span><span class="o">::</span><span class="k">class</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Gradle Kotlin for JVM plugin configures &#34;src/test/kotlin&#34; on its own
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">kotlin</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="android-1">Android</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;main&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/main/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/main/kotlinX&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">named</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">java</span><span class="p">.</span><span class="n">srcDirs</span><span class="p">(</span><span class="s2">&#34;src/test/kotlin&#34;</span><span class="p">,</span> <span class="s2">&#34;src/test/kotlinX&#34;</span><span class="p">,</span> <span class="s2">&#34;src/testFixtures/kotlin&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="next">Next?</h1>
 <p>Don’t afraid to configure source sets — think about what can be done better
 and adapt. The Gradle API might be not intuitive at first glance —
 especially when Kotlin and Android are brought in the mix — but almost everything can be achieved.</p>

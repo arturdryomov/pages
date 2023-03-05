@@ -131,57 +131,57 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 <li>Modules contain all dependency declarations, no components have <code>@Inject</code> annotations on them.</li>
 </ul>
 <p>Basically, the DI glue is separated from the main codebase.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="c1">// Model
-</span><span class="c1"></span>
-<span class="k">interface</span> <span class="nc">Repository</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">RepositoryContent</span><span class="p">&gt;</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Repository</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="n">Observable</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">RepositoryContent</span><span class="p">())</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">Service</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">ServiceContent</span><span class="p">&gt;</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">)</span> <span class="p">:</span> <span class="n">Service</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">toServiceContent</span><span class="p">()</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// Presentation
-</span><span class="c1"></span>
-<span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
-
-    <span class="nd">@Inject</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
-
-    <span class="k">init</span> <span class="p">{</span>
-        <span class="n">context</span><span class="p">.</span><span class="n">inject</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="c1">// Dagger
-</span><span class="c1"></span>
-<span class="nd">@Module</span>
-<span class="k">class</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
-    <span class="k">fun</span> <span class="nf">provideRepository</span><span class="p">():</span> <span class="n">Repository</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="nd">@Module</span>
-<span class="k">class</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
-    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
-    <span class="k">fun</span> <span class="nf">provideService</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">):</span> <span class="n">Service</span> <span class="p">=</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">inject</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">ViewModel</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="nd">@Singleton</span>
-<span class="nd">@Component</span><span class="p">(</span><span class="n">modules</span> <span class="p">=</span> <span class="p">[</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="k">class</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="o">::</span><span class="k">class</span><span class="p">])</span>
-<span class="k">interface</span> <span class="nc">ContextComponent</span> <span class="p">:</span> <span class="n">Context</span>
-</code></pre></div><p>I know, I know, that’s not how you do it, but it is just a use case I have on hand.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="c1">// Model
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Repository</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">RepositoryContent</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Repository</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="nc">Observable</span><span class="p">.</span><span class="n">just</span><span class="p">(</span><span class="n">RepositoryContent</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Service</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">ServiceContent</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">)</span> <span class="p">:</span> <span class="n">Service</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">content</span> <span class="p">=</span> <span class="n">repository</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">toServiceContent</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Presentation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@Inject</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">init</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context</span><span class="p">.</span><span class="n">inject</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Dagger
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="nd">@Module</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">provideRepository</span><span class="p">():</span> <span class="n">Repository</span> <span class="p">=</span> <span class="nc">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@Module</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">provideService</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span><span class="p">):</span> <span class="n">Service</span> <span class="p">=</span> <span class="nc">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">inject</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">ViewModel</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@Singleton</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@Component</span><span class="p">(</span><span class="n">modules</span> <span class="p">=</span> <span class="p">[</span><span class="n">RepositoryModule</span><span class="o">::</span><span class="k">class</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="o">::</span><span class="k">class</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">ContextComponent</span> <span class="p">:</span> <span class="n">Context</span>
+</span></span></code></pre></div><p>I know, I know, that’s not how you do it, but it is just a use case I have on hand.</p>
 <p>How do you test things using this structure? Well, it is pretty simple.</p>
 <ul>
 <li>For <em>model</em> components, you can mock or stub your dependencies and pass them to constructor, no biggie.</li>
@@ -226,102 +226,102 @@ It contains almost everything you need to know about IoC, so I’m going to talk
 <p>What is a module? It is a registry of dependencies.
 What properties a module has? Dependencies on other modules.
 Sounds simple enough.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">RepositoryModule</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">service</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">.</span><span class="n">repository</span><span class="p">)</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Notice the <code>lazy</code> delegate.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span> <span class="nc">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">service</span> <span class="k">by</span> <span class="n">lazy</span> <span class="p">{</span> <span class="nc">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">.</span><span class="n">repository</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Notice the <code>lazy</code> delegate.
 It makes our <a href="https://kotlinlang.org/docs/reference/delegated-properties.html#lazy">properties lazy singletons</a>,
 just like Dagger would do it for you!
 In other words, creating a module would not create all dependencies in it at once,
 but will do it only on the first access.</p>
 <h3 id="context"><code>Context</code></h3>
 <p>Talking about <code>Context</code>&hellip; It is just a composition of modules, right?</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span>
-    <span class="n">RepositoryModule</span><span class="p">,</span>
-    <span class="n">ServiceModule</span> <span class="p">{</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
-        <span class="n">repositoryModule</span><span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span>
-        <span class="n">serviceModule</span><span class="p">:</span> <span class="n">ServiceModule</span>
-    <span class="p">)</span> <span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
-        <span class="n">RepositoryModule</span> <span class="k">by</span> <span class="n">repositoryModule</span><span class="p">,</span>
-        <span class="n">ServiceModule</span> <span class="k">by</span> <span class="n">serviceModule</span>
-<span class="p">}</span>
-</code></pre></div><p>We are using <a href="https://kotlinlang.org/docs/reference/delegation.html">Kotlin delegation</a> here.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">RepositoryModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ServiceModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">repositoryModule</span><span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">serviceModule</span><span class="p">:</span> <span class="n">ServiceModule</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">RepositoryModule</span> <span class="k">by</span> <span class="n">repositoryModule</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ServiceModule</span> <span class="k">by</span> <span class="n">serviceModule</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>We are using <a href="https://kotlinlang.org/docs/reference/delegation.html">Kotlin delegation</a> here.
 The <code>Context</code> will be translated to something like this to the end user.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
-    <span class="k">val</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
-<span class="p">}</span>
-</code></pre></div><p>You have to create it by hand though, creating all modules first.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>You have to create it by hand though, creating all modules first.
 Dagger would’ve done it for you, but it is no biggie.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">createContext</span><span class="p">():</span> <span class="n">Context</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">repositoryModule</span> <span class="p">=</span> <span class="n">RepositoryModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
-    <span class="k">val</span> <span class="py">serviceModule</span> <span class="p">=</span> <span class="n">ServiceModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">Context</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">,</span> <span class="n">serviceModule</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>Yep, it is a bit verbose, but you are in a total control because it is your code.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">createContext</span><span class="p">():</span> <span class="n">Context</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">repositoryModule</span> <span class="p">=</span> <span class="nc">RepositoryModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">serviceModule</span> <span class="p">=</span> <span class="nc">ServiceModule</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nc">Context</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repositoryModule</span><span class="p">,</span> <span class="n">serviceModule</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Yep, it is a bit verbose, but you are in a total control because it is your code.</p>
 <h3 id="tricks">Tricks</h3>
 <p>You can define non-lazy dependencies which will be created at the same time as a module.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>You can define non-singleton dependencies.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
-            <span class="k">get</span><span class="p">()</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>You can define scopes using the same delegation approach as with the <code>Context</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">UserContext</span> <span class="p">:</span>
-    <span class="n">Context</span><span class="p">,</span>
-    <span class="n">UserModule</span> <span class="p">{</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
-        <span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span>
-    <span class="p">)</span> <span class="p">:</span> <span class="n">UserContext</span><span class="p">,</span>
-        <span class="n">Context</span> <span class="k">by</span> <span class="n">context</span><span class="p">,</span>
-        <span class="n">UserModule</span> <span class="k">by</span> <span class="n">userModule</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">plus</span><span class="p">(</span><span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span><span class="p">):</span> <span class="n">UserContext</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Context</span> <span class="p">{</span>
-        <span class="k">override</span> <span class="k">fun</span> <span class="nf">plus</span><span class="p">(</span><span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span><span class="p">)</span> <span class="p">=</span> <span class="n">UserContext</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">userModule</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>You can define multiple dependencies with the same interface.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">yinService</span><span class="p">:</span> <span class="n">Service</span>
-    <span class="k">val</span> <span class="py">yangService</span><span class="p">:</span> <span class="n">Service</span>
-<span class="p">}</span>
-</code></pre></div><p>You can move from <code>lateinit var</code> to <code>private val</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
-<span class="p">}</span>
-</code></pre></div><h3 id="results">Results</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span> <span class="p">=</span> <span class="nc">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>You can define non-singleton dependencies.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">repository</span><span class="p">:</span> <span class="n">Repository</span>
+</span></span><span class="line"><span class="cl">            <span class="k">get</span><span class="p">()</span> <span class="p">=</span> <span class="nc">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>You can define scopes using the same delegation approach as with the <code>Context</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">UserContext</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">UserModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="p">:</span> <span class="n">UserContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Context</span> <span class="k">by</span> <span class="n">context</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">UserModule</span> <span class="k">by</span> <span class="n">userModule</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">plus</span><span class="p">(</span><span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span><span class="p">):</span> <span class="n">UserContext</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Context</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">fun</span> <span class="nf">plus</span><span class="p">(</span><span class="n">userModule</span><span class="p">:</span> <span class="n">UserModule</span><span class="p">)</span> <span class="p">=</span> <span class="nc">UserContext</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">userModule</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>You can define multiple dependencies with the same interface.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">yinService</span><span class="p">:</span> <span class="n">Service</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">yangService</span><span class="p">:</span> <span class="n">Service</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>You can move from <code>lateinit var</code> to <code>private val</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="results">Results</h3>
 <p>Seems like it is possible to do the inversion of control without Dagger, who knew?</p>
 <h4 id="pros">Pros</h4>
 <ul>
@@ -373,16 +373,16 @@ There is also <a href="https://www.youtube.com/watch?v=OJe0Dm3t5wQ">a great pres
 on the topic comparing Cake, Thin Cake and a couple of other approaches, including Guice.</p>
 <p>I don’t think it is possible to do the exact Thin Cake translation
 to Kotlin, but here is an attempt to do so anyway.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">repository</span><span class="p">()</span> <span class="p">=</span> <span class="n">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">:</span> <span class="n">RepositoryModule</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">service</span><span class="p">()</span> <span class="p">=</span> <span class="n">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">())</span>
-<span class="p">}</span>
-
-<span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span>
-</code></pre></div><p>The code is not identical to the original approach though since
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">repository</span><span class="p">()</span> <span class="p">=</span> <span class="nc">Repository</span><span class="p">.</span><span class="n">Impl</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">ServiceModule</span> <span class="p">:</span> <span class="n">RepositoryModule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">service</span><span class="p">()</span> <span class="p">=</span> <span class="nc">Service</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">repository</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span>
+</span></span></code></pre></div><p>The code is not identical to the original approach though since
 we don’t have
 <a href="https://docs.scala-lang.org/tour/traits.html">traits</a> and
 <a href="https://docs.scala-lang.org/tour/self-types.html">self-types</a> in Kotlin.
@@ -391,10 +391,10 @@ just like I’ve described above. So I guess the Kotlin approach
 is a rough adaptation of the Thin Cake pattern!</p>
 <h2 id="swift">Swift</h2>
 <p>Passing <code>Context</code> to <code>ViewModel</code> in the described approach is actually messy.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
-<span class="p">}</span>
-</code></pre></div><p>The <code>Context</code> is a dependency container and passing it basically means
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">val</span> <span class="py">service</span> <span class="p">=</span> <span class="n">context</span><span class="p">.</span><span class="n">service</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The <code>Context</code> is a dependency container and passing it basically means
 a complete access to all dependencies, whether you like it or not.</p>
 <p>Swift has a nice method to isolate the scope of the <code>Context</code>
 via declaring child <code>Context</code> using
@@ -404,21 +404,21 @@ This approach is described
 and
 <a href="https://5sw.de/2017/04/protocol-composition-and-dependency-injection/">there</a>.</p>
 <p>A rough Kotlin translation seems to be something like this.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">ViewModel</span><span class="p">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">ServiceModule</span>
-<span class="p">}</span>
-
-<span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// Error: type mismatch.
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></div><p>Unfortunately for this to work all child <code>Context</code> variations should be declared
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="nc">ViewModel</span><span class="p">.</span><span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">ServiceModule</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// Error: type mismatch.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>Unfortunately for this to work all child <code>Context</code> variations should be declared
 at the top-level <code>Context</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="p">,</span> <span class="n">ViewModel</span><span class="p">.</span><span class="n">Context</span>
-
-<span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// It works!
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></div><p>A more sane approach actually can be just passing all dependencies
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="p">,</span> <span class="nc">ViewModel</span><span class="p">.</span><span class="n">Context</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// It works!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>A more sane approach actually can be just passing all dependencies
 in <code>ViewModel</code> constructors directly, without a <code>Context</code> instance.
 Plus, this requires declaring a module per dependency to be able
 to construct <code>Context</code> from singular dependencies instead of their enumerations.

@@ -110,11 +110,11 @@ and <a href="https://docs.github.com/en/github/setting-up-and-managing-organizat
 <ol>
 <li><a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/creating-a-team">Create a GitHub team</a>.</li>
 <li>Create a GitHub <code>CODEOWNERS</code> file.
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="gp">$ </span>cat .github/CODEOWNERS
-<span class="err">
-</span><span class="err"></span><span class="gp"># </span>Makes the team owners of everything but this can be fine-tuned <span class="o">(</span>see the documentation<span class="o">)</span>
-<span class="go">* @REPLACE_WITH_ORG_NAME/REPLACE_WITH_TEAM_NAME
-</span></code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> cat .github/CODEOWNERS
+</span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="gp">#</span> Makes the team owners of everything but this can be fine-tuned <span class="o">(</span>see the documentation<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="go">* @REPLACE_WITH_ORG_NAME/REPLACE_WITH_TEAM_NAME
+</span></span></span></code></pre></div></li>
 <li>Configure <a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-code-review-assignment-for-your-team">code review assignment</a> for the GitHub team.</li>
 </ol>
 <p>That’s it! On opening a PR GitHub will add the team as reviewers (thanks to <code>CODEOWNERS</code>)
@@ -150,60 +150,60 @@ GitHub Actions doesn’t but it can be done via
 <p>The following script does that.</p>
 <details>
   <summary><code>.github/workflows/pull-request-cancel-concurrent.sh</code></summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
-</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
-
-<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
-
-curl <span class="se">\
-</span><span class="se"></span>  --fail <span class="se">\
-</span><span class="se"></span>  --silent <span class="se">\
-</span><span class="se"></span>  --show-error <span class="se">\
-</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
-</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --output <span class="s2">&#34;run.json&#34;</span>
-
-<span class="nv">WORKFLOW_ID</span><span class="o">=</span><span class="k">$(</span>jq <span class="s2">&#34;.workflow_id&#34;</span> run.json<span class="k">)</span>
-
-curl <span class="se">\
-</span><span class="se"></span>  --fail <span class="se">\
-</span><span class="se"></span>  --silent <span class="se">\
-</span><span class="se"></span>  --show-error <span class="se">\
-</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
-</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/workflows/</span><span class="si">${</span><span class="nv">WORKFLOW_ID</span><span class="si">}</span><span class="s2">/runs?branch=</span><span class="si">${</span><span class="nv">GITHUB_HEAD_REF</span><span class="si">}</span><span class="s2">&amp;status=queued&amp;status=in_progress&#34;</span> <span class="se">\
-</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --output <span class="s2">&#34;runs.json&#34;</span>
-
-<span class="k">for</span> WORKFLOW_RUN_ID in <span class="k">$(</span>jq <span class="s2">&#34;.workflow_runs[] | .id&#34;</span> runs.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
-
-  <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-    <span class="nb">echo</span> <span class="s2">&#34;:: Cancelling workflow run #</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">...&#34;</span>
-    curl <span class="se">\
-</span><span class="se"></span>      --silent <span class="se">\
-</span><span class="se"></span>      --show-error <span class="se">\
-</span><span class="se"></span>      --request <span class="s2">&#34;POST&#34;</span> <span class="se">\
-</span><span class="se"></span>      --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">/cancel&#34;</span> <span class="se">\
-</span><span class="se"></span>      --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span>
-  <span class="k">fi</span>
-
-<span class="k">done</span>
-</code></pre></div></details>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nb">set</span> -eou pipefail
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --fail <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --output <span class="s2">&#34;run.json&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">WORKFLOW_ID</span><span class="o">=</span><span class="k">$(</span>jq <span class="s2">&#34;.workflow_id&#34;</span> run.json<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --fail <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/workflows/</span><span class="si">${</span><span class="nv">WORKFLOW_ID</span><span class="si">}</span><span class="s2">/runs?branch=</span><span class="si">${</span><span class="nv">GITHUB_HEAD_REF</span><span class="si">}</span><span class="s2">&amp;status=queued&amp;status=in_progress&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --output <span class="s2">&#34;runs.json&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> WORKFLOW_RUN_ID in <span class="k">$(</span>jq <span class="s2">&#34;.workflow_runs[] | .id&#34;</span> runs.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> !<span class="o">=</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_RUN_ID</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s2">&#34;:: Cancelling workflow run #</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">...&#34;</span>
+</span></span><span class="line"><span class="cl">    curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>      --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>      --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>      --request <span class="s2">&#34;POST&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>      --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/actions/runs/</span><span class="si">${</span><span class="nv">WORKFLOW_RUN_ID</span><span class="si">}</span><span class="s2">/cancel&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>      --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></div></details>
 <p>The script should be called from a PR workflow.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull-request-cancel-concurrent</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
-</span><span class="w">
-</span><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
-</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Cancel concurrent runs&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-cancel-concurrent.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34;</span><span class="w">
-</span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull-request-cancel-concurrent</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Cancel concurrent runs&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-cancel-concurrent.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34;</span><span class="w">
+</span></span></span></code></pre></div><blockquote>
 <p>📖 The script uses
 <a href="https://docs.github.com/en/actions/reference/authentication-in-a-workflow">the GitHub-provided authentication token</a>
 via <code>secrets.GITHUB_TOKEN</code> and a good amount of GitHub-provided
@@ -220,27 +220,27 @@ for each opened PR making it easy to forget or even miss.</p>
 it’s <a href="https://docs.github.com/en/rest/reference/pulls#merge-a-pull-request">a single API call</a>.</p>
 <details>
   <summary><code>.github/workflows/pull-request-merge.sh</code></summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
-</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
-
-<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
-<span class="nv">GITHUB_PR_NUMBER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
-<span class="nv">GITHUB_PR_TITLE</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">3</span><span class="si">}</span><span class="s2">&#34;</span>
-
-curl <span class="se">\
-</span><span class="se"></span>  --fail <span class="se">\
-</span><span class="se"></span>  --silent <span class="se">\
-</span><span class="se"></span>  --show-error <span class="se">\
-</span><span class="se"></span>  --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
-</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">GITHUB_PR_NUMBER</span><span class="si">}</span><span class="s2">/merge&#34;</span> <span class="se">\
-</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --header <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
-</span><span class="se"></span>  --data <span class="s2">&#34;{
-</span><span class="s2">    \&#34;merge_method\&#34;: \&#34;squash\&#34;,
-</span><span class="s2">    \&#34;commit_title\&#34;: \&#34;</span><span class="si">${</span><span class="nv">GITHUB_PR_TITLE</span><span class="si">}</span><span class="s2">\&#34;,
-</span><span class="s2">    \&#34;commit_message\&#34;: \&#34;\&#34;
-</span><span class="s2">  }&#34;</span>
-</code></pre></div></details>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nb">set</span> -eou pipefail
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_PR_NUMBER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_PR_TITLE</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">3</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --fail <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">GITHUB_PR_NUMBER</span><span class="si">}</span><span class="s2">/merge&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --header <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --data <span class="s2">&#34;{
+</span></span></span><span class="line"><span class="cl"><span class="s2">    \&#34;merge_method\&#34;: \&#34;squash\&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s2">    \&#34;commit_title\&#34;: \&#34;</span><span class="si">${</span><span class="nv">GITHUB_PR_TITLE</span><span class="si">}</span><span class="s2">\&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="s2">    \&#34;commit_message\&#34;: \&#34;\&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  }&#34;</span>
+</span></span></code></pre></div></details>
 <p>Updating is a bit more interesting and consists of multiple steps:</p>
 <ol>
 <li>find the current PR target branch;</li>
@@ -249,34 +249,34 @@ curl <span class="se">\
 </ol>
 <details>
   <summary><code>.github/workflows/pull-request-update.sh</code></summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="cp">#!/bin/bash
-</span><span class="cp"></span><span class="nb">set</span> -eou pipefail
-
-<span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
-<span class="nv">GITHUB_TOKEN_USER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
-
-curl <span class="se">\
-</span><span class="se"></span>  --fail <span class="se">\
-</span><span class="se"></span>  --silent <span class="se">\
-</span><span class="se"></span>  --show-error <span class="se">\
-</span><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
-</span><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls?base=</span><span class="si">${</span><span class="nv">GITHUB_BASE_REF</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>  --output <span class="s2">&#34;pull-requests.json&#34;</span>
-
-<span class="k">for</span> PULL_REQUEST_NUMBER in <span class="k">$(</span>jq <span class="s2">&#34;.[] | .number&#34;</span> pull-requests.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
-
-  <span class="nb">echo</span> <span class="s2">&#34;:: Updating PR #</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">...&#34;</span>
-  curl <span class="se">\
-</span><span class="se"></span>    --silent <span class="se">\
-</span><span class="se"></span>    --show-error <span class="se">\
-</span><span class="se"></span>    --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
-</span><span class="se"></span>    --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">/update-branch&#34;</span> <span class="se">\
-</span><span class="se"></span>    --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN_USER</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
-</span><span class="se"></span>    --header <span class="s2">&#34;Accept: application/vnd.github.lydian-preview+json&#34;</span>
-
-<span class="k">done</span>
-</code></pre></div></details>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nb">set</span> -eou pipefail
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_TOKEN</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">1</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">GITHUB_TOKEN_USER</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">2</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --fail <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --request <span class="s2">&#34;GET&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls?base=</span><span class="si">${</span><span class="nv">GITHUB_BASE_REF</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  --output <span class="s2">&#34;pull-requests.json&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> PULL_REQUEST_NUMBER in <span class="k">$(</span>jq <span class="s2">&#34;.[] | .number&#34;</span> pull-requests.json<span class="k">)</span><span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nb">echo</span> <span class="s2">&#34;:: Updating PR #</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">...&#34;</span>
+</span></span><span class="line"><span class="cl">  curl <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --silent <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --show-error <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --request <span class="s2">&#34;PUT&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --url <span class="s2">&#34;</span><span class="si">${</span><span class="nv">GITHUB_API_URL</span><span class="si">}</span><span class="s2">/repos/</span><span class="si">${</span><span class="nv">GITHUB_REPOSITORY</span><span class="si">}</span><span class="s2">/pulls/</span><span class="si">${</span><span class="nv">PULL_REQUEST_NUMBER</span><span class="si">}</span><span class="s2">/update-branch&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --header <span class="s2">&#34;Authorization: token </span><span class="si">${</span><span class="nv">GITHUB_TOKEN_USER</span><span class="si">}</span><span class="s2">&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    --header <span class="s2">&#34;Accept: application/vnd.github.lydian-preview+json&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></div></details>
 <blockquote>
 <p>🚩 Notice that the update script uses a user-provided GitHub token
 in addition to the GitHub-provided one. The latter
@@ -294,37 +294,37 @@ Otherwise developers might think that checks failed but it might be as trivial a
 <p>These conditions can be satisfied using a combination of
 <a href="https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#using-a-specific-shell">a custom shell</a>
 and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter">an output parameter</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
-</span><span class="w">
-</span><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
-</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Merge&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
-</span><span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash --noprofile --norc {0}&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span><span class="sd">        bash .github/workflows/pull-request-merge.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ github.event.pull_request.number }}&#34; &#34;${{ github.event.pull_request.title }}&#34;
-</span><span class="sd">        echo &#34;::set-output name=merge_status::$?&#34;</span><span class="w">        
-</span><span class="w">
-</span><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Update remaining PRs&#34;</span><span class="w">
-</span><span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">steps.merge.outputs.merge_status == 0</span><span class="w">
-</span><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-update.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ secrets.USER_GITHUB_TOKEN }}&#34;</span><span class="w">
-</span></code></pre></div><p>Don’t forget to duplicate the workflow for PR reviews. This will merge PRs on approvals.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="nt">on</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull_request_review</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;submitted&#34;</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
-</span><span class="w">    </span><span class="l">...</span><span class="w">
-</span></code></pre></div><h1 id="overview">Overview</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Checkout the source code&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Merge&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">merge</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash --noprofile --norc {0}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        bash .github/workflows/pull-request-merge.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ github.event.pull_request.number }}&#34; &#34;${{ github.event.pull_request.title }}&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;::set-output name=merge_status::$?&#34;</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Update remaining PRs&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">steps.merge.outputs.merge_status == 0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-update.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ secrets.USER_GITHUB_TOKEN }}&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>Don’t forget to duplicate the workflow for PR reviews. This will merge PRs on approvals.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull_request_review</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;submitted&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pull-request-auto-merge</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ubuntu-latest&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="l">...</span><span class="w">
+</span></span></span></code></pre></div><h1 id="overview">Overview</h1>
 <p>The following combination of files achieves the workflow described in the beginning.</p>
 <pre tabindex="0"><code>.
 └── .github

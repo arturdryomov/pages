@@ -68,38 +68,38 @@ Fortunately or not there are multiple ways to achieve this — partially because
 of the Java baggage. Which one is the best?</p>
 <h1 id="domain">Domain</h1>
 <p>There is a drawing system. We want to declare shapes we are able to draw.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><p>This is a fine piece of code but <code>Shape</code> drawing is a bit messy.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">draw</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">paint</span> <span class="p">=</span> <span class="n">Paint</span><span class="p">(</span><span class="n">antialias</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span> <span class="n">color</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
-    <span class="p">})</span>
-
-    <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawCircle</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
-        <span class="k">is</span> <span class="n">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawSquare</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>The <code>Paint</code> part looks weird. The <code>color</code> is common for both shapes
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This is a fine piece of code but <code>Shape</code> drawing is a bit messy.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">draw</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">Shape</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">paint</span> <span class="p">=</span> <span class="n">Paint</span><span class="p">(</span><span class="n">antialias</span> <span class="p">=</span> <span class="k">true</span><span class="p">,</span> <span class="n">color</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="nc">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="nc">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">shape</span><span class="p">.</span><span class="n">color</span>
+</span></span><span class="line"><span class="cl">    <span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">when</span> <span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="nc">Shape</span><span class="p">.</span><span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawCircle</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="nc">Shape</span><span class="p">.</span><span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">canvas</span><span class="p">.</span><span class="n">drawSquare</span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">paint</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The <code>Paint</code> part looks weird. The <code>color</code> is common for both shapes
 but we are forced to dance around types to make it work. Let’s change that.</p>
 <h1 id="refactoring">Refactoring</h1>
 <h2 id="val"><code>val</code></h2>
 <p>The basic refactoring is moving the code into the type declaration.
 This way we can use it everywhere.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-
-    <span class="k">val</span> <span class="py">commonColor</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">is</span> <span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">color</span>
-        <span class="k">is</span> <span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">color</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>There is a number of issues with this approach.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">commonColor</span> <span class="p">=</span> <span class="k">when</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="n">Circle</span> <span class="o">-&gt;</span> <span class="n">color</span>
+</span></span><span class="line"><span class="cl">        <span class="k">is</span> <span class="n">Square</span> <span class="o">-&gt;</span> <span class="n">color</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>There is a number of issues with this approach.</p>
 <ul>
 <li>It is impossible to name the property <code>color</code> since it conflicts
 with <code>data class</code> declarations.</li>
@@ -108,89 +108,89 @@ with <code>data class</code> declarations.</li>
 color is stored both in the supertype and subtypes plus
 a bunch of nested <code>if</code> are called on creating an object:</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">commonColor</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">int</span> <span class="nf">getCommonColor</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">commonColor</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
-        <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
-
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="n">Shape</span><span class="o">.</span><span class="na">Circle</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="o">((</span><span class="n">Shape</span><span class="o">.</span><span class="na">Circle</span><span class="o">)</span> <span class="k">this</span><span class="o">).</span><span class="na">getColor</span><span class="o">();</span>
-        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-            <span class="k">if</span> <span class="o">(!(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="n">Shape</span><span class="o">.</span><span class="na">Square</span><span class="o">))</span> <span class="o">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="n">NoWhenBranchMatchedException</span><span class="o">();</span>
-            <span class="o">}</span>
-
-            <span class="n">color</span> <span class="o">=</span> <span class="o">((</span><span class="n">Shape</span><span class="o">.</span><span class="na">Square</span><span class="o">)</span> <span class="k">this</span><span class="o">).</span><span class="na">getColor</span><span class="o">();</span>
-        <span class="o">}</span>
-
-        <span class="k">this</span><span class="o">.</span><span class="na">commonColor</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
-    <span class="o">}</span>
-</code></pre></div><h2 id="open-val"><code>open val</code></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">commonColor</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">final</span> <span class="kt">int</span> <span class="nf">getCommonColor</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">commonColor</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="n">Shape</span><span class="o">.</span><span class="na">Circle</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">color</span> <span class="o">=</span> <span class="o">((</span><span class="n">Shape</span><span class="o">.</span><span class="na">Circle</span><span class="o">)</span> <span class="k">this</span><span class="o">).</span><span class="na">getColor</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(!(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="n">Shape</span><span class="o">.</span><span class="na">Square</span><span class="o">))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">throw</span> <span class="k">new</span> <span class="n">NoWhenBranchMatchedException</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">color</span> <span class="o">=</span> <span class="o">((</span><span class="n">Shape</span><span class="o">.</span><span class="na">Square</span><span class="o">)</span> <span class="k">this</span><span class="o">).</span><span class="na">getColor</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">commonColor</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span></code></pre></div><h2 id="open-val"><code>open val</code></h2>
 <p>We can define a <code>Shape</code>-level <code>open</code> property.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span><span class="p">(</span><span class="k">open</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>It is better than the previous approach, but&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span><span class="p">(</span><span class="k">open</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>It is better than the previous approach, but&hellip;</p>
 <ul>
 <li>Each <code>sealed class</code> variant is forced to pass values into the constructor — <code>Shape(color)</code>.</li>
 <li>The bytecode is still not efficient — the <code>color</code> value is stored
 in the supertype and subtypes:</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getColor</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">color</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">(</span><span class="kt">int</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
-    <span class="o">}</span>
-</code></pre></div><h2 id="interface"><code>interface</code></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getColor</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">(</span><span class="kt">int</span> <span class="n">color</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span></code></pre></div><h2 id="interface"><code>interface</code></h2>
 <p>Back to Java roots!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">PaintedShape</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span>
-<span class="p">}</span>
-
-<span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">:</span> <span class="n">PaintedShape</span><span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><p>It works and the supertype does not have anything not relevant.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PaintedShape</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="nf">getColor</span><span class="o">();</span>
-<span class="o">}</span>
-
-<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="kd">implements</span> <span class="n">PaintedShape</span> <span class="o">{</span>
-
-    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
-    <span class="o">}</span>
-</code></pre></div><p>However, this approach requires creating a separate <code>interface</code>.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">PaintedShape</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">:</span> <span class="n">PaintedShape</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>It works and the supertype does not have anything not relevant.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">PaintedShape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">getColor</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="kd">implements</span> <span class="n">PaintedShape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span></code></pre></div><p>However, this approach requires creating a separate <code>interface</code>.
 And — as we know — naming is the hardest CS issue.</p>
 <h2 id="abstract-val"><code>abstract val</code></h2>
 <p>Like an <code>interface</code> but causes less friction.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
-    <span class="k">abstract</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span>
-
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><p>The bytecode is as simple as the <code>interface</code> one.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">int</span> <span class="nf">getColor</span><span class="o">();</span>
-
-    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
-    <span class="o">}</span>
-</code></pre></div><h1 id="results">Results</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Shape</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">abstract</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="k">val</span> <span class="py">radius</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Square</span><span class="p">(</span><span class="k">val</span> <span class="py">size</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="k">override</span> <span class="k">val</span> <span class="py">color</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Shape</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The bytecode is as simple as the <code>interface</code> one.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Shape</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">int</span> <span class="nf">getColor</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Shape</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span></code></pre></div><h1 id="results">Results</h1>
 <p>Use <code>abstract val</code>, Luke!</p>
 <p>This kind of research is fun and all but sometimes Kotlin makes me sad.
 In this particular issue I’ve been struggling to reason what is better —

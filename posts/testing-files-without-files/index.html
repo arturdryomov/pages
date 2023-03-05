@@ -68,11 +68,11 @@ it doesn’t eliminate them. In this article I’ll show how to use Java fake fi
 to test file interactions. It’s a fun approach but with its own pros and cons.</p>
 <h1 id="overview">Overview</h1>
 <p>Let’s imagine that there is a <code>Packages</code> class we want to test.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
-
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span>
-<span class="p">}</span>
-</code></pre></div><p>The <code>pack</code> method receives an enumeration of files and returns a file of the resulting package.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The <code>pack</code> method receives an enumeration of files and returns a file of the resulting package.</p>
 <h1 id="options">Options</h1>
 <h2 id="java-io">Java IO</h2>
 <p>A classic approach using <a href="https://devdocs.io/openjdk~17/java.base/java/io/file"><code>java.io.File</code></a>.</p>
@@ -81,50 +81,50 @@ to test file interactions. It’s a fun approach but with its own pros and cons.
 <li>receives a <code>packagesRoot</code> argument, making it possible to switch it in tests;</li>
 <li>creates a blank file at <code>packagesRoot</code>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
-
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">File</span><span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span> <span class="p">{</span>
-            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">File</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">,</span> <span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="n">createNewFile</span><span class="p">()</span> <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>The corresponding test suite:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">File</span><span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">File</span><span class="p">&gt;):</span> <span class="n">File</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">File</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">,</span> <span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="n">createNewFile</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The corresponding test suite:</p>
 <ul>
 <li>creates a random directory serving as <code>packagesRoot</code> before each test;</li>
 <li>deletes <code>packagesRoot</code> after each test.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
-
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">File</span>
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
-
-    <span class="nd">@BeforeEach</span>
-    <span class="k">private</span> <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">packagesRoot</span> <span class="p">=</span> <span class="n">createTempDir</span><span class="p">()</span>
-        <span class="n">packages</span> <span class="p">=</span> <span class="n">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="nd">@AfterEach</span>
-    <span class="k">private</span> <span class="k">fun</span> <span class="nf">tearDown</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">packagesRoot</span><span class="p">.</span><span class="n">deleteRecursively</span><span class="p">()</span>
-    <span class="p">}</span>
-
-    <span class="nd">@Test</span>
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">File</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">,</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">createNewFile</span><span class="p">()</span> <span class="p">}</span>
-
-        <span class="n">assertThat</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">)).</span><span class="n">exists</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Pros:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">File</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@BeforeEach</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packagesRoot</span> <span class="p">=</span> <span class="n">createTempDir</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packages</span> <span class="p">=</span> <span class="nc">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@AfterEach</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">fun</span> <span class="nf">tearDown</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packagesRoot</span><span class="p">.</span><span class="n">deleteRecursively</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">File</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">,</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">createNewFile</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">assertThat</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">)).</span><span class="n">exists</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Pros:</p>
 <ul>
 <li><code>java.io.File</code> is available from Java 1;</li>
 <li>uses the same API as the implementation (no potential surprises).</li>
@@ -149,20 +149,20 @@ It might feel new but the NIO is available from Java 7 (2011).</p>
 <li><code>java.io.File</code> mutation calls are done via <code>java.nio.file.Files</code>;</li>
 <li><code>java.nio.file.Path</code> uses <code>java.nio.file.FileSystem</code> under the hood.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
-
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span> <span class="p">{</span>
-            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">packagesRoot</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="n">Files</span><span class="p">.</span><span class="n">createFile</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>The corresponding test suite:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">packagesRoot</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="nc">Files</span><span class="p">.</span><span class="n">createFile</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The corresponding test suite:</p>
 <ul>
 <li>creates a fake file system using JimFS before each test;</li>
 <li>provides <code>packagesRoot</code> via the fake file system;</li>
@@ -172,37 +172,37 @@ It might feel new but the NIO is available from Java 7 (2011).</p>
 an in-memory <code>java.nio.file.FileSystem</code> implementation.
 Nope, it wasn’t created by <a href="https://theoffice.fandom.com/wiki/Jim_Halpert">Jim from The Office</a>.
 It means Just In Memory File System. It doesn’t use disk at all.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
-
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span>
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
-
-    <span class="nd">@BeforeEach</span>
-    <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="n">Jimfs</span><span class="p">.</span><span class="n">newFileSystem</span><span class="p">()</span>
-
-        <span class="n">packages</span> <span class="p">=</span> <span class="n">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span>
-            <span class="n">packagesRoot</span> <span class="p">=</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&#34;packages&#34;</span><span class="p">).</span><span class="n">apply</span> <span class="p">{</span>
-                <span class="n">Files</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="nd">@AfterEach</span>
-    <span class="k">fun</span> <span class="nf">tearDown</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="p">}</span>
-
-    <span class="nd">@Test</span>
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="n">Files</span><span class="p">.</span><span class="n">createFile</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
-
-        <span class="n">assertThat</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">)).</span><span class="n">exists</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Pros:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@BeforeEach</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="nc">Jimfs</span><span class="p">.</span><span class="n">newFileSystem</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">packages</span> <span class="p">=</span> <span class="nc">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">packagesRoot</span> <span class="p">=</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&#34;packages&#34;</span><span class="p">).</span><span class="n">apply</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nc">Files</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@AfterEach</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">tearDown</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="nc">Files</span><span class="p">.</span><span class="n">createFile</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">assertThat</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">)).</span><span class="n">exists</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Pros:</p>
 <ul>
 <li>no disk interaction meaning better performance;</li>
 <li>it’s possible to test different platforms behavior via
@@ -223,55 +223,55 @@ Also it’s <a href="https://github.com/square/okio">a separate artifact</a> and
 <li><code>java.io.File</code> becomes <code>okio.Path</code>;</li>
 <li><code>java.io.File</code> mutation calls are done via <code>okio.FileSystem</code>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
-
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
-        <span class="k">private</span> <span class="k">val</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span><span class="p">,</span>
-        <span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span> <span class="p">{</span>
-            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">packagesRoot</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{}</span> <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>The corresponding test suite:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="k">private</span> <span class="k">val</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="k">private</span> <span class="k">val</span> <span class="py">packagesRoot</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="p">:</span> <span class="n">Packages</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">fun</span> <span class="nf">pack</span><span class="p">(</span><span class="n">files</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">&lt;</span><span class="n">Path</span><span class="p">&gt;):</span> <span class="n">Path</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">val</span> <span class="py">packageFile</span> <span class="p">=</span> <span class="n">packagesRoot</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&#34;package.tar&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">packageFile</span><span class="p">.</span><span class="n">apply</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">{}</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The corresponding test suite:</p>
 <ul>
 <li>creates a fake file system using <code>FakeFileSystem</code> before each test;</li>
 <li>provides <code>packagesRoot</code> via the fake file system.</li>
 </ul>
 <p>JimFS is not relevant here but there is a neat <code>okio.fakefilesystem.FakeFileSystem</code> doing the same thing.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
-
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span>
-    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
-
-    <span class="nd">@BeforeEach</span>
-    <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="n">FakeFileSystem</span><span class="p">()</span>
-
-        <span class="n">packages</span> <span class="p">=</span> <span class="n">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span>
-            <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="n">packagesFileSystem</span><span class="p">,</span>
-            <span class="n">packagesRoot</span> <span class="p">=</span> <span class="s2">&#34;packages&#34;</span><span class="p">.</span><span class="n">toPath</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
-                <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="nd">@Test</span>
-    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
-            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">.</span><span class="n">toPath</span><span class="p">()</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{}</span> <span class="p">}</span>
-
-        <span class="n">assertThat</span><span class="p">(</span><span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">))).</span><span class="n">isTrue</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Pros:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">PackagesTests</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packagesFileSystem</span><span class="p">:</span> <span class="n">FileSystem</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">packages</span><span class="p">:</span> <span class="n">Packages</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@BeforeEach</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="n">FakeFileSystem</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">packages</span> <span class="p">=</span> <span class="nc">Packages</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">packagesFileSystem</span> <span class="p">=</span> <span class="n">packagesFileSystem</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">packagesRoot</span> <span class="p">=</span> <span class="s2">&#34;packages&#34;</span><span class="p">.</span><span class="n">toPath</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">.</span><span class="n">toPath</span><span class="p">()</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{}</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">assertThat</span><span class="p">(</span><span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">packages</span><span class="p">.</span><span class="n">pack</span><span class="p">(</span><span class="n">files</span><span class="p">))).</span><span class="n">isTrue</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Pros:</p>
 <ul>
 <li>no disk interaction meaning better performance;</li>
 <li>it’s possible to test different platforms behavior via

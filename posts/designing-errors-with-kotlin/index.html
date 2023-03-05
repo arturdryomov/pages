@@ -79,8 +79,8 @@ At the same time, checked exceptions are useful to enforce
 a desired behavior. From that perspective, unchecked exceptions are actually
 worse — unchecked ones are implicit and easy to miss, checked ones
 are explicit and defined in the declaration.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">File</span> <span class="nf">open</span><span class="o">(</span><span class="n">String</span> <span class="n">filename</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
-</code></pre></div><p>Another option is to return <code>null</code> or magic values when something went wrong.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">File</span> <span class="nf">open</span><span class="o">(</span><span class="n">String</span> <span class="n">filename</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span>
+</span></span></code></pre></div><p>Another option is to return <code>null</code> or magic values when something went wrong.
 It can be called either a C-style or a documentation-driven error handling —
 the caller is expected (but not enforced) to check the function result
 for a special case. The case itself is either documented or not — in such situations
@@ -88,13 +88,13 @@ the process transforms into a goose chase for implicit errors.</p>
 <h1 id="swift">Swift</h1>
 <p>Errors in Swift resemble Java checked exceptions.
 Error-producing functions are required to be annotated with the <code>throws</code> keyword.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="kr">throws</span> <span class="p">-&gt;</span> <span class="n">File</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="k">do</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="n">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-    <span class="bp">print</span><span class="p">(</span><span class="s">&#34;Gotta catch them all!&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>The neat part is that only throwing functions are allowed to <code>throw</code>.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="kr">throws</span> <span class="p">-&gt;</span> <span class="n">File</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="k">do</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span> <span class="n">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="bp">print</span><span class="p">(</span><span class="s">&#34;Gotta catch them all!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The neat part is that only throwing functions are allowed to <code>throw</code>.
 Non-annotated functions are required to handle their exceptions themselves.
 There are no unchecked exceptions.</p>
 <p>Another neat detail — there are no exceptions in Swift. Yep. In fact,
@@ -114,34 +114,34 @@ to introduce the <code>Result</code> type to the standard library as an alternat
 to <code>throw</code>-driven workflows. It can be seen as a more explicit, manual
 approach to propagating errors to callers. <code>Result</code> eliminates
 the function result vs. error duality via combining both of them.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">enum</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="n">value</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span>
-    <span class="k">case</span> <span class="n">error</span><span class="p">(</span><span class="n">Error</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><h1 id="go">Go</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">enum</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">value</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">error</span><span class="p">(</span><span class="n">Error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="go">Go</h1>
 <p>Fortunately or not Go doesn’t have either Java-like exceptions or
 Swift-like syntax sugar. And it is this way <a href="https://golang.org/doc/faq#exceptions">by design</a>.
 Explicit return values are used instead.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="nx">filename</span><span class="p">:</span> <span class="nx">String</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">File</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-    <span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>Basically, each function which might result in an error returns a pair
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">open</span><span class="p">(</span><span class="nx">filename</span><span class="p">:</span> <span class="nx">String</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">File</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Basically, each function which might result in an error returns a pair
 of a value and an error. That’s it! Looks like a C-style error
 handling, but at least it is explicit and type-safe. The style
 is verbose, but it works surprisingly good due to the universal application.
 Plus, Go 2.0 most likely will introduce
 <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling.md">syntax sugar for error handling</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="nx">handle</span> <span class="nx">err</span> <span class="p">{</span> <span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span> <span class="p">}</span>
-<span class="nx">file</span> <span class="o">:=</span> <span class="nx">check</span> <span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
-</code></pre></div><p>There is a <code>panic</code> function which might look like a Java
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">handle</span> <span class="nx">err</span> <span class="p">{</span> <span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">file</span> <span class="o">:=</span> <span class="nx">check</span> <span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>There is a <code>panic</code> function which might look like a Java
 unchecked exception. Using enough hacks makes it possible to catch <code>panic</code> errors
 but it is considered non-idiomatic.
 <code>panic</code> is the last call for help when things got really, really bad.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="nb">panic</span><span class="p">(</span><span class="s">&#34;on the streets of London&#34;</span><span class="p">)</span>
-</code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nb">panic</span><span class="p">(</span><span class="s">&#34;on the streets of London&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><blockquote>
 <p>📖 There is <a href="https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance">a great article</a>
 on coping with Go error handling by Sergey Alexandrovich.</p>
 </blockquote>
@@ -167,12 +167,12 @@ like trying to access a location beyond the end of an array.</p>
 <li>
 <p>There is a <code>Result</code> type with a number of helper functions on top
 with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it less verbose.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="fm">panic!</span><span class="p">(</span><span class="s">&#34;at the Disco&#34;</span><span class="p">)</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="k">enum</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
-</span><span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
-</span><span class="w"></span><span class="p">}</span><span class="w">
-</span></code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="fm">panic!</span><span class="p">(</span><span class="s">&#34;at the Disco&#34;</span><span class="p">)</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">enum</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div></li>
 </ul>
 <h1 id="kotlin">Kotlin</h1>
 <p>Welcome back to the JVM world!</p>
@@ -180,41 +180,41 @@ with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it 
 <a href="https://kotlinlang.org/docs/reference/exceptions.html#checked-exceptions">does not have checked exceptions</a>.
 Well, actually <a href="https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html#checked-exceptions">it does</a>,
 mostly for Java interop purposes.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Throws</span><span class="p">(</span><span class="n">IOException</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
-<span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">File</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="n">IOException</span><span class="p">(</span><span class="s2">&#34;This is a checked, checked world.&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>Since Kotlin runs on the JVM platform, there are unchecked exceptions.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Throws</span><span class="p">(</span><span class="n">IOException</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">File</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">throw</span> <span class="n">IOException</span><span class="p">(</span><span class="s2">&#34;This is a checked, checked world.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Since Kotlin runs on the JVM platform, there are unchecked exceptions.
 However, Kotlin is not Java — it has a couple of benefits.
 Specifically — it is possible to use <code>sealed class</code>
 to return a union of values and use it. Yep, just like the <code>Result</code> type.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">Value</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Failure</span><span class="p">(</span><span class="k">val</span> <span class="py">error</span><span class="p">:</span> <span class="n">Error</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">Result</span><span class="p">&lt;</span><span class="n">File</span><span class="p">,</span> <span class="n">String</span><span class="p">&gt;</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="k">open</span><span class="p">(</span><span class="s2">&#34;file.txt&#34;</span><span class="p">)</span>
-
-<span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">is</span> <span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">path</span><span class="p">)</span>
-    <span class="k">is</span> <span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">error</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>In fact, there is <a href="https://github.com/Kotlin/KEEP/blob/master/proposals/stdlib/result.md">an accepted proposal</a>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Result</span><span class="p">&lt;</span><span class="n">Value</span><span class="p">,</span> <span class="n">Error</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">Value</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Failure</span><span class="p">(</span><span class="k">val</span> <span class="py">error</span><span class="p">:</span> <span class="n">Error</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">open</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="n">String</span><span class="p">):</span> <span class="n">Result</span><span class="p">&lt;</span><span class="n">File</span><span class="p">,</span> <span class="n">String</span><span class="p">&gt;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">val</span> <span class="py">result</span> <span class="p">=</span> <span class="k">open</span><span class="p">(</span><span class="s2">&#34;file.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">when</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">is</span> <span class="n">Success</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="k">value</span><span class="p">.</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">is</span> <span class="n">Failure</span> <span class="o">-&gt;</span> <span class="n">println</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>In fact, there is <a href="https://github.com/Kotlin/KEEP/blob/master/proposals/stdlib/result.md">an accepted proposal</a>
 to include a similar type in the standard library, but it is a bit weird
 since it is scoped to coroutines. Not to worry! It is still possible to introduce
 a project-specific one. Even better — create various <code>sealed class</code> for domain-specific
 tasks, which might include more than two states.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Result</span> <span class="p">{</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Progress</span><span class="p">(</span><span class="k">val</span> <span class="py">percent</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
-    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">file</span><span class="p">:</span> <span class="n">File</span><span class="p">):</span> <span class="n">Result</span><span class="p">()</span>
-    <span class="k">sealed</span> <span class="k">class</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">object</span> <span class="nc">Disconnect</span> <span class="p">:</span> <span class="n">Failure</span><span class="p">()</span>
-        <span class="k">data</span> <span class="k">class</span> <span class="nc">Undefined</span><span class="p">(</span><span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Failure</span><span class="p">()</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">fun</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">HttpUrl</span><span class="p">):</span> <span class="n">Result</span>
-</code></pre></div><p>Unfortunately, there are no ways to ban the <code>catch</code> keyword and
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">sealed</span> <span class="k">class</span> <span class="nc">Result</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Progress</span><span class="p">(</span><span class="k">val</span> <span class="py">percent</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">data</span> <span class="k">class</span> <span class="nc">Success</span><span class="p">(</span><span class="k">val</span> <span class="py">file</span><span class="p">:</span> <span class="n">File</span><span class="p">):</span> <span class="n">Result</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">sealed</span> <span class="k">class</span> <span class="nc">Failure</span> <span class="p">:</span> <span class="n">Result</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">object</span> <span class="nc">Disconnect</span> <span class="p">:</span> <span class="n">Failure</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="k">data</span> <span class="k">class</span> <span class="nc">Undefined</span><span class="p">(</span><span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">:</span> <span class="n">Failure</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">HttpUrl</span><span class="p">):</span> <span class="n">Result</span>
+</span></span></code></pre></div><p>Unfortunately, there are no ways to ban the <code>catch</code> keyword and
 mentally map it to the <code>panic</code> invocation. It is still possible
 to control this in the scope of a codebase, but it doesn’t scale
 well with the growing number of developers. In-house Lint checks might help.</p>
@@ -225,8 +225,8 @@ Unfortunately, the <code>onError</code> notification is often abused by a domain
 error handling. This behavior introduces the result handling duality we’ve talked before.
 The solution is obvious if Kotlin is available — use result types as <code>onNext</code>
 and do not use errors.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">HttpUrl</span><span class="p">):</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;</span>
-</code></pre></div><p>This approach simplifies interactions by a huge margin.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="n">HttpUrl</span><span class="p">):</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Result</span><span class="p">&gt;</span>
+</span></span></code></pre></div><p>This approach simplifies interactions by a huge margin.
 <code>onError</code> becomes a reactive <code>panic</code> — a way to notify the caller
 about significant system failures that require developer attention.
 <a href="https://en.wikipedia.org/wiki/Fail-fast">Fail-fast</a>, right?</p>

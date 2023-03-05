@@ -25,7 +25,7 @@ However, even if files and file systems are hidden behind various APIs — it do
       <guid>https://arturdryomov.dev/posts/auto-github-pull-requests/</guid>
       <description>In general, people are lazy. This is our nature — we want to achieve more by doing less. Developers are on the next step of this urge — we want to automate similar actions, patterns in human behavior. And what’s more repetitive than working on pull requests for each source code change we make?
 Workflow Over time and multiple iterations I’ve established the following workflow.
- Open a PR.  Assign reviewers automatically.</description>
+Open a PR. Assign reviewers automatically.</description>
     </item>
     
     <item>
@@ -35,7 +35,7 @@ Workflow Over time and multiple iterations I’ve established the following work
       
       <guid>https://arturdryomov.dev/posts/kotlin-code-organization/</guid>
       <description>What’s the motivation behind organizing the code? Two points come to mind.
- Help humans. Consistent environments are easier to understand and adapt. Storing the source code in src/ instead of _k_/ makes it easier to find. Help machines. Build systems need hints. The code in main/ should be assembled all the time, while test/ is test-specific and shouldn’t make it to a production environment.  Sounds empathic. Where do we start?</description>
+Help humans. Consistent environments are easier to understand and adapt. Storing the source code in src/ instead of _k_/ makes it easier to find. Help machines. Build systems need hints. The code in main/ should be assembled all the time, while test/ is test-specific and shouldn’t make it to a production environment. Sounds empathic. Where do we start?</description>
     </item>
     
     <item>
@@ -84,9 +84,9 @@ Implementing dark themes is surprisingly deep and affects the whole application.
       
       <guid>https://arturdryomov.dev/posts/namespacing-in-kotlin/</guid>
       <description>The development process is a research. Find the state machine, organize mutations, wire it for consumers. The process repeats and leads to the meta-research. We investigate scenarios and search for reusable parts. Patterns arise, implementations follow. Ideally, the code resembles a fractal structure.
- An architecture is said to be fractal if subcomponents are structured in the same way as the whole is.
+An architecture is said to be fractal if subcomponents are structured in the same way as the whole is.
 — André Staltz
- The Problem Let’s say we have a fractal components structure.</description>
+The Problem Let’s say we have a fractal components structure.</description>
     </item>
     
     <item>
@@ -236,7 +236,7 @@ The concept is not new, but sometimes it becomes too hard to manage it.</descrip
       <description>An average working day of an Android developer involves doing something with UI. Pushing widgets around, changing text and images&amp;hellip;
 The colleges of mine convert SVG images to VectorDrawable via a specific converter and I use Android Studio. Which tool does the job better? Let’s find out!
 Tools Converters (do optimizations under the hood):
- Android Studio (3.1.4) — IDE. svg2android — website, deprecated in favor of Android Studio. svg2vector — website.</description>
+Android Studio (3.1.4) — IDE. svg2android — website, deprecated in favor of Android Studio. svg2vector — website.</description>
     </item>
     
     <item>
@@ -246,8 +246,8 @@ Tools Converters (do optimizations under the hood):
       
       <guid>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</guid>
       <description>Who knows how many test suites were not created because of a classic parry.
- It cannot be tested — it uses a platform call!
- Well, it is not actually true all the time. Unit testing something that only a human eye and neural networks can catch — like animations — doesn’t make sense. On the other hand, retrying a network request on a re-established connection can and should be tested.</description>
+It cannot be tested — it uses a platform call!
+Well, it is not actually true all the time. Unit testing something that only a human eye and neural networks can catch — like animations — doesn’t make sense. On the other hand, retrying a network request on a re-established connection can and should be tested. As a bonus, it is possible to gain a couple of perks.</description>
     </item>
     
     <item>

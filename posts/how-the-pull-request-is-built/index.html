@@ -84,19 +84,19 @@ especially for non-enterprise-level-complicated scenarios.</p>
 </ul>
 <p>Is there a difference though? Let’s take a look at the example.</p>
 <p>There is a color resource named <code>white</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;colors&gt;</span>
-    <span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;white&#34;</span><span class="nt">&gt;</span>#fffafa<span class="nt">&lt;/white&gt;</span>
-<span class="nt">&lt;/colors&gt;</span>
-</code></pre></div><p>Let’s say I need to use it in a brand-new screen.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;View</span>
-    <span class="na">android:background=</span><span class="s">&#34;@color/white&#34;</span>
-    <span class="na">android:layout_width=</span><span class="s">&#34;match_parent&#34;</span>
-    <span class="na">android:layout_height=</span><span class="s">&#34;match_parent&#34;</span><span class="nt">/&gt;</span>
-</code></pre></div><p>I create a Git branch, commit changes and open a pull request. But! When the PR
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;colors&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;color</span> <span class="na">name=</span><span class="s">&#34;white&#34;</span><span class="nt">&gt;</span>#fffafa<span class="nt">&lt;/white&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/colors&gt;</span>
+</span></span></code></pre></div><p>Let’s say I need to use it in a brand-new screen.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;View</span>
+</span></span><span class="line"><span class="cl">    <span class="na">android:background=</span><span class="s">&#34;@color/white&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="na">android:layout_width=</span><span class="s">&#34;match_parent&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="na">android:layout_height=</span><span class="s">&#34;match_parent&#34;</span><span class="nt">/&gt;</span>
+</span></span></code></pre></div><p>I create a Git branch, commit changes and open a pull request. But! When the PR
 was being prepared someone had merged the following change.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- &lt;color name=&#34;white&#34;&gt;#fffafa&lt;/white&gt;
-</span><span class="gd"></span><span class="gi">+ &lt;color name=&#34;snow_white&#34;&gt;#fffafa&lt;/white&gt;
-</span></code></pre></div><p>It actually makes sense — <code>#fffafa</code> isn’t a white per se,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- &lt;color name=&#34;white&#34;&gt;#fffafa&lt;/white&gt;
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ &lt;color name=&#34;snow_white&#34;&gt;#fffafa&lt;/white&gt;
+</span></span></span></code></pre></div><p>It actually makes sense — <code>#fffafa</code> isn’t a white per se,
 but <a href="https://en.wikipedia.org/wiki/Shades_of_white#Snow">a shade of white</a>.</p>
 <p>Merging the PR with the new screen can break the target branch at this point,
 depending on a CI configuration.</p>

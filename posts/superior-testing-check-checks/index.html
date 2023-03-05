@@ -82,49 +82,49 @@ Good times. Don’t listen to me, better read
 the <a href="https://google.github.io/truth/comparison">thorough comparison</a>.</p>
 <p>Assertions fail short with side effects though. For example, we need to check
 not only the result of the function but the analytics call underneath.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">fun</span> <span class="nf">calculate</span><span class="p">():</span> <span class="n">Result</span> <span class="p">{</span>
-    <span class="n">analytics</span><span class="p">.</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">businessResult</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><p>Yes, it is a meh peace of code, functional programming is superior, yada-yada-yada.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">calculate</span><span class="p">():</span> <span class="n">Result</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">analytics</span><span class="p">.</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">businessResult</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Yes, it is a meh peace of code, functional programming is superior, yada-yada-yada.
 The thing is — <code>analytics.trackEvent</code> does not have a result. Most likely
 it calls weird SDK and we are not interested in workings behind it.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Analytics</span> <span class="p">{</span>
-    <span class="k">fun</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>This is where we remember about&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Analytics</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">String</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This is where we remember about&hellip;</p>
 <h1 id="verifications">Verifications</h1>
 <p>It is a no-brainer — <a href="http://mockito.org/">Mockito</a> is the right choice.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">val</span> <span class="py">analytics</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Analytics</span><span class="p">&gt;()</span>
-
-<span class="n">calculate</span><span class="p">()</span>
-
-<span class="n">verify</span><span class="p">(</span><span class="n">analytics</span><span class="p">).</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
-</code></pre></div><p>Looks like magic, right? Well, it kinda is — a lot of reflection is involved,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">val</span> <span class="py">analytics</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Analytics</span><span class="p">&gt;()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">calculate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">verify</span><span class="p">(</span><span class="n">analytics</span><span class="p">).</span><span class="n">trackEvent</span><span class="p">(</span><span class="s2">&#34;Calc&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>Looks like magic, right? Well, it kinda is — a lot of reflection is involved,
 intercepting invocations and a bit of salt. It works though and works well.</p>
 <p>Let’s take a look at another example.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
-
-    <span class="k">val</span> <span class="py">plus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
-            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">4</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">onPlus</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;&gt;()</span>
-    <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="n">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
-
-    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-
-    <span class="n">verify</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><pre tabindex="0"><code>TEST PASSED
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">plus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">onPlus</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;&gt;()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">verify</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><pre tabindex="0"><code>TEST PASSED
 </code></pre><p>Not exactly an expected result. <code>Calculator.Impl.plus</code> invokes <code>onPlus</code> two times.
 The first call passes <code>2</code>, the second one passes <code>4</code>. We are checking that
 <code>2</code> was passed and&hellip; it is actually completely correct. <code>2</code> was passed, right?
@@ -135,14 +135,14 @@ that verifies text changing action and it passes. Unfortunately, it is possible
 to find out that the message was changed again, to another text we don’t want to see.</p>
 <p>The good news is — Mockito has <a href="https://static.javadoc.io/org.mockito/mockito-core/2.25.1/org/mockito/Mockito.html#only--">a verification mode</a>
 which checks exactly what we need.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- verify(onPlus).accept(2)
-</span><span class="gd"></span><span class="gi">+ verify(onPlus, only()).accept(2)
-</span></code></pre></div><pre tabindex="0"><code>TEST FAILED
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- verify(onPlus).accept(2)
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ verify(onPlus, only()).accept(2)
+</span></span></span></code></pre></div><pre tabindex="0"><code>TEST FAILED
 
 org.mockito.exceptions.verification.NoInteractionsWanted:
 No interactions wanted here:
 -&gt; at Test.kt
-But found this interaction on mock 'consumer':
+But found this interaction on mock &#39;consumer&#39;:
 -&gt; at Calculator$Impl$plus$1.accept(Calculator.kt)
 ***
 For your reference, here is the list of all invocations ([?] - means unverified).
@@ -152,50 +152,50 @@ For your reference, here is the list of all invocations ([?] - means unverified)
 <ul>
 <li>
 <p>Forget about <code>verify</code>. Use this Kotlin extension instead.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">verifyOnly</span><span class="p">(</span><span class="n">mock</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">=</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">verify</span><span class="p">(</span><span class="n">mock</span><span class="p">,</span> <span class="n">Mockito</span><span class="p">.</span><span class="n">only</span><span class="p">())</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">inline</span> <span class="k">fun</span> <span class="p">&lt;</span><span class="nc">T</span><span class="p">&gt;</span> <span class="nf">verifyOnly</span><span class="p">(</span><span class="n">mock</span><span class="p">:</span> <span class="n">T</span><span class="p">):</span> <span class="n">T</span> <span class="p">=</span> <span class="nc">Mockito</span><span class="p">.</span><span class="n">verify</span><span class="p">(</span><span class="n">mock</span><span class="p">,</span> <span class="nc">Mockito</span><span class="p">.</span><span class="n">only</span><span class="p">())</span>
+</span></span></code></pre></div></li>
 <li>
 <p>Learn about <a href="https://static.javadoc.io/org.mockito/mockito-core/2.25.1/org/mockito/Mockito.html#clearInvocations-T...-"><code>clearInvocations</code></a>.
 It is useful for tests where there is an interest in checking behavior
 after a particular state and all interactions before this state are irrelevant.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testCalculate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">repeat</span><span class="p">(</span><span class="m">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">clearInvocations</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
-
-    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
-    <span class="n">verifyOnly</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div></li>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testCalculate</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">repeat</span><span class="p">(</span><span class="m">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">clearInvocations</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">verifyOnly</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
 </ul>
 <h1 id="rxjava-assertions">RxJava Assertions</h1>
 <p>Don’t be so sure that these assertions are the same faithful assertions described above.
 Observe!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
-
-    <span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
-    <span class="k">val</span> <span class="py">plus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
-
-    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">val</span> <span class="py">value</span> <span class="p">=</span> <span class="n">BehaviorSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
-
-        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
-            <span class="n">value</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-            <span class="n">value</span><span class="p">.</span><span class="n">onError</span><span class="p">(</span><span class="n">RuntimeException</span><span class="p">())</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">valueObserver</span> <span class="p">=</span> <span class="n">TestObserver</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;()</span>
-    <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="n">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
-        <span class="n">value</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">valueObserver</span><span class="p">)</span>
-    <span class="p">}</span>
-
-    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-
-    <span class="n">valueObserver</span><span class="p">.</span><span class="n">assertValue</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><pre tabindex="0"><code>TEST PASSED
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">value</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">plus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">value</span> <span class="p">=</span> <span class="nc">BehaviorSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">value</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">value</span><span class="p">.</span><span class="n">onError</span><span class="p">(</span><span class="n">RuntimeException</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testPlus</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">valueObserver</span> <span class="p">=</span> <span class="n">TestObserver</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">().</span><span class="n">apply</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">value</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">valueObserver</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">valueObserver</span><span class="p">.</span><span class="n">assertValue</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><pre tabindex="0"><code>TEST PASSED
 </code></pre><p>Not expected, right? <code>Calculator.Impl.plus</code> emits the value event and the terminal error event.
 Is it what we want? Most likely not — the test passes but in real-life
 we’ll see either an error message or an application crash. Not a good thing.</p>
@@ -209,9 +209,9 @@ will check for values and for no terminal events.</li>
 <li><a href="http://reactivex.io/RxJava/javadoc/io/reactivex/observers/BaseTestConsumer.html#assertResult-T...-"><code>assertResult</code></a> —
 will check for the value and for completion event. Useful for testing <code>Single</code>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">- valueObserver.assertValue(2)
-</span><span class="gd"></span><span class="gi">+ valueObserver.assertValuesOnly(2)
-</span></code></pre></div><pre tabindex="0"><code>TEST FAILED
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- valueObserver.assertValue(2)
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ valueObserver.assertValuesOnly(2)
+</span></span></span></code></pre></div><pre tabindex="0"><code>TEST FAILED
 
 Error(s) present: (latch = 0, values = 1, errors = 1, completions = 0)
 </code></pre><h1 id="the-cruel-cruel-world">The Cruel, Cruel World</h1>

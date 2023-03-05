@@ -94,27 +94,27 @@ As a bonus, it is possible to provide reactive API for the framework
 or the one compatible with <a href="https://kotlinlang.org/docs/reference/coroutines.html">coroutines</a>.
 There is no need to cover the whole API — the application most likely doesn’t
 use everything anyway.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">interface</span> <span class="nc">Bluetooth</span> <span class="p">{</span>
-
-    <span class="k">val</span> <span class="py">supportsLe</span><span class="p">:</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
-
-    <span class="k">class</span> <span class="nc">AndroidBluetooth</span><span class="p">(</span>
-        <span class="n">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">,</span>
-        <span class="n">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
-    <span class="p">)</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
-
-        <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">Single</span>
-            <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">context</span><span class="p">.</span><span class="n">packageManager</span><span class="p">.</span><span class="n">hasSystemFeature</span><span class="p">(</span><span class="n">FEATURE_BLUETOOTH_LE</span><span class="p">)</span> <span class="p">}</span>
-            <span class="p">.</span><span class="n">cache</span><span class="p">()</span>
-            <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">TestBluetooth</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">supportsLeResult</span> <span class="p">=</span> <span class="n">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
-
-    <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">supportsLeResult</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="n">singleOrError</span><span class="p">()</span>
-<span class="p">}</span>
-</code></pre></div><p>The <code>Bluetooth</code> instance should be provided via the Inversion of Control
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Bluetooth</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">supportsLe</span><span class="p">:</span> <span class="n">Single</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">AndroidBluetooth</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">context</span><span class="p">:</span> <span class="n">AndroidContext</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ioScheduler</span><span class="p">:</span> <span class="n">Scheduler</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">Single</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">fromCallable</span> <span class="p">{</span> <span class="n">context</span><span class="p">.</span><span class="n">packageManager</span><span class="p">.</span><span class="n">hasSystemFeature</span><span class="p">(</span><span class="n">FEATURE_BLUETOOTH_LE</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">cache</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">subscribeOn</span><span class="p">(</span><span class="n">ioScheduler</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TestBluetooth</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">supportsLeResult</span> <span class="p">=</span> <span class="nc">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">supportsLeResult</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="n">singleOrError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The <code>Bluetooth</code> instance should be provided via the Inversion of Control
 implementation. <code>AndroidBluetooth</code> is for the real use and <code>TestBluetooth</code> is for tests.</p>
 <p>About UI-related things — the topic was beaten
 to death over and over again. MVP, MVVM, MVI — everything works. The <code>V</code> part
@@ -183,25 +183,25 @@ Scenarios generally consist of a number of steps:</p>
 It is kind of meh in terms of declarative description, so generally
 I recommend using <a href="https://github.com/agoda-com/Kakao">Kakao</a> as a thin layer
 on top of Espresso. The result looks something like that.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">object</span> <span class="nc">CounterScreen</span> <span class="p">:</span> <span class="n">Screen</span><span class="p">&lt;</span><span class="n">CounterScreen</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="k">val</span> <span class="py">incrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_increment</span><span class="p">)</span> <span class="p">}</span>
-    <span class="k">val</span> <span class="py">decrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_decrement</span><span class="p">)</span> <span class="p">}</span>
-    <span class="k">val</span> <span class="py">numberText</span> <span class="p">=</span> <span class="n">KTextView</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">text_number</span><span class="p">)</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="k">class</span> <span class="nc">CounterScreenTest</span> <span class="p">{</span>
-    <span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">`it works`</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">CounterScreen</span> <span class="p">{</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
-
-            <span class="n">incrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
-
-            <span class="n">decrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
-            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>This kind of setup works well. It is readable and maintainable.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">object</span> <span class="nc">CounterScreen</span> <span class="p">:</span> <span class="n">Screen</span><span class="p">&lt;</span><span class="n">CounterScreen</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">incrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_increment</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">decrementButton</span> <span class="p">=</span> <span class="n">KButton</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">button_decrement</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">numberText</span> <span class="p">=</span> <span class="n">KTextView</span> <span class="p">{</span> <span class="n">withId</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">text_number</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CounterScreenTest</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">`it works`</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CounterScreen</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">incrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="n">decrementButton</span><span class="p">.</span><span class="n">click</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">numberText</span><span class="p">.</span><span class="n">hasText</span><span class="p">(</span><span class="s2">&#34;0&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>This kind of setup works well. It is readable and maintainable.
 Unfortunately, the world around us is highly connected, so almost every action we do
 leads to network requests and responses, database reads and writes and so on.</p>
 <h3 id="async--await"><code>async</code> + <code>await</code></h3>

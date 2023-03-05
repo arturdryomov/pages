@@ -102,20 +102,20 @@ and following it. This way non-technical people are able to read and write
 AC and technical people feel more comfortable since it looks and feels like
 a barbaric programming language. Fortunately enough <a href="https://cucumber.io/">Cucumber</a>
 already defined such syntax named <a href="https://docs.cucumber.io/gherkin/reference/">Gherkin</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gherkin" data-lang="gherkin"><span class="k">Feature:</span><span class="nf"> Infinity Gauntlet
-</span><span class="nf">
-</span><span class="nf">  Given 5 gems are in place
-</span><span class="nf">  When fingers are snapped
-</span><span class="nf">  Then erase half of the universe
-</span><span class="nf">
-</span><span class="nf">  Given 1—4 gems are in place
-</span><span class="nf">  When gem-specific intent is performed
-</span><span class="nf">  Then perform gem-specific action
-</span><span class="nf">
-</span><span class="nf">  Given 0 gems are in place
-</span><span class="nf">  When any intent is performed
-</span><span class="nf">  Then do nothing
-</span></code></pre></div><p>Much better. Attentive readers might notice that the declaration enforced us
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-gherkin" data-lang="gherkin"><span class="line"><span class="cl"><span class="k">Feature:</span><span class="nf"> Infinity Gauntlet
+</span></span></span><span class="line"><span class="cl"><span class="nf">
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Given 5 gems are in place
+</span></span></span><span class="line"><span class="cl"><span class="nf">  When fingers are snapped
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Then erase half of the universe
+</span></span></span><span class="line"><span class="cl"><span class="nf">
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Given 1—4 gems are in place
+</span></span></span><span class="line"><span class="cl"><span class="nf">  When gem-specific intent is performed
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Then perform gem-specific action
+</span></span></span><span class="line"><span class="cl"><span class="nf">
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Given 0 gems are in place
+</span></span></span><span class="line"><span class="cl"><span class="nf">  When any intent is performed
+</span></span></span><span class="line"><span class="cl"><span class="nf">  Then do nothing
+</span></span></span></code></pre></div><p>Much better. Attentive readers might notice that the declaration enforced us
 to explicitly describe when actions are actually performed. This was missed
 in the original text-based AC. Actually, I’m thinking right now what should be done
 on non-snap when 5 gems are in place&hellip;</p>

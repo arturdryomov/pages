@@ -68,10 +68,10 @@ It takes time and I think <a href="https://www.youtube.com/watch?v=SLILjDx0SO0">
 <p>A lot of people are familiar with <a href="https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:parallel_execution">the <code>--parallel</code> flag</a>.
 It will execute Gradle tasks in parallel, not much else.
 <a href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:maxParallelForks">We can do the same with tests</a>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="n">maxParallelForks</span> <span class="p">=</span> <span class="n">Runtime</span><span class="p">.</span><span class="n">getRuntime</span><span class="p">().</span><span class="n">availableProcessors</span><span class="p">()</span> <span class="p">/</span> <span class="m">2</span>
-<span class="p">}</span>
-</code></pre></div><p>The <code>maxParallelForks</code> default value is <code>1</code>. Give it a bigger number and Gradle
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">maxParallelForks</span> <span class="p">=</span> <span class="nc">Runtime</span><span class="p">.</span><span class="n">getRuntime</span><span class="p">().</span><span class="n">availableProcessors</span><span class="p">()</span> <span class="p">/</span> <span class="m">2</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>The <code>maxParallelForks</code> default value is <code>1</code>. Give it a bigger number and Gradle
 will execute test classes (not methods) in parallel. The snippet above
 uses a half of available CPU cores. Results:</p>
 <table>
@@ -99,10 +99,10 @@ at least one of them to render results on UI.
 But a lot of systems do not use it at all. Moreover, there is
 a good chance that developers do not use these reports at all.
 <a href="https://docs.gradle.org/current/javadoc/org/gradle/api/reporting/Report.html#setEnabled-boolean-">Let’s nuke them</a>!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
-    <span class="n">reports</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">report</span> <span class="o">-&gt;</span> <span class="n">report</span><span class="p">.</span><span class="n">isEnabled</span> <span class="p">=</span> <span class="k">false</span> <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><table>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">reports</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">report</span> <span class="o">-&gt;</span> <span class="n">report</span><span class="p">.</span><span class="n">isEnabled</span> <span class="p">=</span> <span class="k">false</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><table>
 <thead>
 <tr>
 <th><code>report.isEnabled</code></th>
@@ -122,7 +122,7 @@ a good chance that developers do not use these reports at all.
 </table>
 <p>Well, this is kind of disappointing&hellip; However, there is an interesting
 side effect.</p>
-<pre tabindex="0"><code>$ find build/reports/tests/testDebugUnitTest -name &quot;*.html&quot; | wc -l
+<pre tabindex="0"><code>$ find build/reports/tests/testDebugUnitTest -name &#34;*.html&#34; | wc -l
 </code></pre><p>The result will be a number of test classes or similar. This number is
 the number of files created by the HTML report. Tools like
 <a href="https://github.com/buildfoundation/mainframer">Mainframer</a> transfer files
