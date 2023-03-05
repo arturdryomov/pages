@@ -9,9 +9,6 @@ params:
   description: "Artur Dryomov on software design, development and deployment."
   googleSearchCode: "Noz-S7X4481rtWBcFiugLcNzvzXEG3Ukn-T6QVPPUOE"
 
-social:
-  twitter: "arturdryomov"
-
 menu:
   left:
     - name: "Posts"
@@ -20,9 +17,6 @@ menu:
     - name: "GitHub"
       url: "https://github.com/arturdryomov"
       weight: 3
-    - name: "Twitter"
-      url: "https://twitter.com/arturdryomov"
-      weight: 2
     - name: "RSS"
       url: "/index.xml"
       weight: 1
