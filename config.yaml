@@ -6,6 +6,7 @@ permalinks:
   post: ":slug"
 
 params:
+  author: "Artur Dryomov"
   description: "Artur Dryomov on software design, development and deployment."
 
 menu:
