@@ -6,7 +6,18 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Feb 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 05 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Music Stats with DuckDB</title>
+      <link>https://arturdryomov.dev/posts/music-stats-with-duckdb/</link>
+      <pubDate>Mon, 05 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/music-stats-with-duckdb/</guid>
+      <description>Music! Everyone likes music. Well, I certainly hope so. Stats! Well, not everyone likes stats but I certainly do.
+In this article I’ll describe an approach to work with music scrobbles from different sources and in different formats using DuckDB. DuckDB is a perfect match for such ad-hoc scenarios — it has a minimal footprint, great performance and useful features.
+Scrobbles I’ve been using multiple music sources over the past decade.</description>
+    </item>
+    
     <item>
       <title>Testing Files without Files</title>
       <link>https://arturdryomov.dev/posts/testing-files-without-files/</link>
