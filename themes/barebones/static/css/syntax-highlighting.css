@@ -1,26 +1,28 @@
 :root {
-  /* Base16 GitHub */
+  /* Base16 Tomorrow */
+  /* https://github.com/tinted-theming/base16-schemes/blob/main/tomorrow.yaml */
   --color-base00: #ffffff;
-  --color-base01: #f5f5f5;
-  --color-base02: #c8c8fa;
-  --color-base03: #969896;
-  --color-base04: #e8e8e8;
-  --color-base05: #333333;
-  --color-base06: #ffffff;
-  --color-base07: #ffffff;
-  --color-base08: #ed6a43;
-  --color-base09: #0086b3;
-  --color-base0a: #795da3;
-  --color-base0b: #183691;
-  --color-base0c: #183691;
-  --color-base0d: #795da3;
-  --color-base0e: #a71d5d;
-  --color-base0f: #333333;
+  --color-base01: #e0e0e0;
+  --color-base02: #d6d6d6;
+  --color-base03: #8e908c;
+  --color-base04: #969896;
+  --color-base05: #4d4d4c;
+  --color-base06: #282a2e;
+  --color-base07: #1d1f21;
+  --color-base08: #c82829;
+  --color-base09: #f5871f;
+  --color-base0a: #eab700;
+  --color-base0b: #718c00;
+  --color-base0c: #3e999f;
+  --color-base0d: #4271ae;
+  --color-base0e: #8959a8;
+  --color-base0f: #a3685a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     /* Base16 Tomorrow Night */
+    /* https://github.com/tinted-theming/base16-schemes/blob/main/tomorrow-night.yaml */
     --color-base00: #1d1f21;
     --color-base01: #282a2e;
     --color-base02: #373b41;
@@ -32,7 +34,7 @@
     --color-base08: #cc6666;
     --color-base09: #de935f;
     --color-base0a: #f0c674;
-    --color-base0b: #f0c674;
+    --color-base0b: #b5bd68;
     --color-base0c: #8abeb7;
     --color-base0d: #81a2be;
     --color-base0e: #b294bb;
