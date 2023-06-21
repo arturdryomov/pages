@@ -1,10 +1,10 @@
 <nav>
   <ul>
     {{ range .Site.Menus.left }}
-    <li class="menu-left"><a href="{{ .URL }}">{{ .Name }}</a></li>
+    <li class="menu-left"><a href="{{ .URL | safeURL }}">{{ .Name }}</a></li>
     {{end}}
     {{ range .Site.Menus.right }}
-    <li class="menu-right"><a href="{{ .URL }}">{{ .Name}}</a></li>
+    <li class="menu-right"><a href="{{ .URL | safeURL }}">{{ .Name}}</a></li>
     {{end}}
   </ul>
 </nav>

@@ -14,6 +14,10 @@
 
   <!-- Chrome for Android -->
   <meta name="theme-color" content="#1e2327">
+
+  {{ range .AlternativeOutputFormats }}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ $.Site.Title }}"/>
+  {{ end -}}
 </head>
 
 <body>
