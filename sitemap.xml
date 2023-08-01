@@ -3,7 +3,10 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://arturdryomov.dev/</loc>
-    <lastmod>2023-06-05T00:00:00+00:00</lastmod>
+    <lastmod>2023-08-01T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arturdryomov.dev/posts/python-foreign-functions-and-steam/</loc>
+    <lastmod>2023-08-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arturdryomov.dev/posts/music-stats-with-duckdb/</loc>
     <lastmod>2023-06-05T00:00:00+00:00</lastmod>

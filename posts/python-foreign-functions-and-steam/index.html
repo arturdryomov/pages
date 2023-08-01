@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Python, foreign functions and Steam</title>
+  <meta name="description" content="Calling Steamworks from Python without overhead"/>
+  <meta name="author" content="Artur Dryomov"/>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  </head>
+
+<body>
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="feed://arturdryomov.dev/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Python, foreign functions and Steam</span></h1>
+  <h3>August 1, 2023</h3>
+
+</div>
+
+<main>
+<p>Language ecosystems are not perfect. Sometimes resulting executables are performant
+but the syntax is horrible, sometimes there is a nice package manager
+but standard functions are scarce to a fault &mdash; it&rsquo;s all about the compromise.</p>
+<p>Python is nice to use but the performance might be not great. The latter causes
+such tools as <a href="https://numpy.org/">NumPy</a> to emerge. How does it work?
+Well, <a href="https://numpy.org/doc/stable/user/whatisnumpy.html#why-is-numpy-fast">it uses C calls</a> &mdash;
+essentially borrowing performance improvements from the C ecosystem.
+In this article, I&rsquo;ll show how to use foreign C functions from dynamic libraries in Python.
+Calls will be done to <a href="https://partner.steamgames.com/doc/sdk">the Steamworks SDK</a>
+which games use to communicate with Steam.</p>
+<h1 id="overview">Overview</h1>
+<p>When talking about calling foreign functions from Python, at least two solutions come to mind &mdash;
+<a href="https://docs.python.org/3/library/ctypes.html"><code>ctypes</code></a> and
+<a href="https://cython.readthedocs.io/en/latest/index.html"><code>cython</code></a>.
+<code>ctypes</code> is a standard package, does not require additional compilation steps or tools &mdash;
+basically, Plug and Play for dynamic libraries. <code>cython</code> is an external package and is a bit more involved &mdash;
+having a different (but similar to Python) syntax, tools and so on. I&rsquo;ll use <code>ctypes</code> below but <code>cython</code>
+can be useful in more complicated situations.</p>
+<p>As for Steam, <a href="https://partner.steamgames.com/doc/sdk/api">the Steamworks API</a> is the point of interest.
+It&rsquo;s a collection of C++ calls &mdash; including interfaces, classes, methods and all of that.
+Unfortunately, <code>ctypes</code> doesn&rsquo;t bode well with C++, preferring C signatures instead.
+Fortunately, the Steamworks API provides <a href="https://partner.steamgames.com/doc/sdk/api#flat_interface">a special API</a>
+for interop purposes &ndash; <code>ctypes</code> is capable of using it without issues or side-effects.</p>
+<h1 id="making-the-call">Making the Call</h1>
+<h2 id="linking">Linking</h2>
+<p>The Steamworks SDK has following Steamworks API binaries.</p>
+<pre tabindex="0"><code>redistributable_bin
+├── linux32
+│   └── libsteam_api.so
+├── linux64
+│   └── libsteam_api.so
+├── osx
+│   └── libsteam_api.dylib
+├── steam_api.dll
+├── steam_api.lib
+└── win64
+    ├── steam_api64.dll
+    └── steam_api64.lib
+</code></pre><p>An appropriate file must be picked based on the OS and passed to <code>ctypes</code> to receive a dynamic library object (<code>ctypes.CDLL</code>).
+I have a Mac and a Steam Deck so the code below is for macOS and Linux since I cannot check how Windows works but it should be similar.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ctypes</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pathlib</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">platform</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">_dll</span><span class="p">:</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdk_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="n">Steam</span><span class="o">.</span><span class="n">_resolve_dll_path</span><span class="p">(</span><span class="n">sdk_path</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">_resolve_dll_path</span><span class="p">(</span><span class="n">sdk_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dlls_path</span> <span class="o">=</span> <span class="n">sdk_path</span> <span class="o">/</span> <span class="s2">&#34;redistributable_bin&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&#34;Darwin&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">dlls_path</span> <span class="o">/</span> <span class="s2">&#34;osx&#34;</span> <span class="o">/</span> <span class="s2">&#34;libsteam_api.dylib&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&#34;Linux&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="p">(</span><span class="n">system_bits</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">system_bits</span> <span class="o">==</span> <span class="s2">&#34;64bit&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">dlls_path</span> <span class="o">/</span> <span class="s2">&#34;linux64&#34;</span> <span class="o">/</span> <span class="s2">&#34;libsteam_api.so&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">elif</span> <span class="n">system_bits</span> <span class="o">==</span> <span class="s2">&#34;32bit&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">dlls_path</span> <span class="o">/</span> <span class="s2">&#34;linux32&#34;</span> <span class="o">/</span> <span class="s2">&#34;libsteam_api.so&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">raise</span> <span class="n">SteamException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;unsupported system bits: </span><span class="si">{</span><span class="n">bits</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="n">SteamException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;unsupported system: </span><span class="si">{</span><span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><h2 id="binding-c">Binding: C</h2>
+<p>To call functions from a dynamic library, <code>ctypes</code> needs to know their signature.
+To feed this knowledge, functions are defined on the <code>ctypes.CDLL</code> object &mdash;
+including their arguments and results.</p>
+<p>From the C perspective, these calls look like this (see <code>sdk/public/steam/steam_api.h</code>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">S_API</span> <span class="kt">bool</span> <span class="n">S_CALLTYPE</span> <span class="nf">SteamAPI_Init</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="n">S_API</span> <span class="kt">void</span> <span class="n">S_CALLTYPE</span> <span class="nf">SteamAPI_Shutdown</span><span class="p">();</span>
+</span></span></code></pre></div><p>As such, the Python declaration will be (note <code>argtypes</code> and <code>restype</code>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ctypes</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdk_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API bool S_CALLTYPE SteamAPI_Init();</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Init</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Init</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_bool</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API void S_CALLTYPE SteamAPI_Shutdown();</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Shutdown</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Shutdown</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span></code></pre></div><p>Python calls refer to <code>ctypes.CDLL</code> and can benefit from the context management:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SteamException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Init</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">            <span class="k">raise</span> <span class="n">SteamException</span><span class="p">(</span><span class="s2">&#34;unable to init&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_Shutdown</span><span class="p">()</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">with</span> <span class="n">Steam</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&#34;./sdk&#34;</span><span class="p">))</span> <span class="k">as</span> <span class="n">steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Success!&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>If the Steam application is running in the background, the Steamworks SDK is unpacked near
+the Python file and the file itself is executed, it will be successfull indeed. However,
+the call is not that useful. What if I want to check game achievements?</p>
+<h2 id="binding-c-1">Binding: C++</h2>
+<p>The Steamworks API is available as multiple C++ interfaces &mdash; each interface covers its own area.
+For example, achievements and stats are available at <a href="https://partner.steamgames.com/doc/api/ISteamUserStats"><code>ISteamUserStats</code></a>.
+As I&rsquo;ve mentioned above, <code>ctypes</code> works with C calls, not C++ ones. Fortunately, a compatible &mdash; C-like &mdash; flat API is available.</p>
+<p>C++ API:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ISteamUserStats</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="n">uint32</span> <span class="n">GetNumAchievements</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">GetAchievementName</span><span class="p">(</span> <span class="n">uint32</span> <span class="n">iAchievement</span> <span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">virtual</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">GetAchievementDisplayAttribute</span><span class="p">(</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pchName</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pchKey</span> <span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div><p>C++ flat API (see <code>sdk/public/steam/steam_api_flat.h</code>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">S_API</span> <span class="n">ISteamUserStats</span> <span class="o">*</span><span class="nf">SteamAPI_SteamUserStats_v012</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">S_API</span> <span class="n">uint32</span> <span class="nf">SteamAPI_ISteamUserStats_GetNumAchievements</span><span class="p">(</span> <span class="n">ISteamUserStats</span><span class="o">*</span> <span class="n">self</span> <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">S_API</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">SteamAPI_ISteamUserStats_GetAchievementName</span><span class="p">(</span> <span class="n">ISteamUserStats</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">iAchievement</span> <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">S_API</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="nf">SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute</span><span class="p">(</span> <span class="n">ISteamUserStats</span><span class="o">*</span> <span class="n">self</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pchName</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">pchKey</span> <span class="p">);</span>
+</span></span></code></pre></div><p>These calls have arguments and pointers unlike the ones before. However, the same <code>ctypes</code> approach works fine.
+Pick a C signature, provide a <code>ctypes</code> binding based on C arguments and results, call resulting functions.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">ctypes</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">os</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Alias for &#34;ISteamUserStats*&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># A pointer is needed and not its type so a &#34;void*&#34; works</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SteamUserStatsPtr</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_void_p</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">pass</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SteamUserStats</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">_dll</span><span class="p">:</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_ptr</span><span class="p">:</span> <span class="n">SteamUserStatsPtr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dll</span><span class="p">:</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">,</span> <span class="n">ptr</span><span class="p">:</span> <span class="n">SteamUserStatsPtr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span> <span class="o">=</span> <span class="n">dll</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span> <span class="o">=</span> <span class="n">ptr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API uint32 SteamAPI_ISteamUserStats_GetNumAchievements( ISteamUserStats* self );</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetNumAchievements</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SteamUserStatsPtr</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetNumAchievements</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_uint32</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API const char * SteamAPI_ISteamUserStats_GetAchievementName( ISteamUserStats* self, uint32 iAchievement );</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementName</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SteamUserStatsPtr</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_uint32</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementName</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API const char * SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute( ISteamUserStats* self, const char * pchName, const char * pchKey );</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">SteamUserStatsPtr</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_achievements_count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetNumAchievements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_achievement_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">achievement_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">achievement_index</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_achievement_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">achievement_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_ISteamUserStats_GetAchievementDisplayAttribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ptr</span><span class="p">,</span> <span class="n">achievement_id</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">),</span> <span class="s2">&#34;name&#34;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&#34;utf-8&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sdk_path</span><span class="p">:</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="n">application_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># S_API ISteamUserStats *SteamAPI_SteamUserStats_v012();</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_SteamUserStats_v012</span><span class="o">.</span><span class="n">argtypes</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_SteamUserStats_v012</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">SteamUserStatsPtr</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># This is where Steam picks the Steam Application ID</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># ID can be found at Steam URLs and at SteamDB</span>
+</span></span><span class="line"><span class="cl">        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&#34;SteamAppId&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">application_id</span><span class="si">}</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_user_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SteamUserStats</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">SteamUserStats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dll</span><span class="o">.</span><span class="n">SteamAPI_SteamUserStats_v012</span><span class="p">())</span>
+</span></span></code></pre></div><p>Might be a bit daunting to look at but at its core it&rsquo;s a simple concept. Usage:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pathlib</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Planescape: Torment @ https://store.steampowered.com/app/466300</span>
+</span></span><span class="line"><span class="cl"><span class="k">with</span> <span class="n">Steam</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&#34;./sdk&#34;</span><span class="p">),</span> <span class="mi">466300</span><span class="p">)</span> <span class="k">as</span> <span class="n">steam</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">steam_user_stats</span> <span class="o">=</span> <span class="n">steam</span><span class="o">.</span><span class="n">get_user_stats</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">achievement_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steam_user_stats</span><span class="o">.</span><span class="n">get_achievements_count</span><span class="p">()):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">achievement_id</span> <span class="o">=</span> <span class="n">steam_user_stats</span><span class="o">.</span><span class="n">get_achievement_id</span><span class="p">(</span><span class="n">achievement_index</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">achievement_name</span> <span class="o">=</span> <span class="n">steam_user_stats</span><span class="o">.</span><span class="n">get_achievement_name</span><span class="p">(</span><span class="n">achievement_id</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">achievement_id</span><span class="si">:</span><span class="s2">30</span><span class="si">}{</span><span class="n">achievement_name</span><span class="si">:</span><span class="s2">30</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><pre tabindex="0"><code>BD_ACH_001                    Call of the Blade
+BD_ACH_002                    Call of the Art
+BD_ACH_003                    Call of the Shadows
+BD_ACH_004                    Master of Blades
+BD_ACH_005                    Master of the Art
+...
+</code></pre><p>Of course, there are more use cases IRL &mdash;
+<a href="https://docs.python.org/3/library/ctypes.html#callback-functions">using callbacks</a>,
+<a href="https://docs.python.org/3/library/ctypes.html#pointers">passing non-standard pointers</a>,
+checking incorrect states and so on. However, it&rsquo;s not that different / difficult.</p>
+<h1 id="thoughts">Thoughts</h1>
+<p>Overall, <code>ctypes</code> is a good starting point when working with dynamic libraries.
+It doesn&rsquo;t require additional steps &mdash; a Python file and a <code>*.dylib</code> / <code>*.so</code> file are enough, no tools,
+no dependencies. I&rsquo;ve checked the code above on a Mac and on a Steam Deck with system-level
+Python interpreters and it worked great. As such, the <code>ctypes</code>-based code can be used
+for scripting and even for something more complicated.</p>
+<p>However, if the task at hand is too complex for <code>ctypes</code> &mdash; there is <code>cython</code>.</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="feed://arturdryomov.dev/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+

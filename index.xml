@@ -6,7 +6,17 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Python, foreign functions and Steam</title>
+      <link>https://arturdryomov.dev/posts/python-foreign-functions-and-steam/</link>
+      <pubDate>Tue, 01 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://arturdryomov.dev/posts/python-foreign-functions-and-steam/</guid>
+      <description>Language ecosystems are not perfect. Sometimes resulting executables are performant but the syntax is horrible, sometimes there is a nice package manager but standard functions are scarce to a fault &amp;mdash; it&amp;rsquo;s all about the compromise.
+Python is nice to use but the performance might be not great. The latter causes such tools as NumPy to emerge. How does it work? Well, it uses C calls &amp;mdash; essentially borrowing performance improvements from the C ecosystem.</description>
+    </item>
+    
     <item>
       <title>Music Stats with DuckDB</title>
       <link>https://arturdryomov.dev/posts/music-stats-with-duckdb/</link>
