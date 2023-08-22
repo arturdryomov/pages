@@ -17,11 +17,39 @@
 }
 
 body, nav {
-  font-family: system-ui;
+  font-family:
+    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
+    "ui-sans-serif",
+    /* Works ATM: https://caniuse.com/font-family-system-ui */
+    "system-ui",
+    /* Fallback */
+    "sans-serif";
 }
 
 code {
-  font-family: "SFMono-Regular", Menlo, Consolas, "Roboto Mono", "Liberation Mono", Courier, monospace;
+  font-family:
+    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
+    "ui-monospace",
+    /* macOS 10.11+ */
+    "SF Mono",
+    /* macOS 10.6+ */
+    "Menlo",
+    /* Windows 10+ */
+    "Cascadia Mono",
+    /* Windows Vista+ */
+    "Consolas",
+    /* Linux: GNOME */
+    "Source Code Pro",
+    /* Linux: KDE */
+    "Hack",
+    /* Linux */
+    "Liberation Mono",
+    "DejaVu Sans Mono",
+    /* Android */
+    "Roboto Mono",
+    /* Fallback */
+    "monospace";
+
   font-size: 85%;
 }
 
