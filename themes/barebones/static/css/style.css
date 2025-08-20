@@ -20,10 +20,25 @@ body, nav {
   font-family:
     /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
     "ui-sans-serif",
-    /* Works ATM: https://caniuse.com/font-family-system-ui */
-    "system-ui",
+    /* macOS 10.11+ */
+    "SF Pro",
+    /* macOS 10.8+ */
+    "Helvetica Neue",
+    /* Windows Vista+ */
+    "Segoe UI",
+    /* Linux: GNOME */
+    "Adwaita Sans",
+    /* Linux: KDE */
+    "Noto Sans",
+    /* Linux */
+    "Liberation Sans",
+    "DejaVu Sans",
+    /* Android */
+    "Roboto",
     /* Fallback */
     "sans-serif";
+
+  font-size: 1rem;
 }
 
 code {
@@ -35,11 +50,11 @@ code {
     /* macOS 10.6+ */
     "Menlo",
     /* Windows 10+ */
-    "Cascadia Mono",
+    "Cascadia Code",
     /* Windows Vista+ */
     "Consolas",
     /* Linux: GNOME */
-    "Source Code Pro",
+    "Adwaita Mono",
     /* Linux: KDE */
     "Hack",
     /* Linux */
