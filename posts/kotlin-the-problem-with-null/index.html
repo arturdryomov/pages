@@ -72,21 +72,21 @@ otherwise the type system assumes them be to be non-nullable by default.</p>
 any warnings or errors and yet it will crash <em>in runtime</em>.
 Well, at least when using RxJava 2.1.8 and Kotlin 1.2.10.</p>
 <p>Why? Fortunately enough, <a href="https://github.com/ReactiveX/RxJava">RxJava is open source</a>, so we can take a look ourselves.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="o">(</span><span class="n">T</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ObjectHelper</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="s">&#34;The item is null&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="o">.</span><span class="na">onAssembly</span><span class="o">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span><span class="n">item</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><p>In other words, the underlying code checks the <code>item</code> to not be <code>null</code>. And yet, Kotlin did not save us.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">just</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">ObjectHelper</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;The item is null&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">RxJavaPlugins</span><span class="p">.</span><span class="na">onAssembly</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>In other words, the underlying code checks the <code>item</code> to not be <code>null</code>. And yet, Kotlin did not save us.
 The reason is quite simple. When using RxJava we are using Java bytecode which does not have enough metadata.
 To actually have it the Java code should be annotated with so-called Nullability Annotations.
 The platform itself does not have enough introspection knowledge about if a value can be <code>null</code> or not.</p>
 <p>OK, so now we’ve established that we need annotations in the Java code to make Kotlin happy.
 In other words, the RxJava source code should be changed to be like this.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="nf">just</span><span class="o">(</span><span class="nd">@NonNull</span> <span class="n">T</span> <span class="n">item</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ObjectHelper</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">item</span><span class="o">,</span> <span class="s">&#34;The item is null&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">RxJavaPlugins</span><span class="o">.</span><span class="na">onAssembly</span><span class="o">(</span><span class="k">new</span> <span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;(</span><span class="n">item</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><p>The difference is in the <code>@NonNull</code> annotation. The IDE will highlight the original code as an error,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Observable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">just</span><span class="p">(</span><span class="nd">@NonNull</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">ObjectHelper</span><span class="p">.</span><span class="na">requireNonNull</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;The item is null&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">RxJavaPlugins</span><span class="p">.</span><span class="na">onAssembly</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ObservableJust</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>The difference is in the <code>@NonNull</code> annotation. The IDE will highlight the original code as an error,
 the Kotlin compiler will stop compilation&hellip; The End.</p>
 <p>It is totally another story about mutiple <em>different</em> Nullability Annotations artifacts
 from JetBrains, FindBugs, The Checker Framework, Lombok, Android Support Library and others,
@@ -135,14 +135,14 @@ so it seems like a better argument.</li>
 excluding codebases with a huge number of public methods — like RxJava.
 As a side benefit — you will make your code more testable encapsulating implementation behind an interface.</p>
 <p>Sample time!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">CorporateCalculator</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">calculate</span><span class="o">(</span><span class="n">Argument</span> <span class="n">argument</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">argument</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">(</span><span class="s">&#34;Gotcha!&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="n">calculateUsingCorporateBlackMagic</span><span class="o">(</span><span class="n">argument</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">CorporateCalculator</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="n">Argument</span><span class="w"> </span><span class="n">argument</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">argument</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NullPointerException</span><span class="p">(</span><span class="s">&#34;Gotcha!&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">calculateUsingCorporateBlackMagic</span><span class="p">(</span><span class="n">argument</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Calculator</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">argument</span><span class="p">:</span> <span class="n">Argument</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">CorporateImpl</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
@@ -217,27 +217,24 @@ I’m gonna put it right here since I deeply agree with him on the subject.</p>
 languages around them. And so the surface-level syntax does look very similar.
 But if you go one level down below the syntax, the semantics are quite different.
 Kotlin is very reference semantics, it’s a thin layer on top of Java, and
-so it perpetuates through a lot of the Javaisms in its model.</p>
-</blockquote>
+so it perpetuates through a lot of the Javaisms in its model.</p></blockquote>
 <blockquote>
 <p>If we had done an analog to that for Objective-C it would be like,
 everything is an <code>NSObject</code> and it’s <code>objc_msgSend</code> everywhere,
 just with parentheses instead of square brackets. And a lot of people
 would have been happy with that for sure, but that wouldn’t
 have gotten us the functional features, that wouldn’t have gotten us value semantics,
-that wouldn’t have gotten us a lot of the safety things that are happening [in Swift].</p>
-</blockquote>
+that wouldn’t have gotten us a lot of the safety things that are happening [in Swift].</p></blockquote>
 <blockquote>
 <p>I think that Kotlin is a great language. I really mean that.
 Kotlin is a great language, and they’re doing great things.
-They’re just under a different set of constraints.</p>
-</blockquote>
+They’re just under a different set of constraints.</p></blockquote>
 <p>Kotlin hits a nice middle ground between compatibility with the whole Java world and, at the same time,
 a set of features and abilities of a truly modern language. Unfortunately, it brings some
 caveats related to its Java roots and it is too easy to simply forget about them.
 Well, unless you shoot yourself in a foot really badly, so be carefull.</p>
 <hr>
-<p>PS Bonus points to everyone who got <a href="https://en.wikipedia.org/wiki/The_Problem_with_Popplers">the Futurama reference</a> 😉</p>
+<p>PS Bonus points to everyone who got <a href="https://en.wikipedia.org/wiki/The_Problem_with_Popplers">the Futurama reference</a> &#x1f609;</p>
 <hr>
 <p>Thanks to <a href="https://twitter.com/artem_zin">Artem Zinnatullin</a>,
 <a href="https://twitter.com/sockeqwe">Hannes Dorfmann</a>

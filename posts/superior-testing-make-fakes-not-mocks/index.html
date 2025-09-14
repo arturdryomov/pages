@@ -73,8 +73,7 @@ a lot with abstraction which leads to better inversion of control practices
 and utility use-cases (like mocking). Rephrasing
 <a href="https://en.wikipedia.org/wiki/Single_Ladies_(Put_a_Ring_on_It)">a modern classic Beyoncé</a>:</p>
 <blockquote>
-<p>If you like it, then you shoulda put an <code>interface</code> on it.</p>
-</blockquote>
+<p>If you like it, then you shoulda put an <code>interface</code> on it.</p></blockquote>
 <p>We’ll make a single test for now — to check that the repository returns <code>null</code>
 when the storage is blank.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testBlankStorage</span><span class="p">()</span> <span class="p">{</span>
@@ -132,10 +131,9 @@ idea — magic is not cheap and certainly is not trivial.</li>
 <h1 id="faking">Faking</h1>
 <p>Instead of mocking let’s produce reusable fakes using language instruments and nothing else.</p>
 <blockquote>
-<p>📖 Fakes might be called stubs or dummies —
+<p>&#x1f4d6; Fakes might be called stubs or dummies —
 <a href="http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html">depends on the material</a>.
-I suggest calling them <em>test implementations</em>.</p>
-</blockquote>
+I suggest calling them <em>test implementations</em>.</p></blockquote>
 <h2 id="sync-1">Sync</h2>
 <p>The implementation is not complicated at all.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TestBooksStorage</span> <span class="p">:</span> <span class="n">BooksStorage</span> <span class="p">{</span>

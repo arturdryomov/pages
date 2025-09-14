@@ -4,332 +4,233 @@
     <title>Artur Dryomov</title>
     <link>https://arturdryomov.dev/</link>
     <description>Recent content on Artur Dryomov</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 01 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 01 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Python, foreign functions and Steam</title>
       <link>https://arturdryomov.dev/posts/python-foreign-functions-and-steam/</link>
       <pubDate>Tue, 01 Aug 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/python-foreign-functions-and-steam/</guid>
-      <description>Language ecosystems are not perfect. Sometimes resulting executables are performant but the syntax is horrible, sometimes there is a nice package manager but standard functions are scarce to a fault &amp;mdash; it&amp;rsquo;s all about the compromise.
-Python is nice to use but the performance might be not great. The latter causes such tools as NumPy to emerge. How does it work? Well, it uses C calls &amp;mdash; essentially borrowing performance improvements from the C ecosystem.</description>
+      <description>&lt;p&gt;Language ecosystems are not perfect. Sometimes resulting executables are performant&#xA;but the syntax is horrible, sometimes there is a nice package manager&#xA;but standard functions are scarce to a fault &amp;mdash; it&amp;rsquo;s all about the compromise.&lt;/p&gt;&#xA;&lt;p&gt;Python is nice to use but the performance might be not great. The latter causes&#xA;such tools as &lt;a href=&#34;https://numpy.org/&#34;&gt;NumPy&lt;/a&gt; to emerge. How does it work?&#xA;Well, &lt;a href=&#34;https://numpy.org/doc/stable/user/whatisnumpy.html#why-is-numpy-fast&#34;&gt;it uses C calls&lt;/a&gt; &amp;mdash;&#xA;essentially borrowing performance improvements from the C ecosystem.&#xA;In this article, I&amp;rsquo;ll show how to use foreign C functions from dynamic libraries in Python.&#xA;Calls will be done to &lt;a href=&#34;https://partner.steamgames.com/doc/sdk&#34;&gt;the Steamworks SDK&lt;/a&gt;&#xA;which games use to communicate with Steam.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Music Stats with DuckDB</title>
       <link>https://arturdryomov.dev/posts/music-stats-with-duckdb/</link>
       <pubDate>Mon, 05 Jun 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/music-stats-with-duckdb/</guid>
-      <description>Music! Everyone likes music. Well, I certainly hope so. Stats! Well, not everyone likes stats but I certainly do.
-In this article I’ll describe an approach to work with music scrobbles from different sources and in different formats using DuckDB. DuckDB is a perfect match for such ad-hoc scenarios — it has a minimal footprint, great performance and useful features.
-Scrobbles I’ve been using multiple music sources over the past decade.</description>
+      <description>&lt;p&gt;Music! Everyone likes music. Well, I certainly hope so.&#xA;Stats! Well, not everyone likes stats but I certainly do.&lt;/p&gt;&#xA;&lt;p&gt;In this article I’ll describe an approach to work with&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Last.fm#Scrobbling&#34;&gt;music scrobbles&lt;/a&gt;&#xA;from different sources and in different formats using &lt;a href=&#34;https://duckdb.org/&#34;&gt;DuckDB&lt;/a&gt;.&#xA;DuckDB is a perfect match for such ad-hoc scenarios — it has a minimal&#xA;footprint, great performance and useful features.&lt;/p&gt;&#xA;&lt;h1 id=&#34;scrobbles&#34;&gt;Scrobbles&lt;/h1&gt;&#xA;&lt;p&gt;I’ve been using multiple music sources over the past decade.&#xA;Fortunately, I had a &lt;a href=&#34;https://en.wikipedia.org/wiki/Last.fm&#34;&gt;Last.fm&lt;/a&gt; account from the beginning.&#xA;It allowed me to track almost everything I’ve listened — resulting in almost 110+ thousands of scrobbles.&#xA;Unfortunately, I haven’t used it all the time.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Testing Files without Files</title>
       <link>https://arturdryomov.dev/posts/testing-files-without-files/</link>
       <pubDate>Mon, 21 Feb 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/testing-files-without-files/</guid>
-      <description>File operations become less and less common. As users, we store more and more data in a vendor storage due to its convenience. I remember the contacts file format but cannot locate one on a local machine — I have Google Contacts instead. As developers, we use datastores — from S3 to Hive Metastore. Such datastores are scalable, fault tolerant and cheap.
-However, even if files and file systems are hidden behind various APIs — it doesn’t eliminate them.</description>
+      <description>&lt;p&gt;File operations become less and less common. As users, we store more and more&#xA;data in a vendor storage due to its convenience.&#xA;I remember &lt;a href=&#34;https://en.wikipedia.org/wiki/VCard&#34;&gt;the contacts file format&lt;/a&gt;&#xA;but cannot locate one on a local machine — I have Google Contacts instead.&#xA;As developers, we use datastores —&#xA;from &lt;a href=&#34;https://aws.amazon.com/s3/&#34;&gt;S3&lt;/a&gt;&#xA;to &lt;a href=&#34;https://hive.apache.org/&#34;&gt;Hive Metastore&lt;/a&gt;.&#xA;Such datastores are scalable, fault tolerant and cheap.&lt;/p&gt;&#xA;&lt;p&gt;However, even if files and file systems are hidden behind various APIs —&#xA;it doesn’t eliminate them. In this article I’ll show how to use Java fake file systems&#xA;to test file interactions. It’s a fun approach but with its own pros and cons.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Autonomous GitHub Pull Requests</title>
       <link>https://arturdryomov.dev/posts/auto-github-pull-requests/</link>
       <pubDate>Mon, 08 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/auto-github-pull-requests/</guid>
-      <description>In general, people are lazy. This is our nature — we want to achieve more by doing less. Developers are on the next step of this urge — we want to automate similar actions, patterns in human behavior. And what’s more repetitive than working on pull requests for each source code change we make?
-Workflow Over time and multiple iterations I’ve established the following workflow.
-Open a PR. Assign reviewers automatically.</description>
+      <description>&lt;p&gt;In general, people are lazy. This is our nature — we want to achieve more by doing less.&#xA;Developers are on the next step of this urge — we want to automate similar actions,&#xA;patterns in human behavior. And what’s more repetitive than working on pull requests&#xA;for each source code change we make?&lt;/p&gt;&#xA;&lt;h1 id=&#34;workflow&#34;&gt;Workflow&lt;/h1&gt;&#xA;&lt;p&gt;Over time and multiple iterations I’ve established the following workflow.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Open a PR.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Assign reviewers automatically.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Refine the PR.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Run automatic checks (compiler, tests, linters):&#xA;&lt;ul&gt;&#xA;&lt;li&gt;on success — attempt automatic merge;&lt;/li&gt;&#xA;&lt;li&gt;on failure — push new changes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Receive reviews:&#xA;&lt;ul&gt;&#xA;&lt;li&gt;on approve — attempt automatic merge;&lt;/li&gt;&#xA;&lt;li&gt;on decline — push new changes.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Merge the PR.&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Update PRs targeting the same branch.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;This approach reduces the manual interaction as much as possible.&#xA;Developers provide changes and reviews, the automation handles everything else.&#xA;There is no need to choose people for review, track checks and review statuses,&#xA;merge and update remaining PRs.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kotlin Code Organization</title>
       <link>https://arturdryomov.dev/posts/kotlin-code-organization/</link>
       <pubDate>Mon, 27 Jan 2020 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/kotlin-code-organization/</guid>
-      <description>What’s the motivation behind organizing the code? Two points come to mind.
-Help humans. Consistent environments are easier to understand and adapt. Storing the source code in src/ instead of _k_/ makes it easier to find. Help machines. Build systems need hints. The code in main/ should be assembled all the time, while test/ is test-specific and shouldn’t make it to a production environment. Sounds empathic. Where do we start?</description>
+      <description>&lt;p&gt;What’s the motivation behind organizing the code? Two points come to mind.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Help humans. Consistent environments are easier to understand and adapt.&#xA;Storing the source code in &lt;code&gt;src/&lt;/code&gt; instead of &lt;code&gt;_k_/&lt;/code&gt; makes it easier to find.&lt;/li&gt;&#xA;&lt;li&gt;Help machines. Build systems need hints. The code in &lt;code&gt;main/&lt;/code&gt; should be&#xA;assembled all the time, while &lt;code&gt;test/&lt;/code&gt; is test-specific and shouldn’t make it&#xA;to a production environment.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Sounds empathic. Where do we start?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>On Technical Writing</title>
       <link>https://arturdryomov.dev/posts/on-technical-writing/</link>
       <pubDate>Mon, 30 Dec 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/on-technical-writing/</guid>
-      <description>Books were the internet for me before the real one became accessible. Authors wrote a thing and I’ve read it, consuming the information behind the text. First, I’ve read each book we had at home. Then everything meaningful from a kids’ section of the local library. And then I’ve been introduced into the serious stuff. I think The Hobbit was the beginning. Then The Three Musketeers, The Adventures of Sherlock Holmes&amp;hellip;</description>
+      <description>&lt;p&gt;Books were the internet for me before the real one became accessible.&#xA;Authors wrote a thing and I’ve read it, consuming the information behind the text.&#xA;First, I’ve read each book we had at home.&#xA;Then everything meaningful from a kids’ section of the local library.&#xA;And then I’ve been introduced into the serious stuff. I think&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/The_Hobbit&#34;&gt;The Hobbit&lt;/a&gt;&#xA;was the beginning. Then &lt;a href=&#34;https://en.wikipedia.org/wiki/The_Three_Musketeers&#34;&gt;The Three Musketeers&lt;/a&gt;,&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/The_Adventures_of_Sherlock_Holmes&#34;&gt;The Adventures of Sherlock Holmes&lt;/a&gt;&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;There were no recommendation engines of course so I went through everything,&#xA;itching to consume experiences left behind by humanity.&#xA;Sounds like an addiction, right? Well, it kinda was.&#xA;Nowadays we have different drugs — news, movies, TV series, games.&#xA;There is no time for books. Kids certainly don’t give a damn about them either.&#xA;Anyways, we are talking about me, right?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kotlin Enum Recipes</title>
       <link>https://arturdryomov.dev/posts/kotlin-enum-recipes/</link>
       <pubDate>Tue, 08 Oct 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/kotlin-enum-recipes/</guid>
-      <description>Enumerations, in a form of enum class declarations, got a bad rep on Android. In fact, the official documentation straight out recommends to avoid them. How rude is that? At the same time, Effective Java has a full chapter about enum. The situation reminds me of the trolley problem. Kind of.
-In this article, I’ll distance myself from Android specifics and show useful enum-related snippets.
-Declaration Naming Use CamelCase, don’t be ashamed.</description>
+      <description>&lt;p&gt;Enumerations, in a form of &lt;code&gt;enum class&lt;/code&gt; declarations, got a bad rep on Android.&#xA;In fact, the official documentation straight out&#xA;&lt;a href=&#34;https://developer.android.com/topic/performance/reduce-apk-size#remove-enums&#34;&gt;recommends to avoid them&lt;/a&gt;.&#xA;How rude is that?&#xA;At the same time, &lt;a href=&#34;https://www.amazon.com//dp/0134685997&#34;&gt;Effective Java&lt;/a&gt;&#xA;has a full chapter about &lt;code&gt;enum&lt;/code&gt;.&#xA;The situation reminds me of &lt;a href=&#34;https://en.wikipedia.org/wiki/Trolley_problem&#34;&gt;the trolley problem&lt;/a&gt;.&#xA;Kind of.&lt;/p&gt;&#xA;&lt;p&gt;In this article, I’ll distance myself from Android specifics and show&#xA;useful &lt;code&gt;enum&lt;/code&gt;-related snippets.&lt;/p&gt;&#xA;&lt;h1 id=&#34;declaration&#34;&gt;Declaration&lt;/h1&gt;&#xA;&lt;h2 id=&#34;naming&#34;&gt;Naming&lt;/h2&gt;&#xA;&lt;p&gt;Use &lt;code&gt;CamelCase&lt;/code&gt;, don’t be ashamed. I doubt that anyone names&#xA;&lt;code&gt;sealed class&lt;/code&gt; using the &lt;code&gt;UPPERCASE&lt;/code&gt; notation.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Midnight in Android Themes</title>
       <link>https://arturdryomov.dev/posts/midnight-in-android-themes/</link>
       <pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/midnight-in-android-themes/</guid>
-      <description>Android Q introduces dark themes. Or night mode? No idea. Anyways, it is here and can be helpful with using applications in dark environments or with bringing back that sweet Winamp skins vibe.
-Implementing dark themes is surprisingly deep and affects the whole application. At times it feels like a redesign. I’ve tried to collect steps we’ve made to introduce the dark theme in the Juno rider application and make a (kind of) comprehensive guide.</description>
+      <description>&lt;p&gt;Android Q introduces &lt;a href=&#34;https://developer.android.com/preview/features/darktheme&#34;&gt;dark themes&lt;/a&gt;.&#xA;Or &lt;a href=&#34;https://developer.android.com/reference/androidx/appcompat/app/AppCompatDelegate.html#MODE_NIGHT_YES&#34;&gt;night mode&lt;/a&gt;?&#xA;No idea. Anyways, it is here and can be helpful with using applications in&#xA;dark environments or with bringing back that sweet Winamp skins vibe.&lt;/p&gt;&#xA;&lt;p&gt;Implementing dark themes is surprisingly deep and affects the whole application.&#xA;At times it feels like a redesign. I’ve tried to collect steps we’ve made to&#xA;introduce the dark theme in the &lt;a href=&#34;https://play.google.com/store/apps/details?id=com.gojuno.rider&#34;&gt;Juno rider application&lt;/a&gt;&#xA;and make a (kind of) comprehensive guide. Let’s jump in!&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Managing Production</title>
       <link>https://arturdryomov.dev/posts/superior-testing-managing-production/</link>
       <pubDate>Tue, 30 Jul 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-managing-production/</guid>
-      <description>The testing process does not magically stop after deploying an artifact. We’ve only just begun. It is impossible to check everything in a sandboxed environment. From a certain perspective it seems like the whole run time is the testing process. How is it possible to check the correctness without tests? Right — by running the thing. We do the same in production — just on a bigger scale and with bigger risks.</description>
+      <description>&lt;p&gt;The testing process does not magically stop after deploying an artifact.&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/We%27ve_Only_Just_Begun&#34;&gt;We’ve only just begun&lt;/a&gt;.&#xA;It is impossible to check everything in a sandboxed environment.&#xA;From a certain perspective it seems like the whole run time is the testing process.&#xA;How is it possible to check the correctness without tests?&#xA;Right — by running the thing. We do the same in production — just on a bigger scale and&#xA;with bigger risks.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Namespacing in Kotlin</title>
       <link>https://arturdryomov.dev/posts/namespacing-in-kotlin/</link>
       <pubDate>Mon, 29 Jul 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/namespacing-in-kotlin/</guid>
-      <description>The development process is a research. Find the state machine, organize mutations, wire it for consumers. The process repeats and leads to the meta-research. We investigate scenarios and search for reusable parts. Patterns arise, implementations follow. Ideally, the code resembles a fractal structure.
-An architecture is said to be fractal if subcomponents are structured in the same way as the whole is.
-— André Staltz
-The Problem Let’s say we have a fractal components structure.</description>
+      <description>&lt;p&gt;The development process is a research. Find the state machine,&#xA;organize mutations, wire it for consumers. The process&#xA;repeats and leads to the meta-research. We investigate scenarios and&#xA;search for reusable parts. Patterns arise, implementations follow.&#xA;Ideally, the code resembles a fractal structure.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;An architecture is said to be fractal if subcomponents are structured&#xA;in the same way as the whole is.&lt;/p&gt;&#xA;&lt;p&gt;— &lt;a href=&#34;https://staltz.com/unidirectional-user-interface-architectures.html&#34;&gt;&lt;em&gt;André Staltz&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;h1 id=&#34;the-problem&#34;&gt;The Problem&lt;/h1&gt;&#xA;&lt;p&gt;Let’s say we have a fractal components structure. Each one has a &lt;code&gt;View&lt;/code&gt; and a &lt;code&gt;ViewModel&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Cleaning Up</title>
       <link>https://arturdryomov.dev/posts/superior-testing-cleaning-up/</link>
       <pubDate>Thu, 06 Jun 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-cleaning-up/</guid>
-      <description>There is a game called Viscera Cleanup Detail. The task in this game is to&amp;hellip; clean things up. Well, it is a bit more exciting since it involves alien invasions, but at the end of the day players become space janitors. It is surprisingly addictive.
-Cleaning things is useful and helpful in a lot of ways. Developers understand that, but usually there is an additional motivation to keep things in order — users.</description>
+      <description>&lt;p&gt;There is a game called &lt;a href=&#34;https://en.wikipedia.org/wiki/Viscera_Cleanup_Detail&#34;&gt;Viscera Cleanup Detail&lt;/a&gt;.&#xA;The task in this game is to&amp;hellip; clean things up.&#xA;Well, it is a bit more exciting since it involves alien invasions,&#xA;but at the end of the day players become space janitors.&#xA;It is surprisingly addictive.&lt;/p&gt;&#xA;&lt;p&gt;Cleaning things is useful and helpful in a lot of ways.&#xA;Developers understand that, but usually there is an additional motivation&#xA;to keep things in order — users.&#xA;Nobody wants a product that breaks because there is not enough memory&#xA;or wrecks havoc across the file system.&#xA;The picture is very different with tests — often they become&#xA;a second class citizen. It shouldn’t be this way.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Abstracting Kotlin Sealed Classes</title>
       <link>https://arturdryomov.dev/posts/abstracting-kotlin-sealed-classes/</link>
       <pubDate>Tue, 04 Jun 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/abstracting-kotlin-sealed-classes/</guid>
-      <description>Things tend to be similar. Cars and bikes are different for sure but both have wheels, engines, exhaust systems and so on. Such similarities between models are usually described using basic polymorphism in virtual domain modeling.
-Kotlin makes this process a bit more pragmatic using sealed class declarations. Specifying type hierarchies using sealed classes is simple, but what about declaring common properties? Fortunately or not there are multiple ways to achieve this — partially because of the Java baggage.</description>
+      <description>&lt;p&gt;Things tend to be similar. Cars and bikes are different&#xA;for sure but both have wheels, engines, exhaust systems and so on.&#xA;Such similarities between models are usually described using basic&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Polymorphism_(computer_science)&#34;&gt;polymorphism&lt;/a&gt;&#xA;in virtual domain modeling.&lt;/p&gt;&#xA;&lt;p&gt;Kotlin makes this process a bit more pragmatic using&#xA;&lt;a href=&#34;https://kotlinlang.org/docs/reference/sealed-classes.html&#34;&gt;&lt;code&gt;sealed class&lt;/code&gt;&lt;/a&gt;&#xA;declarations. Specifying type hierarchies using sealed classes is simple,&#xA;but what about declaring common properties?&#xA;Fortunately or not there are multiple ways to achieve this — partially because&#xA;of the Java baggage. Which one is the best?&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Need for Speed</title>
       <link>https://arturdryomov.dev/posts/superior-testing-need-for-speed/</link>
       <pubDate>Tue, 30 Apr 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-need-for-speed/</guid>
-      <description>Everybody wants to have a faster development cycle. Everything should be flawless and straightforward. Nobody wants to have hour-long builds and stuck CI queues. We need results! Now! Or maybe even in the past, preemptively. Guard from the Ruby ecosystem comes to mind, starting tests on file changes, without doing it manually.
-Talking about tests — they are a part of the cycle, right? We run them both locally and remotely (as part of a CI pipeline).</description>
+      <description>&lt;p&gt;Everybody wants to have a faster development cycle.&#xA;Everything should be flawless and straightforward.&#xA;Nobody wants to have hour-long builds and stuck CI queues.&#xA;We need results! Now! Or maybe even in the past, preemptively.&#xA;&lt;a href=&#34;https://github.com/guard/guard&#34;&gt;Guard&lt;/a&gt; from the Ruby ecosystem comes to mind,&#xA;starting tests on file changes, without doing it manually.&lt;/p&gt;&#xA;&lt;p&gt;Talking about tests — they are a part of the cycle, right?&#xA;We run them both locally and remotely (as part of a CI pipeline).&#xA;It takes time and I think &lt;a href=&#34;https://www.youtube.com/watch?v=SLILjDx0SO0&#34;&gt;we can do better&lt;/a&gt;!&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Modern DateTimes on Android</title>
       <link>https://arturdryomov.dev/posts/modern-times/</link>
       <pubDate>Mon, 15 Apr 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/modern-times/</guid>
-      <description>Java 8 gave us a great gift — the java.time package, known as JSR 310 and ThreeTen. The story behind java.time is unique. It was introduced in JEP 150 by an independent developer — Stephen Colebourne (@jodastephen). Yep, the same person who designed and developed Joda-Time. It was even endorsed by Brian Goetz, the Java Concurrency in Practice author! The result is a great API — explicit and direct, based on years of Joda-Time experience.</description>
+      <description>&lt;p&gt;Java 8 gave us a great gift — the &lt;code&gt;java.time&lt;/code&gt; package, known as&#xA;&lt;a href=&#34;https://jcp.org/en/jsr/detail?id=310&#34;&gt;JSR 310&lt;/a&gt; and&#xA;&lt;a href=&#34;https://www.threeten.org/&#34;&gt;ThreeTen&lt;/a&gt;.&#xA;The story behind &lt;code&gt;java.time&lt;/code&gt; is unique. It was introduced in&#xA;&lt;a href=&#34;https://openjdk.java.net/jeps/150&#34;&gt;JEP 150&lt;/a&gt; by an independent developer —&#xA;Stephen Colebourne (&lt;a href=&#34;https://github.com/jodastephen&#34;&gt;&lt;code&gt;@jodastephen&lt;/code&gt;&lt;/a&gt;).&#xA;Yep, the same person who designed and developed&#xA;&lt;a href=&#34;https://github.com/JodaOrg/joda-time&#34;&gt;Joda-Time&lt;/a&gt;.&#xA;It was even endorsed by Brian Goetz, the&#xA;&lt;a href=&#34;http://jcip.net/&#34;&gt;Java Concurrency in Practice&lt;/a&gt; author!&#xA;The result is a great API — explicit and direct,&#xA;based on years of Joda-Time experience.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Check Your Checks</title>
       <link>https://arturdryomov.dev/posts/superior-testing-check-checks/</link>
       <pubDate>Wed, 27 Mar 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-check-checks/</guid>
-      <description>False positives. Such an interesting combination of words, isn’t it? The nature of false positives is mostly human. We misinterpret conditions, define them wrong, forget about effects — but the machine obeys. We get what we want but not what we need. This is dangerous. The civilization downfall in various science fiction books is a false positive result. The AI gets instructions to eliminate all threats, humanity becomes the threat, roll the action scene.</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/False_positives_and_false_negatives#False_positive_error&#34;&gt;False positives&lt;/a&gt;.&#xA;Such an interesting combination of words, isn’t it?&#xA;The nature of false positives is mostly human.&#xA;We misinterpret conditions, define them wrong, forget about effects —&#xA;but the machine obeys. We get what we want but not what we need.&#xA;This is dangerous. The civilization downfall in various&#xA;science fiction books is a false positive result. The AI gets instructions&#xA;to eliminate all threats, humanity becomes the threat, roll the action scene.&#xA;This is so not new that we got used to it.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Merge Git Authors</title>
       <link>https://arturdryomov.dev/posts/merge-git-authors/</link>
       <pubDate>Tue, 19 Mar 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/merge-git-authors/</guid>
-      <description>Stats! Stats are awesome. You can collect them, you can analyze and visualize them, you can boil, grill and fry them&amp;hellip; Wait, that’s not food, right?
-git shortlog Let’s say we have a Git repository. We want to count commits per author. There is a Git command for that!
-$ git shortlog --summary --numbered 2 Bender Rodriguez 2 Philip J. Fry 1 Bending Unit 22 1 Turanga Leela There are actually three authors but since names are non-consistent Git makes it look like there are four.</description>
+      <description>&lt;p&gt;Stats! Stats are awesome. You can collect them, you can analyze and visualize them,&#xA;you can boil, grill and fry them&amp;hellip; Wait, that’s not food, right?&lt;/p&gt;&#xA;&lt;h1 id=&#34;git-shortlog&#34;&gt;&lt;code&gt;git shortlog&lt;/code&gt;&lt;/h1&gt;&#xA;&lt;p&gt;Let’s say we have a Git repository. We want to count commits per author.&#xA;There is a Git command for that!&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;gp&#34;&gt;$&lt;/span&gt; git shortlog --summary --numbered&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&lt;/span&gt;&lt;span class=&#34;go&#34;&gt;  2  Bender Rodriguez&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;go&#34;&gt;  2  Philip J. Fry&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;go&#34;&gt;  1  Bending Unit 22&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;go&#34;&gt;  1  Turanga Leela&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;There are actually three authors but since names are non-consistent&#xA;Git makes it look like there are four. It gets worse with emails.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Make Fakes not Mocks</title>
       <link>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</link>
       <pubDate>Thu, 28 Feb 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-make-fakes-not-mocks/</guid>
-      <description>After years of writing and reading tests I’ve discovered that mocking is either overused or underused. Not sure why exactly it happens but striking the right balance seems to be a complicated issue.
-In this Superior Testing article I’ll show how to replace mocking in favor of faking and collect benefits.
-Mocking Sync Let’s say we have a books repository allowing us to get a book based on its ID. The repository depends on the storage.</description>
+      <description>&lt;p&gt;After years of writing and reading tests I’ve discovered that mocking&#xA;is either overused or underused. Not sure why exactly it happens&#xA;but striking the right balance seems to be a complicated issue.&lt;/p&gt;&#xA;&lt;p&gt;In this Superior Testing article I’ll show how to replace mocking&#xA;in favor of faking and collect benefits.&lt;/p&gt;&#xA;&lt;h1 id=&#34;mocking&#34;&gt;Mocking&lt;/h1&gt;&#xA;&lt;h2 id=&#34;sync&#34;&gt;Sync&lt;/h2&gt;&#xA;&lt;p&gt;Let’s say we have a books repository allowing us to get a book based on its ID.&#xA;The repository depends on the storage. The resulting code is simple enough.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Filling Android Autofill Gaps</title>
       <link>https://arturdryomov.dev/posts/filling-android-autofill-gaps/</link>
       <pubDate>Wed, 13 Feb 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/filling-android-autofill-gaps/</guid>
-      <description>We can have different opinions but should be able to agree on one thing — we are humans. Well, except ones who like Gerrit and use Dashboard on macOS. Those are clearly aliens (Mulder was right). All humans tend to forget things. Important and useless, smart and dumb, beautiful and ugly — it does not matter, any thought or information can disappear. Precious credentials for applications we work on are no exception.</description>
+      <description>&lt;p&gt;We can have different opinions but should be able to agree on one thing — we are humans.&#xA;Well, except ones who like &lt;a href=&#34;https://www.gerritcodereview.com/&#34;&gt;Gerrit&lt;/a&gt;&#xA;and use &lt;a href=&#34;https://en.wikipedia.org/wiki/Dashboard_(macOS)&#34;&gt;Dashboard on macOS&lt;/a&gt;.&#xA;Those are clearly aliens (Mulder was right).&#xA;All humans tend to forget things. Important and useless, smart and dumb, beautiful and ugly —&#xA;it does not matter, any thought or information can disappear.&#xA;Precious credentials for applications we work on are no exception.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Superior Testing: Stop Stopping</title>
       <link>https://arturdryomov.dev/posts/superior-testing-stop-stopping/</link>
       <pubDate>Sun, 27 Jan 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/superior-testing-stop-stopping/</guid>
-      <description>Let’s start with confessions. The initial idea to kick-off a series of articles about testing was the shortest article ever. A single phrase. Just do it. I mean, isn’t it obvious that testing is awesome and useful?
-Unfortunately, after talking to dozens of developers I’ve come to the shocking fact that most of them don’t write tests. Our customer doesn’t pay for tests. We don’t have time. The codebase is impossible to test.</description>
+      <description>&lt;p&gt;Let’s start with confessions. The initial idea to kick-off a series of articles&#xA;about testing was the shortest article ever. A single phrase. &lt;em&gt;Just do it&lt;/em&gt;.&#xA;I mean, isn’t it obvious that testing is awesome and useful?&lt;/p&gt;&#xA;&lt;p&gt;Unfortunately, after talking to dozens of developers&#xA;I’ve come to the shocking fact that most of them don’t write tests.&#xA;&lt;em&gt;Our customer doesn’t pay for tests&lt;/em&gt;. &lt;em&gt;We don’t have time&lt;/em&gt;.&#xA;&lt;em&gt;The codebase is impossible to test&lt;/em&gt;. I’ve heard&#xA;&lt;a href=&#34;https://www.youtube.com/watch?v=EvycNBSQ798&#34;&gt;these words&lt;/a&gt; over and over again.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Acceptance Criteria Bureaucracy</title>
       <link>https://arturdryomov.dev/posts/acceptance-criteria-bureaucracy/</link>
       <pubDate>Sun, 20 Jan 2019 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/acceptance-criteria-bureaucracy/</guid>
-      <description>Cooperation! It sure sounds better than bureaucracy. A released product is a result of cooperation between the Business and the Tech. There is an obvious issue though. Both sides have different mindsets. The misunderstanding is inevitable. How do we solve this? Well, there are still wars on the planet so apparently humanity wasn’t able to find a solution.
-What about establishing not world peace but a good communication channel? Agile methodologies establish such artifact as Acceptance Criteria (AC).</description>
+      <description>&lt;p&gt;Cooperation! It sure sounds better than bureaucracy.&#xA;A released product is a result of cooperation between the Business and the Tech.&#xA;There is an obvious issue though. Both sides have different mindsets.&#xA;The misunderstanding is inevitable. How do we solve this?&#xA;Well, there are still wars on the planet so apparently humanity wasn’t able to find a solution.&lt;/p&gt;&#xA;&lt;p&gt;What about establishing not world peace&#xA;but a good communication channel? Agile methodologies establish such artifact as&#xA;Acceptance Criteria (AC). AC is a specification for how the product should work.&#xA;Sounds good and the motivation is solid, but there is a catch —&#xA;there are no explicit requirements. AC can consist of memes and be distributed by birds —&#xA;the sky is the limit (literally). Let’s take a look at the evolution and&#xA;trace our path to the bureaucracy nirvana.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Designing Errors with Kotlin</title>
       <link>https://arturdryomov.dev/posts/designing-errors-with-kotlin/</link>
       <pubDate>Tue, 18 Dec 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/designing-errors-with-kotlin/</guid>
-      <description>Fun fact — the area of the Java island is 138 793 km², the Kotlin island occupies 15 km². Of course, it is blatantly incorrect to compare languages based on same-named island areas. At the same time, it brings things in perspective. Java is the cornerstone of the JVM platform. The platform itself overshadows everything it hosts: Groovy, Ceylon, Scala, Clojure and Kotlin. It brings a lot to the table — error handling is no exception (pun intended).</description>
+      <description>&lt;p&gt;Fun fact — the area of&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Java&#34;&gt;the Java island&lt;/a&gt; is 138 793 km²,&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Kotlin_Island&#34;&gt;the Kotlin island&lt;/a&gt; occupies 15 km².&#xA;Of course, it is blatantly incorrect to compare languages based on same-named island areas.&#xA;At the same time, it brings things in perspective. Java is the cornerstone&#xA;of the JVM platform. The platform itself overshadows everything it hosts:&#xA;Groovy, Ceylon, Scala, Clojure and Kotlin. It brings&#xA;a lot to the table — error handling is no exception (pun intended).&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Abandon Jenkins for Great Good!</title>
       <link>https://arturdryomov.dev/posts/abandon-jenkins/</link>
       <pubDate>Sun, 09 Dec 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/abandon-jenkins/</guid>
-      <description>CI and CD techniques are a part of all good happened to the software development. Having CI in place means better productivity and higher confidence in the result of the everyday work. Sounds kind of obvious, right? Well, let’s take a look at the dark side of the Moon.
-Do you have a person on the team who occasionally curses Gradle or (and) Maven, Android SDK or (and) NDK? Maybe someone who knows everything about these weird Shell scripts you have in the repository?</description>
+      <description>&lt;p&gt;CI and CD techniques are a part of all good happened to the software development.&#xA;Having CI in place means better productivity and higher confidence&#xA;in the result of the everyday work. Sounds kind of obvious, right?&#xA;Well, let’s take a look at&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/The_Dark_Side_of_the_Moon&#34;&gt;the dark side of the Moon&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;Do you have a person on the team who occasionally curses Gradle or (and) Maven,&#xA;Android SDK or (and) NDK? Maybe someone who knows everything about&#xA;these weird Shell scripts you have in the repository? You know, the one&#xA;who doesn’t like mentions about broken nightly builds, looks at the &lt;code&gt;htop&lt;/code&gt;&#xA;from time to time? Yeah, the tooling person. The fancy name nowadays&#xA;is a Developer Experience Engineer. Right. The question is — do you want to be&#xA;this person? No worries — I already know the answer.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Reactive Pipelines in Action</title>
       <link>https://arturdryomov.dev/posts/reactive-pipelines/</link>
       <pubDate>Wed, 07 Nov 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/reactive-pipelines/</guid>
-      <description>Human beings are reactive by nature — fortunately or not. The reason is mostly physiology. The dopamine hormone helps us to feel comfortable and secure while we do familiar things. Eating a sandwich sounds and feels far better than gardening, doesn’t it? Essentially it is a fight between psychology (the mind, proactive actions) and physiology (the body, reactive actions).
-The same thing happens in CS. Object-oriented programming (OOP) is the king of the hill and functional programming (FP) is on the outskirts.</description>
+      <description>&lt;p&gt;Human beings are reactive by nature — fortunately or not.&#xA;The reason is mostly physiology. The dopamine hormone helps us&#xA;to feel comfortable and secure while we do familiar things.&#xA;Eating a sandwich sounds and feels far better than gardening, doesn’t it?&#xA;Essentially it is a fight between psychology (the mind, proactive actions)&#xA;and physiology (the body, reactive actions).&lt;/p&gt;&#xA;&lt;p&gt;The same thing happens in CS. Object-oriented programming (OOP) is the king of the hill and&#xA;functional programming (FP) is on the outskirts. Well, it is this way because&#xA;the OOP is more comfortable for the majority. We, as a society, made it this way.&#xA;The educational system includes a mandatory OOP course and rarely there&#xA;is an FP one. And then there is reactive programming which forms a wild beast&#xA;called functional-reactive programming (FRP)&amp;hellip;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Reactive State Mutations via CQRS</title>
       <link>https://arturdryomov.dev/posts/reactive-state-mutations/</link>
       <pubDate>Sun, 21 Oct 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/reactive-state-mutations/</guid>
-      <description>State-state-state. It surrounds us. Think hard enough and everything around will become either a state or a state mutation. The current time is a state and each passing second is a state mutation. A tree can be represented by a state and each drop of rain mutates it, increasing the water supply level and applying the pressure on leaves.
-The concept is not new, but sometimes it becomes too hard to manage it.</description>
+      <description>&lt;p&gt;State-state-state. It surrounds us. Think hard enough and everything around&#xA;will become either a state or a state mutation.&#xA;The current time is a state and each passing second is a state mutation.&#xA;A tree can be represented by a state and each drop of rain mutates it,&#xA;increasing the water supply level and applying the pressure on leaves.&lt;/p&gt;&#xA;&lt;p&gt;The concept is not new, but sometimes it becomes too hard to manage it.&#xA;Even in software development, which was basically created to represent&#xA;the world around us in strict terms.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Optimizing Android Vector Images. Or Not?</title>
       <link>https://arturdryomov.dev/posts/optimizing-android-vector-images/</link>
       <pubDate>Tue, 18 Sep 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/optimizing-android-vector-images/</guid>
-      <description>An average working day of an Android developer involves doing something with UI. Pushing widgets around, changing text and images&amp;hellip;
-The colleges of mine convert SVG images to VectorDrawable via a specific converter and I use Android Studio. Which tool does the job better? Let’s find out!
-Tools Converters (do optimizations under the hood):
-Android Studio (3.1.4) — IDE. svg2android — website, deprecated in favor of Android Studio. svg2vector — website.</description>
+      <description>&lt;p&gt;An average working day of an Android developer involves doing something with UI.&#xA;Pushing widgets around, changing text and images&amp;hellip;&lt;/p&gt;&#xA;&lt;p&gt;The colleges of mine convert SVG images to &lt;code&gt;VectorDrawable&lt;/code&gt; via&#xA;a specific converter and I use Android Studio.&#xA;Which tool does the job better? Let’s find out!&lt;/p&gt;&#xA;&lt;h1 id=&#34;tools&#34;&gt;Tools&lt;/h1&gt;&#xA;&lt;p&gt;Converters (do optimizations under the hood):&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Android Studio (3.1.4) — IDE.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://inloop.github.io/svg2android/&#34;&gt;&lt;code&gt;svg2android&lt;/code&gt;&lt;/a&gt; — website,&#xA;&lt;a href=&#34;https://github.com/inloop/svg2android/commit/4c2312ad376e6c81f0673121b7978768cd94c595&#34;&gt;deprecated&lt;/a&gt;&#xA;in favor of Android Studio.&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://a-student.github.io/SvgToVectorDrawableConverter.Web/&#34;&gt;&lt;code&gt;svg2vector&lt;/code&gt;&lt;/a&gt; — website.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Optimizers:&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Reactive Abstractions in Android World</title>
       <link>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</link>
       <pubDate>Sun, 26 Aug 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/</guid>
-      <description>Who knows how many test suites were not created because of a classic parry.
-It cannot be tested — it uses a platform call!
-Well, it is not actually true all the time. Unit testing something that only a human eye and neural networks can catch — like animations — doesn’t make sense. On the other hand, retrying a network request on a re-established connection can and should be tested. As a bonus, it is possible to gain a couple of perks.</description>
+      <description>&lt;p&gt;Who knows how many test suites were not created because of a classic parry.&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;It cannot be tested — it uses a platform call!&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;p&gt;Well, it is not actually true all the time.&#xA;Unit testing something that only a human eye and neural networks&#xA;can catch — like animations — doesn’t make sense.&#xA;On the other hand, retrying a network request on a re-established connection&#xA;can and should be tested. As a bonus, it is possible to gain a couple of perks.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>How the Pull Request is Built</title>
       <link>https://arturdryomov.dev/posts/how-the-pull-request-is-built/</link>
       <pubDate>Sun, 29 Jul 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/how-the-pull-request-is-built/</guid>
-      <description>Contact information of a friend of mine mentions that he doesn’t have Facebook or Twitter accounts, but he is available at a really cool social network called&amp;hellip; GitHub. Actually, GitHub is a social network, it even had direct private messages until April 2012.
-The developer community should be grateful to GitHub not only for awesome Octocats but for the popularizing a concept of pull requests. It is taken for granted now and we tend to forget that the closest thing before was sending a patch via email.</description>
+      <description>&lt;p&gt;Contact information of a friend of mine mentions that he doesn’t have Facebook or Twitter accounts,&#xA;but he is available at a &lt;em&gt;really cool&lt;/em&gt; social network called&amp;hellip; GitHub.&#xA;Actually, GitHub &lt;em&gt;is&lt;/em&gt; a social network, it even had direct private messages&#xA;&lt;a href=&#34;https://blog.github.com/2012-04-03-spring-cleaning/#private-messaging&#34;&gt;until April 2012&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The developer community should be grateful to GitHub not only for&#xA;&lt;a href=&#34;https://octodex.github.com/&#34;&gt;awesome Octocats&lt;/a&gt; but for the popularizing a concept&#xA;of pull requests. It is taken for granted now and we tend&#xA;to forget that the closest thing before was sending a patch via email.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Mobile Developer Morning Fun</title>
       <link>https://arturdryomov.dev/posts/mobile-developer-morning-fun/</link>
       <pubDate>Sat, 16 Jun 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/mobile-developer-morning-fun/</guid>
-      <description>Do you read this article on a phone? No? Well, I’m pretty sure you have a phone. Fun fact — I’ve bought the best phone I ever had, the Nexus 5X, from Amazon. Another fun fact — there is a pretty good chance you’ve bought something from Amazon too since it grabbed 4% of US retail sales in 2017. That’s a lot!
-Amazon not only sells things but hosts a significant portion of internet resources thanks to Amazon Web Services.</description>
+      <description>&lt;p&gt;Do you read this article on a phone? No? Well, I’m pretty sure you have a phone.&#xA;Fun fact — I’ve bought the best phone I ever had, the Nexus 5X, from Amazon.&#xA;Another fun fact — there is a pretty good chance you’ve bought something from Amazon too since&#xA;&lt;a href=&#34;https://www.cnbc.com/2018/01/03/amazon-grabbed-4-percent-of-all-us-retail-sales-in-2017-new-study.html&#34;&gt;it grabbed 4% of US retail sales in 2017&lt;/a&gt;.&#xA;That’s a lot!&lt;/p&gt;&#xA;&lt;p&gt;Amazon not only sells things but hosts&#xA;a significant portion of internet resources thanks to&#xA;&lt;a href=&#34;https://aws.amazon.com/&#34;&gt;Amazon Web Services&lt;/a&gt;. In other words,&#xA;the company has software developers working on a massive infrastructure&#xA;we use every day without noticing. How do they keep it together?&#xA;There is a great phrase from Amazon CTO which we are going&#xA;to explore.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Do Androids Dream of UI Testing?</title>
       <link>https://arturdryomov.dev/posts/do-androids-dream-of-ui-testing/</link>
       <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/do-androids-dream-of-ui-testing/</guid>
-      <description>Automation is a foundation stone of the software development. People didn’t like counting numbers themselves, so they invented calculators. Calculators went to be computers and here we go, waiting for AI to take over, watching movies about transhumanism on our way here.
-Automation related to UI testing seems to be a Holy Grail from that standpoint. Sure thing, it can replace manual QA procedures with automated ones! Like, completely! You just need to have a local backend&amp;hellip; And maybe disable animations.</description>
+      <description>&lt;p&gt;Automation is a foundation stone of the software development.&#xA;People didn’t like counting numbers themselves, so they invented calculators.&#xA;Calculators went to be computers and here we go, waiting for AI to take over,&#xA;&lt;a href=&#34;https://en.wikipedia.org/wiki/Blade_Runner_2049&#34;&gt;watching movies&lt;/a&gt;&#xA;about transhumanism on our way here.&lt;/p&gt;&#xA;&lt;p&gt;Automation related to UI testing seems to be a Holy Grail from that standpoint.&#xA;Sure thing, it can replace manual QA procedures with automated ones! Like, completely!&#xA;You just need to have a local backend&amp;hellip; And maybe disable animations.&#xA;And&amp;hellip; you know, somehow wait for backend responses. And don’t forget about the infrastructure.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>A Dagger to Remember</title>
       <link>https://arturdryomov.dev/posts/a-dagger-to-remember/</link>
       <pubDate>Sun, 22 Apr 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/a-dagger-to-remember/</guid>
-      <description>Story Time! Kotlin and Java annotations have a complicated relationship. This goes from the syntax to the toolchain.
-Does anybody remember that at the beginning of time Kotlin annotations were placed in square brackets? In 2015 the syntax was changed to the current form. Before that, it was [Inject] instead of @Inject. Yep.
-The syntax is fine at this point, but kapt (Kotlin annotation processing tool) from the Kotlin toolchain can be&amp;hellip; cruel.</description>
+      <description>&lt;h1 id=&#34;story-time&#34;&gt;Story Time!&lt;/h1&gt;&#xA;&lt;p&gt;Kotlin and Java annotations have a complicated relationship. This goes from the syntax to the toolchain.&lt;/p&gt;&#xA;&lt;p&gt;Does anybody remember that at the beginning of time Kotlin annotations were placed in square brackets?&#xA;&lt;a href=&#34;https://blog.jetbrains.com/kotlin/2015/04/upcoming-change-syntax-for-annotations/&#34;&gt;In 2015 the syntax was changed to the current form&lt;/a&gt;.&#xA;Before that, it was &lt;code&gt;[Inject]&lt;/code&gt; instead of &lt;code&gt;@Inject&lt;/code&gt;. Yep.&lt;/p&gt;&#xA;&lt;p&gt;The syntax is fine at this point, but &lt;code&gt;kapt&lt;/code&gt;&#xA;(&lt;a href=&#34;https://kotlinlang.org/docs/reference/kapt.html&#34;&gt;Kotlin annotation processing tool&lt;/a&gt;)&#xA;from the Kotlin toolchain can be&amp;hellip; cruel.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>The Art of a Dependency Upgrade</title>
       <link>https://arturdryomov.dev/posts/art-of-a-dependency-upgrade/</link>
       <pubDate>Sun, 18 Mar 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/art-of-a-dependency-upgrade/</guid>
-      <description>RxJava 1.x reaches EOL on March 31, 2018, meaning no further development. That’s not surprising since the 1.x was in a bugfix-only mode since June 1, 2017.
-This is an interesting event in a software lifetime, since not so many libraries actually live and prosper long enough to produce a superior version, at the same time handling support for an older version for so long. Fortunately enough, RxJava is one of these lucky projects with maintainers actually caring about users.</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/ReactiveX/RxJava&#34;&gt;RxJava&lt;/a&gt; &lt;code&gt;1.x&lt;/code&gt; reaches EOL on March 31, 2018,&#xA;meaning no further development. That’s not surprising since the &lt;code&gt;1.x&lt;/code&gt; was&#xA;in a bugfix-only mode since June 1, 2017.&lt;/p&gt;&#xA;&lt;p&gt;This is an interesting event in a software lifetime, since not so many libraries&#xA;actually live and prosper long enough to produce a superior version, at the same time handling&#xA;support for an older version for so long. Fortunately enough, RxJava is one of these lucky projects&#xA;with maintainers actually caring about users.&#xA;Thank you, RxJava maintainers, you are &lt;a href=&#34;https://www.youtube.com/watch?v=-DSVDcw6iW8&#34;&gt;real human beings and real heroes&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Kotlin: The Problem with `null`</title>
       <link>https://arturdryomov.dev/posts/kotlin-the-problem-with-null/</link>
       <pubDate>Wed, 10 Jan 2018 00:00:00 +0000</pubDate>
-      
       <guid>https://arturdryomov.dev/posts/kotlin-the-problem-with-null/</guid>
-      <description>I think almost everybody in the CS world knows about the Null References: The Billion Dollar Mistake talk. However, it does not really matter if the concept of null references a good idea or a really bad one. We live in the world where we just have to deal with null this way or another. Yep, just deal with it. So let’s ask the “How” question instead of the “Why” one.</description>
+      <description>&lt;p&gt;I think almost everybody in the CS world knows about the&#xA;&lt;a href=&#34;https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare&#34;&gt;Null References: The Billion Dollar Mistake&lt;/a&gt; talk.&#xA;However, it does not really matter if the concept of &lt;code&gt;null&lt;/code&gt; references a good idea or a really bad one.&#xA;We live in the world where we just have to deal with &lt;code&gt;null&lt;/code&gt; this way or another.&#xA;Yep, just deal with it. So let’s ask the “How” question instead of the “Why” one.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -66,22 +66,22 @@ It will execute Gradle tasks in parallel, not much else.
 will execute test classes (not methods) in parallel. The snippet above
 uses a half of available CPU cores. Results:</p>
 <table>
-<thead>
-<tr>
-<th><code>maxParallelForks</code></th>
-<th><code>testDebugUnitTest</code> time, seconds</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>53</td>
-</tr>
-<tr>
-<td>4</td>
-<td>41</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><code>maxParallelForks</code></th>
+          <th><code>testDebugUnitTest</code> time, seconds</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>53</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>41</td>
+      </tr>
+  </tbody>
 </table>
 <h1 id="kill-reports">Kill Reports</h1>
 <p>Gradle test execution ends in generating at least two sets of reports —
@@ -94,22 +94,22 @@ a good chance that developers do not use these reports at all.
 </span></span><span class="line"><span class="cl">    <span class="n">reports</span><span class="p">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">report</span> <span class="o">-&gt;</span> <span class="n">report</span><span class="p">.</span><span class="n">isEnabled</span> <span class="p">=</span> <span class="k">false</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><table>
-<thead>
-<tr>
-<th><code>report.isEnabled</code></th>
-<th><code>testDebugUnitTest</code> time, seconds</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>true</code></td>
-<td>41</td>
-</tr>
-<tr>
-<td><code>false</code></td>
-<td>40</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><code>report.isEnabled</code></th>
+          <th><code>testDebugUnitTest</code> time, seconds</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>true</code></td>
+          <td>41</td>
+      </tr>
+      <tr>
+          <td><code>false</code></td>
+          <td>40</td>
+      </tr>
+  </tbody>
 </table>
 <p>Well, this is kind of disappointing&hellip; However, there is an interesting
 side effect.</p>
@@ -120,22 +120,22 @@ the number of files created by the HTML report. Tools like
 and fewer files — the better. Most likely the same thing can be applied
 to packaging build artifacts during the CI pipeline.</p>
 <table>
-<thead>
-<tr>
-<th><code>report.isEnabled</code></th>
-<th>Mainframer sync time, seconds</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>true</code></td>
-<td>6</td>
-</tr>
-<tr>
-<td><code>false</code></td>
-<td>2</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><code>report.isEnabled</code></th>
+          <th>Mainframer sync time, seconds</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>true</code></td>
+          <td>6</td>
+      </tr>
+      <tr>
+          <td><code>false</code></td>
+          <td>2</td>
+      </tr>
+  </tbody>
 </table>
 <h1 id="kill-android-variants">Kill Android Variants</h1>
 <p>Results above reflect the <code>testDebugUnitTest</code> execution.
@@ -145,26 +145,26 @@ The issue with the <code>test</code> task is that it runs both
 <code>testDebugUnitTest</code> and <code>testReleaseUnitTest</code>.
 This effectively doubles the execution time.</p>
 <table>
-<thead>
-<tr>
-<th>Gradle Task</th>
-<th>Execution time, seconds</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>testDebugUnitTest</code></td>
-<td>40</td>
-</tr>
-<tr>
-<td><code>testReleaseUnitTest</code></td>
-<td>40</td>
-</tr>
-<tr>
-<td><code>test</code></td>
-<td>80</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Gradle Task</th>
+          <th>Execution time, seconds</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>testDebugUnitTest</code></td>
+          <td>40</td>
+      </tr>
+      <tr>
+          <td><code>testReleaseUnitTest</code></td>
+          <td>40</td>
+      </tr>
+      <tr>
+          <td><code>test</code></td>
+          <td>80</td>
+      </tr>
+  </tbody>
 </table>
 <p>But do we even care about the debug variant? We are shipping the release code, right?
 I’m not gonna suggest excluding the <code>testDebugUnitTest</code> as universal advice
@@ -175,8 +175,7 @@ since it is a matter of choice. There is the command though:</p>
 excluding the <code>lintDebug</code> with similar motivation.</p>
 <blockquote>
 <p>You’re probably only shipping your release variant,
-so you could limit yourself to just running <code>lintRelease</code> and you’re not going to miss much.</p>
-</blockquote>
+so you could limit yourself to just running <code>lintRelease</code> and you’re not going to miss much.</p></blockquote>
 <h1 id="math">Math</h1>
 <p>Let’s iterate over what can be done to make tests execution faster, without changing the source code.</p>
 <ul>
@@ -184,7 +183,7 @@ so you could limit yourself to just running <code>lintRelease</code> and you’r
 <li>Killing reports: reduce from 41 to 40 seconds, plus reduced Mainframer sync time.</li>
 <li>Killing debug Android variant: not letting the number be multiplied by the factor of two.</li>
 </ul>
-<p>Looks good! Believe me — it feels even better to do this IRL 😉</p>
+<p>Looks good! Believe me — it feels even better to do this IRL &#x1f609;</p>
 
 </main>
 

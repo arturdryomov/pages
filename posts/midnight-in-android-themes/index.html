@@ -78,11 +78,10 @@ themes are not applied to the navigation bar).</p>
 (<code>values-night</code>, <code>drawable-night</code>, etc). Unfortunately switching recreates
 activities, like a regular configuration change.</p>
 <blockquote>
-<p>⚠️ I ignore <code>AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY</code>
+<p>&#x26a0;&#xfe0f; I ignore <code>AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY</code>
 and go against <a href="https://developer.android.com/preview/features/darktheme#changing_themes_in-app">Google suggestions</a>
 of showing a gazillion of switches.
-At least macOS and Windows work without ad-hoc switches.</p>
-</blockquote>
+At least macOS and Windows work without ad-hoc switches.</p></blockquote>
 <h1 id="colors">Colors</h1>
 <p>In the ideal scenario it is enough to re-declare colors in <code>values-night/colors.xml</code>.
 Unfortunately it is not always so simple. It might be important
@@ -120,10 +119,9 @@ so we’ll use a known trick with <code>Base.*</code> themes.</p>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Base.Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Theme.AppCompat.Light.NoActionBar&#34;</span><span class="nt">/&gt;</span>
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Theme.Local&#34;</span> <span class="na">parent=</span><span class="s">&#34;Base.Theme.Local&#34;</span><span class="nt">/&gt;</span>
 </span></span></code></pre></div><blockquote>
-<p>💡 Notice that I’m not using <code>Theme.AppCompat.DayNight</code>.
+<p>&#x1f4a1; Notice that I’m not using <code>Theme.AppCompat.DayNight</code>.
 <code>DayNight</code> switches <code>Theme.AppCompat</code> attributes between themes but it might be
-useless if attributes are already re-declared in the application-level theme.</p>
-</blockquote>
+useless if attributes are already re-declared in the application-level theme.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="c">&lt;!-- values-v23/themes.xml --&gt;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nt">&lt;style</span> <span class="na">name=</span><span class="s">&#34;Base.Theme.Local.v23&#34;</span><span class="nt">&gt;</span>
@@ -225,9 +223,8 @@ Actually this is what Material Components use under the hood.</p>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><blockquote>
-<p>📖 Take a look at the <code>ShapeAppearanceModel</code> to make cards with rounded corners,
-triangle edges and more via custom <code>EdgeTreatment</code> and <code>CornerTreatment</code> implementations.</p>
-</blockquote>
+<p>&#x1f4d6; Take a look at the <code>ShapeAppearanceModel</code> to make cards with rounded corners,
+triangle edges and more via custom <code>EdgeTreatment</code> and <code>CornerTreatment</code> implementations.</p></blockquote>
 <p>What about gradients and color transitions on elevated surfaces?
 <code>ElevationOverlayProvider</code> helps with that. This class is used under the hood
 of <code>MaterialShapeDrawable</code>. The following extension is a shortcut.</p>
@@ -254,10 +251,9 @@ the ability to automatically change surface color depending on the current eleva
 Oh, please don’t subtract colors manually,
 use <a href="https://www.colorhexa.com">the special calculator</a>.</p>
 <blockquote>
-<p>📖 Since I’m horrible at explaining color math — refer to wonderful
+<p>&#x1f4d6; Since I’m horrible at explaining color math — refer to wonderful
 <a href="https://ciechanow.ski/alpha-compositing/">Alpha Compositing</a> and
-<a href="https://ciechanow.ski/color-spaces/">Color Spaces</a> articles for details.</p>
-</blockquote>
+<a href="https://ciechanow.ski/color-spaces/">Color Spaces</a> articles for details.</p></blockquote>
 <h1 id="html">HTML</h1>
 <h2 id="remote-1">Remote</h2>
 <p>From Chrome 76 it is possible to use the
@@ -306,9 +302,8 @@ it is possible to use templates.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">Int</span><span class="p">.</span><span class="n">colorHexRgba</span><span class="p">()</span> <span class="p">=</span> <span class="nc">String</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&#34;%08x&#34;</span><span class="p">,</span> <span class="n">shl</span><span class="p">(</span><span class="m">8</span><span class="p">)</span> <span class="p">+</span> <span class="n">ushr</span><span class="p">(</span><span class="m">24</span><span class="p">))</span>
 </span></span></code></pre></div><blockquote>
-<p>💡 Notice the <code>colorHexRgba</code> extension. It is not possible to use Android colors as-is
-since HTML uses the RGBA notation while Android uses the ARGB one.</p>
-</blockquote>
+<p>&#x1f4a1; Notice the <code>colorHexRgba</code> extension. It is not possible to use Android colors as-is
+since HTML uses the RGBA notation while Android uses the ARGB one.</p></blockquote>
 <h1 id="maps">Maps</h1>
 <p>Both regular and <a href="https://developers.google.com/maps/documentation/android-sdk/lite">lite</a>
 <a href="https://developers.google.com/android/reference/com/google/android/gms/maps/MapView"><code>MapView</code></a>
@@ -332,9 +327,8 @@ Having something like a design system definitely helps.</p>
 <p>Is it worth it? I think so. It sheds a light on hacks and forces
 to make universal decisions. This is a good thing. Ah, yes, it looks nice!</p>
 <blockquote>
-<p>📖 The design team have published <a href="https://medium.com/design-juno/implementing-dark-mode-e57cccab19f9">their own view on the process</a>.
-Feel free to take a look!</p>
-</blockquote>
+<p>&#x1f4d6; The design team have published <a href="https://medium.com/design-juno/implementing-dark-mode-e57cccab19f9">their own view on the process</a>.
+Feel free to take a look!</p></blockquote>
 <hr>
 <p>The title is a reference to the <a href="https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7">Midnight in a Perfect World</a> track.</p>
 

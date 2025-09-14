@@ -65,8 +65,7 @@ for a better date and time API based on the Joda-Time project.
 The new API will have a more intuitive design allowing code
 to better express its intent. The classes will also be immutable
 which aligns with the multi-core direction of the industry.</p>
-<p>— <a href="https://openjdk.java.net/jeps/150"><em>JEP 150: Motivation</em></a></p>
-</blockquote>
+<p>— <a href="https://openjdk.java.net/jeps/150"><em>JEP 150: Motivation</em></a></p></blockquote>
 <p>The message is clear — the replacement was needed.
 The good news — we got it. The bad news — we have&hellip;</p>
 <h1 id="android">Android</h1>
@@ -118,9 +117,8 @@ to ThreeTenBP ASAP.</p>
 <p>Use <a href="https://developer.android.com/reference/java/time/package-summary"><code>java.time</code></a>,
 forget about Joda-Time and ThreeTenBP.</p>
 <blockquote>
-<p>📖 Android <a href="https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java">uses ICU</a>
-to provide time zones data.</p>
-</blockquote>
+<p>&#x1f4d6; Android <a href="https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java">uses ICU</a>
+to provide time zones data.</p></blockquote>
 <p>The downside of using native <code>java.time</code> is updating time zones data.
 Since standalone distributions (such as Joda-Time and ThreeTenBP) carry their
 own data it is possible to update it separately.
@@ -134,10 +132,9 @@ operations without initialization will lead to runtime exceptions. It is a good 
 a time abstraction in place which will be an entry point for time-related operations.
 It is a good practice to have it for testing purposes anyway.</p>
 <blockquote>
-<p>📖 <code>Duration</code> is safe to use everywhere since it is basically
+<p>&#x1f4d6; <code>Duration</code> is safe to use everywhere since it is basically
 <a href="https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/src/main/java/org/threeten/bp/Duration.java#L486-L490">a pair of seconds and nanoseconds</a>
-with syntax sugar on top.</p>
-</blockquote>
+with syntax sugar on top.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Time</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">now</span><span class="p">():</span> <span class="n">ZonedDateTime</span>

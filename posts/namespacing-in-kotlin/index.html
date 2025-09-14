@@ -54,8 +54,7 @@ Ideally, the code resembles a fractal structure.</p>
 <blockquote>
 <p>An architecture is said to be fractal if subcomponents are structured
 in the same way as the whole is.</p>
-<p>— <a href="https://staltz.com/unidirectional-user-interface-architectures.html"><em>André Staltz</em></a></p>
-</blockquote>
+<p>— <a href="https://staltz.com/unidirectional-user-interface-architectures.html"><em>André Staltz</em></a></p></blockquote>
 <h1 id="the-problem">The Problem</h1>
 <p>Let’s say we have a fractal components structure. Each one has a <code>View</code> and a <code>ViewModel</code>.</p>
 <p>There is a <code>Movie</code> component which delegates to sub-components
@@ -136,9 +135,9 @@ Not good.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">View</span>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">ViewModel</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>➕ It is impossible to create the <code>Component</code> instance.</p>
-<p>➖ It is awkward to have a semicolon at the beginning of each component.</p>
-<p>➖ Semantics are messed up.
+</span></span></code></pre></div><p>&#x2795; It is impossible to create the <code>Component</code> instance.</p>
+<p>&#x2796; It is awkward to have a semicolon at the beginning of each component.</p>
+<p>&#x2796; Semantics are messed up.
 In Java and Kotlin <code>enum</code> represent variations of the enumeration
 (unlike Swift where <code>enum</code> cases might have completely different structure).
 While nested classes are not <code>enum</code> cases it feels wrong.</p>
@@ -148,18 +147,18 @@ While nested classes are not <code>enum</code> cases it feels wrong.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">ViewModel</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>It works! The Java representation is not fun though.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Component</span> <span class="n">INSTANCE</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Component</span><span class="o">()</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">static</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Component</span> <span class="n">var0</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Component</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="n">var0</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span></code></pre></div><p>Yikes! We create a completely useless singleton for no reason.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Component</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Component</span><span class="w"> </span><span class="n">INSTANCE</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="nf">Component</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Component</span><span class="w"> </span><span class="n">var0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Component</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Yikes! We create a completely useless singleton for no reason.
 Moving on.</p>
 <h2 id="class"><code>class</code></h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Component</span> <span class="p">{</span>
@@ -167,8 +166,8 @@ Moving on.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">ViewModel</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>What a <code>class</code>y way to do things. Looks fine in the Java representation.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Component</span> <span class="o">{</span>
-</span></span></code></pre></div><p>Let’s take a deeper look using the disassembler.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Component</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span></code></pre></div><p>Let’s take a deeper look using the disassembler.</p>
 <pre tabindex="0"><code>$ javap -C Component.java &amp;&amp; javap -c -verbose Component.class
 </code></pre><pre tabindex="0"><code>  Size 194 bytes
   MD5 checksum 3a2a9141881597581908528a19f7d993
@@ -202,17 +201,17 @@ Constant pool:
       LineNumberTable:
         line 1: 0
 }
-</code></pre><p>➕ Looks innocent compared to the <code>object</code>.</p>
-<p>➕ Impossible to inherit from since Kotlin classes are <code>final</code> by default.</p>
-<p>➖ Possible to create an object.</p>
+</code></pre><p>&#x2795; Looks innocent compared to the <code>object</code>.</p>
+<p>&#x2795; Impossible to inherit from since Kotlin classes are <code>final</code> by default.</p>
+<p>&#x2796; Possible to create an object.</p>
 <h2 id="interface"><code>interface</code></h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Component</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">View</span>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">ViewModel</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Almost the same as the <code>class</code> approach. The Java representation does not bring surprises.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">interface</span> <span class="nc">Component</span> <span class="o">{</span>
-</span></span></code></pre></div><p>The disassembler shows that it is much lighter than the <code>class</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">interface</span> <span class="nc">Component</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span></code></pre></div><p>The disassembler shows that it is much lighter than the <code>class</code>.</p>
 <pre tabindex="0"><code>$ javap -C Component.java &amp;&amp; javap -c -verbose Component.class
 </code></pre><pre tabindex="0"><code>  Size 101 bytes
   MD5 checksum 574e4f61d4b3e17ccd964289678c7ae2
@@ -230,9 +229,9 @@ Constant pool:
   #6 = Utf8               java/lang/Object
 {
 }
-</code></pre><p>➕ Impossible to create an object.</p>
-<p>➕ Lighter than the <code>class</code> — 6 constants in the pool vs. 12, 101 bytes on disk vs. 194.</p>
-<p>➖ Possible to inherit from.</p>
+</code></pre><p>&#x2795; Impossible to create an object.</p>
+<p>&#x2795; Lighter than the <code>class</code> — 6 constants in the pool vs. 12, 101 bytes on disk vs. 194.</p>
+<p>&#x2796; Possible to inherit from.</p>
 <h2 id="namespace"><code>namespace</code>?</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-csharp" data-lang="csharp"><span class="line"><span class="cl"><span class="k">namespace</span> <span class="nn">Component</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">interface</span> <span class="nc">IView</span>

@@ -66,11 +66,10 @@ in favor of Android Studio.</li>
 <li><a href="https://github.com/svg/svgo">SVGO</a> (1.0.5) — command line tool, optimizes SVG files.</li>
 </ul>
 <blockquote>
-<p>💡 Zeplin exports SVG assets
-<a href="https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin">using SVGO under the hood</a>.</p>
-</blockquote>
+<p>&#x1f4a1; Zeplin exports SVG assets
+<a href="https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin">using SVGO under the hood</a>.</p></blockquote>
 <h1 id="images">Images</h1>
-<h2 id="octiconshttpsocticonsgithubcom"><a href="https://octicons.github.com/">Octicons</a></h2>
+<h2 id="octicons"><a href="https://octicons.github.com/">Octicons</a></h2>
 <p>These are examples of semi-complicated web icons.
 Image sizes are unconventional — more than <code>1024</code> <code>dp</code>.
 <a href="https://developer.android.com/studio/write/vector-asset-studio#when">It is not advisable to use vector images of such size</a>,
@@ -79,7 +78,7 @@ but let’s look at it as a push-to-the-limit approach.</p>
 <li><a href="https://octicons.github.com/icon/octoface/"><code>octicon-octoface</code></a></li>
 <li><a href="https://octicons.github.com/icon/repo/"><code>octicon-repo</code></a></li>
 </ul>
-<h2 id="materialhttpsmaterialiotoolsicons"><a href="https://material.io/tools/icons/">Material</a></h2>
+<h2 id="material"><a href="https://material.io/tools/icons/">Material</a></h2>
 <p>I suspect that these icons were designed with mobile in mind
 and were pre-optimized for mobile rendering, but that might be completely false.
 Both of them are conventionally sized to <code>24</code> <code>dp</code>.</p>
@@ -98,10 +97,9 @@ I’ve used — <a href="https://en.wikipedia.org/wiki/Logo_(programming_langua
 It can be used to teach basic programming concepts
 using so-called <a href="https://en.wikipedia.org/wiki/Turtle_graphics">turtle graphics</a>.</p>
 <blockquote>
-<p>📖 <code>android:pathData</code> uses the exact same format as <code>d</code> attribute in SVG files.
+<p>&#x1f4d6; <code>android:pathData</code> uses the exact same format as <code>d</code> attribute in SVG files.
 Mozilla provides <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">great documentation</a>
-for it with neat samples.</p>
-</blockquote>
+for it with neat samples.</p></blockquote>
 <p>Let’s see how it looks in action.</p>
 <ul>
 <li>
@@ -143,10 +141,9 @@ mean more efficient execution. Actually, Android Lint
 <a href="http://tools.android.com/tips/lint-checks">has a <code>VectorPath</code> check</a>
 for such cases.</p>
 <blockquote>
-<p>📖 The maximum instructions count for Lint is <code>800</code>.
+<p>&#x1f4d6; The maximum instructions count for Lint is <code>800</code>.
 See <a href="https://android.googlesource.com/platform/tools/base/+/studio-master-dev/lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/VectorPathDetector.java">the source code</a>
-for details.</p>
-</blockquote>
+for details.</p></blockquote>
 <p>Do not forget that <code>#apksizematters</code>! Less instructions → less text → less file size.</p>
 <p>Besides <code>pathData</code> differences, there are some minor deviations as well.</p>
 <ul>
@@ -231,161 +228,160 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 <li>Iterations count: 10 000.</li>
 </ul>
 <blockquote>
-<p>📖 Seems like in Android 7.0 <code>VectorDrawable</code>
+<p>&#x1f4d6; Seems like in Android 7.0 <code>VectorDrawable</code>
 <a href="https://android.googlesource.com/platform/frameworks/base/+/804618d0863a5d8ad1b08a846bd5319be864a1cb">was re-implemented to use native rendering</a>.
 Relative numbers remain the same, but be advised that absolute performance
-might differ between API versions.</p>
-</blockquote>
+might differ between API versions.</p></blockquote>
 <h3 id="results">Results</h3>
 <h4 id="octicon-octoface"><code>octicon-octoface</code></h4>
 <table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Average Render Duration, ms</th>
-<th>Average Parse Duration, ms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Android Studio</td>
-<td>24.5128</td>
-<td>0.0594</td>
-</tr>
-<tr>
-<td><code>svg2android</code></td>
-<td>20.1871</td>
-<td>0.0570</td>
-</tr>
-<tr>
-<td><code>svg2vector</code></td>
-<td>24.5424</td>
-<td>0.0581</td>
-</tr>
-<tr>
-<td>Android Studio + Avocado</td>
-<td>24.5393</td>
-<td>0.0596</td>
-</tr>
-<tr>
-<td>SVGO + Android Studio</td>
-<td>24.5721</td>
-<td>0.0619</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Tool</th>
+          <th>Average Render Duration, ms</th>
+          <th>Average Parse Duration, ms</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Android Studio</td>
+          <td>24.5128</td>
+          <td>0.0594</td>
+      </tr>
+      <tr>
+          <td><code>svg2android</code></td>
+          <td>20.1871</td>
+          <td>0.0570</td>
+      </tr>
+      <tr>
+          <td><code>svg2vector</code></td>
+          <td>24.5424</td>
+          <td>0.0581</td>
+      </tr>
+      <tr>
+          <td>Android Studio + Avocado</td>
+          <td>24.5393</td>
+          <td>0.0596</td>
+      </tr>
+      <tr>
+          <td>SVGO + Android Studio</td>
+          <td>24.5721</td>
+          <td>0.0619</td>
+      </tr>
+  </tbody>
 </table>
 <p><code>svg2android</code> looks like the fastest one but it imported SVG incorrectly.
 Resulting <code>VectorDrawable</code> produced an invisible image.</p>
 <h4 id="octicon-repo"><code>octicon-repo</code></h4>
 <table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Average Render Duration, ms</th>
-<th>Average Parse Duration, ms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Android Studio</td>
-<td>18.1411</td>
-<td>0.0575</td>
-</tr>
-<tr>
-<td><code>svg2android</code></td>
-<td>18.1608</td>
-<td>0.0604</td>
-</tr>
-<tr>
-<td><code>svg2vector</code></td>
-<td>18.3110</td>
-<td>0.0562</td>
-</tr>
-<tr>
-<td>Android Studio + Avocado</td>
-<td>18.1604</td>
-<td>0.0554</td>
-</tr>
-<tr>
-<td>SVGO + Android Studio</td>
-<td>18.1699</td>
-<td>0.0588</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Tool</th>
+          <th>Average Render Duration, ms</th>
+          <th>Average Parse Duration, ms</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Android Studio</td>
+          <td>18.1411</td>
+          <td>0.0575</td>
+      </tr>
+      <tr>
+          <td><code>svg2android</code></td>
+          <td>18.1608</td>
+          <td>0.0604</td>
+      </tr>
+      <tr>
+          <td><code>svg2vector</code></td>
+          <td>18.3110</td>
+          <td>0.0562</td>
+      </tr>
+      <tr>
+          <td>Android Studio + Avocado</td>
+          <td>18.1604</td>
+          <td>0.0554</td>
+      </tr>
+      <tr>
+          <td>SVGO + Android Studio</td>
+          <td>18.1699</td>
+          <td>0.0588</td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="material-android"><code>material-android</code></h4>
 <table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Average Render Duration, ms</th>
-<th>Average Parse Duration, ms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Android Studio</td>
-<td>0.0848</td>
-<td>0.0241</td>
-</tr>
-<tr>
-<td><code>svg2android</code></td>
-<td>0.1197</td>
-<td>0.0395</td>
-</tr>
-<tr>
-<td><code>svg2vector</code></td>
-<td>0.1275</td>
-<td>0.0420</td>
-</tr>
-<tr>
-<td>Android Studio + Avocado</td>
-<td>0.1189</td>
-<td>0.0348</td>
-</tr>
-<tr>
-<td>SVGO + Android Studio</td>
-<td>0.1287</td>
-<td>0.0399</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Tool</th>
+          <th>Average Render Duration, ms</th>
+          <th>Average Parse Duration, ms</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Android Studio</td>
+          <td>0.0848</td>
+          <td>0.0241</td>
+      </tr>
+      <tr>
+          <td><code>svg2android</code></td>
+          <td>0.1197</td>
+          <td>0.0395</td>
+      </tr>
+      <tr>
+          <td><code>svg2vector</code></td>
+          <td>0.1275</td>
+          <td>0.0420</td>
+      </tr>
+      <tr>
+          <td>Android Studio + Avocado</td>
+          <td>0.1189</td>
+          <td>0.0348</td>
+      </tr>
+      <tr>
+          <td>SVGO + Android Studio</td>
+          <td>0.1287</td>
+          <td>0.0399</td>
+      </tr>
+  </tbody>
 </table>
 <h4 id="material-store"><code>material-store</code></h4>
 <table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Average Render Duration, ms</th>
-<th>Average Parse Duration, ms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Android Studio</td>
-<td>0.0936</td>
-<td>0.0408</td>
-</tr>
-<tr>
-<td><code>svg2android</code></td>
-<td>0.0892</td>
-<td>0.0390</td>
-</tr>
-<tr>
-<td><code>svg2vector</code></td>
-<td>0.0915</td>
-<td>0.0366</td>
-</tr>
-<tr>
-<td>Android Studio + Avocado</td>
-<td>0.0898</td>
-<td>0.0405</td>
-</tr>
-<tr>
-<td>SVGO + Android Studio</td>
-<td>0.0944</td>
-<td>0.0405</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Tool</th>
+          <th>Average Render Duration, ms</th>
+          <th>Average Parse Duration, ms</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Android Studio</td>
+          <td>0.0936</td>
+          <td>0.0408</td>
+      </tr>
+      <tr>
+          <td><code>svg2android</code></td>
+          <td>0.0892</td>
+          <td>0.0390</td>
+      </tr>
+      <tr>
+          <td><code>svg2vector</code></td>
+          <td>0.0915</td>
+          <td>0.0366</td>
+      </tr>
+      <tr>
+          <td>Android Studio + Avocado</td>
+          <td>0.0898</td>
+          <td>0.0405</td>
+      </tr>
+      <tr>
+          <td>SVGO + Android Studio</td>
+          <td>0.0944</td>
+          <td>0.0405</td>
+      </tr>
+  </tbody>
 </table>
 <h1 id="conclusion">Conclusion</h1>
 <p>It is hard to declare a winner with XML. I like that Android Studio

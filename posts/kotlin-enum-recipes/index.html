@@ -133,11 +133,10 @@ We can solve this by putting commas after each enumeration case.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">data</span> <span class="k">class</span> <span class="nc">ErrorResponse</span><span class="p">(</span><span class="nd">@SerializedName</span><span class="p">(</span><span class="s2">&#34;code&#34;</span><span class="p">)</span> <span class="k">val</span> <span class="py">code</span><span class="p">:</span> <span class="n">ErrorCode</span><span class="p">?)</span>
 </span></span></code></pre></div><blockquote>
-<p>⚠️ Gson will write unknown <code>enum</code> values as <code>null</code> —
+<p>&#x26a0;&#xfe0f; Gson will write unknown <code>enum</code> values as <code>null</code> —
 ignoring the Kotlin nullability — since the Java reflection doesn’t know about Kotlin.
 Make such values nullable and handle them as deserialization errors or use
-Moshi which will do it automatically.</p>
-</blockquote>
+Moshi which will do it automatically.</p></blockquote>
 <h3 id="android-resources">Android Resources</h3>
 <p>It is possible to define <code>enum</code> in XML which is helpful with custom <code>View</code> implementations.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;declare-styleable</span> <span class="na">name=</span><span class="s">&#34;NavigationBar&#34;</span><span class="nt">&gt;</span>
@@ -223,7 +222,7 @@ will produce a number of tests with a single assertion in each one.</p>
 ├── it creates error response from error code [BadRequest]
 ├── it creates error response from error code [NotFound]
 └── it creates error response from error code [Unauthorized]
-</code></pre><h2 id="enumsethttpsdeveloperandroidcomreferencejavautilenumset"><a href="https://developer.android.com/reference/java/util/EnumSet"><code>EnumSet</code></a></h2>
+</code></pre><h2 id="enumset"><a href="https://developer.android.com/reference/java/util/EnumSet"><code>EnumSet</code></a></h2>
 <p>Use it when there is a need to define a subset of enumeration values.
 It is much more efficient than regular <code>Set</code> implementations
 since values are stored as bit vectors internally.</p>
@@ -251,24 +250,24 @@ Most likely it is possible to solve this using platform-specific declarations.</
 </span></span></code></pre></div><p>Putting semantics aside I want to remind everyone that the Kotlin <code>object</code>
 creates a singleton. I doubt that it is desirable to have a lot of static objects.</p>
 <p>For example, the <code>sealed class Color</code> above will be translated into something like this (in Java notation):</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Color</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="nf">Color</span><span class="o">()</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Red</span> <span class="kd">extends</span> <span class="n">Color</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Color</span><span class="o">.</span><span class="na">Red</span> <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Color</span><span class="o">.</span><span class="na">Red</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Green</span> <span class="kd">extends</span> <span class="n">Color</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Color</span><span class="o">.</span><span class="na">Green</span> <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Color</span><span class="o">.</span><span class="na">Green</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Blue</span> <span class="kd">extends</span> <span class="n">Color</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Color</span><span class="o">.</span><span class="na">Blue</span> <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Color</span><span class="o">.</span><span class="na">Blue</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></div><h1 id="refactoring-irl">Refactoring IRL</h1>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="nf">Color</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Red</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Red</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Red</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Green</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Green</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Green</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Blue</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Blue</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Color</span><span class="p">.</span><span class="na">Blue</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h1 id="refactoring-irl">Refactoring IRL</h1>
 <p>I was lucky to see
 <a href="https://github.com/mozilla-mobile/fenix/blob/e6d29df5de88684be18778c155ba694f794423ca/app/src/main/java/org/mozilla/fenix/AppRequestInterceptor.kt#L61-L117">a convenient piece of the Mozilla Fenix code</a>
 which I’m gonna refactor step-by-step.</p>
@@ -279,7 +278,7 @@ which I’m gonna refactor step-by-step.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">object</span> <span class="nc">Medium</span> <span class="p">:</span> <span class="n">RiskLevel</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="k">object</span> <span class="nc">High</span> <span class="p">:</span> <span class="n">RiskLevel</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>⬇️</p>
+</span></span></code></pre></div><p>&#x2b07;&#xfe0f;</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">RiskLevel</span> <span class="p">{</span> <span class="n">Low</span><span class="p">,</span> <span class="n">Medium</span><span class="p">,</span> <span class="n">High</span> <span class="p">}</span>
 </span></span></code></pre></div><h2 id="methods--fields">Methods → Fields</h2>
 <p>We can inline method result values into <code>enum</code> since both are matching operations and nothing else.</p>
@@ -298,7 +297,7 @@ which I’m gonna refactor step-by-step.</p>
 </span></span><span class="line"><span class="cl">        <span class="nc">RiskLevel</span><span class="p">.</span><span class="n">High</span> <span class="o">-&gt;</span> <span class="nc">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">high_risk_error_style</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><p>⬇️</p>
+</span></span></code></pre></div><p>&#x2b07;&#xfe0f;</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">enum</span> <span class="k">class</span> <span class="nc">RiskLevel</span><span class="p">(</span><span class="nd">@RawRes</span> <span class="k">val</span> <span class="py">html</span><span class="p">:</span> <span class="n">Int</span><span class="p">,</span> <span class="nd">@RawRes</span> <span class="k">val</span> <span class="py">css</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Low</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_risk_error_pages</span><span class="p">,</span> <span class="nc">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span><span class="p">),</span>
 </span></span><span class="line"><span class="cl">    <span class="n">Medium</span><span class="p">(</span><span class="nc">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">medium_and_high_risk_error_pages</span><span class="p">,</span> <span class="nc">R</span><span class="p">.</span><span class="n">raw</span><span class="p">.</span><span class="n">low_and_medium_risk_error_style</span><span class="p">),</span>
@@ -310,7 +309,7 @@ which I’m gonna refactor step-by-step.</p>
 </span></span><span class="line"><span class="cl"><span class="k">val</span> <span class="py">cssResource</span> <span class="p">=</span> <span class="n">getStyleForRiskLevel</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nc">ErrorPages</span><span class="p">.</span><span class="n">createErrorPage</span><span class="p">(</span><span class="n">htmlResource</span><span class="p">,</span> <span class="n">cssResource</span><span class="p">)</span>
-</span></span></code></pre></div><p>⬇️</p>
+</span></span></code></pre></div><p>&#x2b07;&#xfe0f;</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nc">ErrorPages</span><span class="p">.</span><span class="n">createErrorPage</span><span class="p">(</span><span class="n">riskLevel</span><span class="p">.</span><span class="n">html</span><span class="p">,</span> <span class="n">riskLevel</span><span class="p">.</span><span class="n">css</span><span class="p">)</span>
 </span></span></code></pre></div><h2 id="voilà">Voilà!</h2>
 <p>Seems like we managed to eliminate about 20 LOC without loss.

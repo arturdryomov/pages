@@ -85,16 +85,14 @@ Developers provide changes and reviews, the automation handles everything else.
 There is no need to choose people for review, track checks and review statuses,
 merge and update remaining PRs.</p>
 <blockquote>
-<p>📖 The <a href="/posts/how-the-pull-request-is-built/">How the Pull Request is Built</a> article
-explains the importance of keeping pull request branches up to date with the target one.</p>
-</blockquote>
+<p>&#x1f4d6; The <a href="/posts/how-the-pull-request-is-built/">How the Pull Request is Built</a> article
+explains the importance of keeping pull request branches up to date with the target one.</p></blockquote>
 <p>The workflow can be brought to life via GitHub and GitHub Actions with a bit of help
 from <a href="https://curl.se/"><code>curl</code></a> and <a href="https://stedolan.github.io/jq/"><code>jq</code></a>.</p>
 <h1 id="implementation">Implementation</h1>
 <blockquote>
-<p>🚩 This article is not a tutorial for GitHub Actions.
-GitHub <a href="https://docs.github.com/en/actions/learn-github-actions">has a great one</a>.</p>
-</blockquote>
+<p>&#x1f6a9; This article is not a tutorial for GitHub Actions.
+GitHub <a href="https://docs.github.com/en/actions/learn-github-actions">has a great one</a>.</p></blockquote>
 <h2 id="assign-reviewers">Assign Reviewers</h2>
 <p>Can be achieved via <a href="https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners">code owners</a>
 and <a href="https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/organizing-members-into-teams">teams</a>.</p>
@@ -195,18 +193,16 @@ GitHub Actions doesn’t but it can be done via
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Cancel concurrent runs&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">bash .github/workflows/pull-request-cancel-concurrent.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34;</span><span class="w">
 </span></span></span></code></pre></div><blockquote>
-<p>📖 The script uses
+<p>&#x1f4d6; The script uses
 <a href="https://docs.github.com/en/actions/reference/authentication-in-a-workflow">the GitHub-provided authentication token</a>
 via <code>secrets.GITHUB_TOKEN</code> and a good amount of GitHub-provided
-<a href="https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables">environment variables</a>.</p>
-</blockquote>
+<a href="https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables">environment variables</a>.</p></blockquote>
 <h2 id="merge-and-update">Merge and Update</h2>
 <blockquote>
-<p>✳️ GitHub has a feature called
+<p>&#x2733;&#xfe0f; GitHub has a feature called
 <a href="https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/automatically-merging-a-pull-request">Auto-Merge</a>
 but its automation part is&hellip; partial. It requires using a dedicated button
-for each opened PR making it easy to forget or even miss.</p>
-</blockquote>
+for each opened PR making it easy to forget or even miss.</p></blockquote>
 <p>Merging itself is straightforward —
 it’s <a href="https://docs.github.com/en/rest/reference/pulls#merge-a-pull-request">a single API call</a>.</p>
 <details>
@@ -269,13 +265,12 @@ it’s <a href="https://docs.github.com/en/rest/reference/pulls#merge-a-pull-req
 </span></span><span class="line"><span class="cl"><span class="k">done</span>
 </span></span></code></pre></div></details>
 <blockquote>
-<p>🚩 Notice that the update script uses a user-provided GitHub token
+<p>&#x1f6a9; Notice that the update script uses a user-provided GitHub token
 in addition to the GitHub-provided one. The latter
 <a href="https://docs.github.com/en/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow">does not trigger consecutive workflows</a>.
 This means that PRs will be updated but there will be no runs due to new changes.
 <a href="https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token">Create a user token</a> and
-<a href="https://docs.github.com/en/actions/reference/encrypted-secrets">store it in GitHub secrets</a> to avoid this.</p>
-</blockquote>
+<a href="https://docs.github.com/en/actions/reference/encrypted-secrets">store it in GitHub secrets</a> to avoid this.</p></blockquote>
 <p>Both scripts should be called from a PR workflow. The integration requires a careful approach.</p>
 <ul>
 <li>A failed merge attempt should not be shown as a run failure.
@@ -301,7 +296,7 @@ and <a href="https://docs.github.com/en/actions/reference/workflow-commands-for-
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;bash --noprofile --norc {0}&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">        bash .github/workflows/pull-request-merge.sh &#34;${{ secrets.GITHUB_TOKEN }}&#34; &#34;${{ github.event.pull_request.number }}&#34; &#34;${{ github.event.pull_request.title }}&#34;
-</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;::set-output name=merge_status::$?&#34;</span><span class="w">        
+</span></span></span><span class="line"><span class="cl"><span class="sd">        echo &#34;::set-output name=merge_status::$?&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Update remaining PRs&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">steps.merge.outputs.merge_status == 0</span><span class="w">

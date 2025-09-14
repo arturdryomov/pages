@@ -72,7 +72,7 @@ with minimal developer interaction.</p>
 <code>SharedPreferences</code> are not encrypted and can be read as-is with <code>root</code>
 privileges. This is what I would call an analog to sticky notes with passwords
 stitched to a monitor.</p>
-<h2 id="google-smart-lockhttpsdevelopersgooglecomidentitysmartlock-passwordsandroid"><a href="https://developers.google.com/identity/smartlock-passwords/android/">Google Smart Lock</a></h2>
+<h2 id="google-smart-lock"><a href="https://developers.google.com/identity/smartlock-passwords/android/">Google Smart Lock</a></h2>
 <p>This is the OG of the Google effort to streamline credentials storage.
 It is obviously not new since it has the word <em>Smart</em> in the name.
 Remember times when everything was named smart? Yeah, me neither kids.</p>
@@ -92,7 +92,7 @@ mobile and web presence.</p>
 and <a href="https://passwords.google.com/">can be viewed as plain text online</a>.
 There are no sources stating how the data is stored and how secure the method is.
 Not a lot of people hacked Google but technically there are no limitations.</p>
-<h2 id="openyolohttpsgithubcomopenidopenyolo-android"><a href="https://github.com/openid/OpenYOLO-Android">OpenYOLO</a></h2>
+<h2 id="openyolo"><a href="https://github.com/openid/OpenYOLO-Android">OpenYOLO</a></h2>
 <p>I’m not making this up, it is a real name. It stands for You Only Login Once.</p>
 <p>It might seem like an SDK, but actually it is <a href="https://openid.net/specs/openyolo-android-ID1.html">a full-blown OpenID spec</a>.
 The motivation behind it is solid — unify password managers under the same API and SPI,
@@ -106,7 +106,7 @@ There is a good abstraction on top of it to use user-installed applications inst
 <p>Unfortunately, the project is half-dead. There are no updates for over a year,
 <a href="https://www.linkedin.com/in/iainmcgin/">the tech lead no longer works at Google</a>
 and something happened that ruined the adaptation completely. This thing is called&hellip;</p>
-<h2 id="android-autofillhttpsdeveloperandroidcomguidetopicstextautofill"><a href="https://developer.android.com/guide/topics/text/autofill">Android Autofill</a></h2>
+<h2 id="android-autofill"><a href="https://developer.android.com/guide/topics/text/autofill">Android Autofill</a></h2>
 <p>The same year OpenYOLO was released and password managers boarded the ship,
 Google decided to open a cannon fire and sink it. Autofill, introduced in Android Oreo,
 solves basically the same issues as OpenYOLO. Users can change autofill providers —
@@ -139,7 +139,7 @@ It brings basically zero-effort password management —
 mark an <code>EditText</code> with proper <code>inputType</code> or <code>autofillHints</code> and everything
 will be done automagically, including filling and saving afterward.
 It is just confusing to see it appear after OpenYOLO started to gain its momentum.</p>
-<h2 id="google-credentialshttpsdevelopersgooglecomandroidreferencecomgoogleandroidgmsauthapicredentialspackage-summary"><a href="https://developers.google.com/android/reference/com/google/android/gms/auth/api/credentials/package-summary">Google Credentials</a></h2>
+<h2 id="google-credentials"><a href="https://developers.google.com/android/reference/com/google/android/gms/auth/api/credentials/package-summary">Google Credentials</a></h2>
 <p>Don’t worry, this is not another SDK solving the same issues in its own way.
 Its purpose is <a href="https://developers.google.com/identity/smartlock-passwords/android/retrieve-hints">to provide hints</a>
 for sign in and sign up forms. There are pickers for accounts and phone numbers
@@ -163,7 +163,7 @@ Take a look at OpenYOLO, but honestly saying — it might be better to use
 Smart Lock in terms of stability and support. Sad but true.</li>
 </ul>
 <p>Well, I guess it wasn’t hard to choose after all!
-And now you have a good story to tell about OpenYOLO 😉</p>
+And now you have a good story to tell about OpenYOLO &#x1f609;</p>
 
 </main>
 

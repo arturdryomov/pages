@@ -72,9 +72,8 @@ Let’s see how it might look and decide.</p>
 depends on providing enough abstractions to connect producers and consumers,
 forming Pipelines.</p>
 <blockquote>
-<p>📖 Suggestions about abstractions are available in
-<a href="https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/">Reactive Abstractions in Android World</a>.</p>
-</blockquote>
+<p>&#x1f4d6; Suggestions about abstractions are available in
+<a href="https://arturdryomov.dev/posts/reactive-abstractions-in-android-world/">Reactive Abstractions in Android World</a>.</p></blockquote>
 <p>Honestly saying, I find reactive pipelines beautiful. There is something deeply
 satisfying in understanding that a complete flow can be tracked via a single
 stream from a producer to a consumer.</p>
@@ -89,15 +88,13 @@ which triggers a UI redraw.</li>
 <blockquote>
 <p>The formula has infinite depth in its efficacy and application
 but it’s staggeringly simple and completely consistent.</p>
-<p>– <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p>
-</blockquote>
+<p>– <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p></blockquote>
 <h1 id="structure">Structure</h1>
 <blockquote>
-<p>📖 We’ll use Data-Domain-Presentation
+<p>&#x1f4d6; We’ll use Data-Domain-Presentation
 <a href="https://en.wikipedia.org/wiki/Multitier_architecture">multitier architecture</a>.
 Please refer to Martin Fowler
-<a href="https://martinfowler.com/bliki/PresentationDomainDataLayering.html">for details</a>.</p>
-</blockquote>
+<a href="https://martinfowler.com/bliki/PresentationDomainDataLayering.html">for details</a>.</p></blockquote>
 <h2 id="data">Data</h2>
 <p>Network-related data sources (especially on Android) most likely use
 <a href="https://github.com/square/retrofit">Retrofit</a> or something similar.
@@ -169,9 +166,8 @@ to make all the work sync or <code>TestScheduler</code> to control time-related 
 <p>We’ll use a stateful example, but essentially this level is a mediator
 between the data and the presentation. Business-related decisions are done here.</p>
 <blockquote>
-<p>📖 Suggestions about state mutations are available in
-<a href="https://arturdryomov.dev/posts/reactive-state-mutations/">Reactive State Mutations via CQRS</a>.</p>
-</blockquote>
+<p>&#x1f4d6; Suggestions about state mutations are available in
+<a href="https://arturdryomov.dev/posts/reactive-state-mutations/">Reactive State Mutations via CQRS</a>.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">BooksService</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">sealed</span> <span class="k">class</span> <span class="nc">State</span> <span class="p">{</span>

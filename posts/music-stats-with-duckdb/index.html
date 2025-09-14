@@ -118,8 +118,7 @@ Each JSON file has the following format.</p>
 </span></span></code></pre></div><p>Besides merging podcasts and music in the same enumeration, the format is good.
 It’s great for DuckDB since it can recognize JSON array items as rows and repeating JSON fields as columns.</p>
 <blockquote>
-<p>💡 Note that it’s possible to import multiple files using a file name mask.</p>
-</blockquote>
+<p>&#x1f4a1; Note that it’s possible to import multiple files using a file name mask.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">scrobbles_spotify</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_json_auto</span><span class="p">(</span><span class="s1">&#39;MyData/endsong_*.json&#39;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">scrobbles_spotify</span><span class="p">;</span><span class="w">
 </span></span></span></code></pre></div><pre tabindex="0"><code>┌───────────────────────────────────┬─────────────┬─────────┬─────────┬─────────┬───────┐
@@ -153,11 +152,10 @@ It’s great for DuckDB since it can recognize JSON array items as rows and repe
 </code></pre><p>Neat! Column types were recognized — even <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> time strings were recognized as <code>TIMESTAMP</code>.</p>
 <h2 id="lastfm">Last.fm</h2>
 <p>There is a single CSV file and its as simple as it gets.</p>
-<pre tabindex="0"><code class="language-csv" data-lang="csv">uts,utc_time,artist,artist_mbid,album,album_mbid,track,track_mbid
-&#34;1667306723&#34;,&#34;01 Nov 2022, 12:45&#34;,&#34;How to Destroy Angels&#34;,&#34;143b396d-a678-43aa-8c74-628fea8e381f&#34;,&#34;How to Destroy Angels&#34;,&#34;4617ac46-8e11-4a14-9133-b00ecbae7069&#34;,&#34;Parasite&#34;,&#34;5aa91266-1d8b-3ede-bd97-ef4d5e921d4f&#34;
-</code></pre><blockquote>
-<p>💡 <code>*_mbid</code> fields are <a href="https://musicbrainz.org/">MusicBrainz</a> IDs.</p>
-</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-csv" data-lang="csv"><span class="line"><span class="cl"><span class="s">uts</span><span class="p">,</span><span class="s">utc_time</span><span class="p">,</span><span class="s">artist</span><span class="p">,</span><span class="s">artist_mbid</span><span class="p">,</span><span class="s">album</span><span class="p">,</span><span class="s">album_mbid</span><span class="p">,</span><span class="s">track</span><span class="p">,</span><span class="s">track_mbid</span><span class="p">
+</span></span></span><span class="line"><span class="cl"><span class="p"></span><span class="s2">&#34;1667306723&#34;</span><span class="p">,</span><span class="s2">&#34;01 Nov 2022, 12:45&#34;</span><span class="p">,</span><span class="s2">&#34;How to Destroy Angels&#34;</span><span class="p">,</span><span class="s2">&#34;143b396d-a678-43aa-8c74-628fea8e381f&#34;</span><span class="p">,</span><span class="s2">&#34;How to Destroy Angels&#34;</span><span class="p">,</span><span class="s2">&#34;4617ac46-8e11-4a14-9133-b00ecbae7069&#34;</span><span class="p">,</span><span class="s2">&#34;Parasite&#34;</span><span class="p">,</span><span class="s2">&#34;5aa91266-1d8b-3ede-bd97-ef4d5e921d4f&#34;</span><span class="p">
+</span></span></span></code></pre></div><blockquote>
+<p>&#x1f4a1; <code>*_mbid</code> fields are <a href="https://musicbrainz.org/">MusicBrainz</a> IDs.</p></blockquote>
 <p>A CSV file is essentially a table so there are no issues with the DuckDB import.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">scrobbles_lastfm</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv_auto</span><span class="p">(</span><span class="s1">&#39;recenttracks.csv&#39;</span><span class="p">);</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">scrobbles_lastfm</span><span class="p">;</span><span class="w">

@@ -131,9 +131,8 @@ polluting <a href="https://en.wikipedia.org/wiki/Inode">the <code>inode</code> s
 <p>A modern approach with <a href="https://devdocs.io/openjdk~17/java.base/java/nio/file/path"><code>java.nio.file.Path</code></a>.
 It might feel new but the NIO is available from Java 7 (2011).</p>
 <blockquote>
-<p>💡 Hello there, a curious Android developer.
-<code>java.nio.file.*</code> is available from API 26 (8.0).</p>
-</blockquote>
+<p>&#x1f4a1; Hello there, a curious Android developer.
+<code>java.nio.file.*</code> is available from API 26 (8.0).</p></blockquote>
 <p>Both the interface and the implementation need changes:</p>
 <ul>
 <li><code>java.io.File</code> becomes <code>java.nio.file.Path</code>;</li>
@@ -283,40 +282,40 @@ Also it’s <a href="https://github.com/square/okio">a separate artifact</a> and
 </ul>
 <p>Time in the table is the average run duration.</p>
 <table>
-<thead>
-<tr>
-<th><code>N</code></th>
-<th>Java IO, ms</th>
-<th>Java NIO (JimFS), ms</th>
-<th>Okio (<code>FakeFileSystem</code>), ms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>100</td>
-<td>15</td>
-<td>3</td>
-<td>4</td>
-</tr>
-<tr>
-<td>1000</td>
-<td>100</td>
-<td>9</td>
-<td>20</td>
-</tr>
-<tr>
-<td>10000</td>
-<td>1040</td>
-<td>30</td>
-<td>95</td>
-</tr>
-<tr>
-<td>100000</td>
-<td>15880</td>
-<td>160</td>
-<td>860</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th><code>N</code></th>
+          <th>Java IO, ms</th>
+          <th>Java NIO (JimFS), ms</th>
+          <th>Okio (<code>FakeFileSystem</code>), ms</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>100</td>
+          <td>15</td>
+          <td>3</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td>1000</td>
+          <td>100</td>
+          <td>9</td>
+          <td>20</td>
+      </tr>
+      <tr>
+          <td>10000</td>
+          <td>1040</td>
+          <td>30</td>
+          <td>95</td>
+      </tr>
+      <tr>
+          <td>100000</td>
+          <td>15880</td>
+          <td>160</td>
+          <td>860</td>
+      </tr>
+  </tbody>
 </table>
 <p>No surprises here — RAM performs better than SSD.</p>
 <p>However, tests creating thousands of files are uncommon. I can imagine having
