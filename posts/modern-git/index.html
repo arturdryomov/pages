@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Modern Git for Modern Times</title>
+  <meta name="description" content="Modern problems require modern solutions"/>
+  <meta name="author" content="Artur Dryomov"/>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
+
+  
+  <meta name="theme-color" content="#1e2327">
+
+  </head>
+
+<body>
+
+<header>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="feed://arturdryomov.dev/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</header>
+
+<br/>
+
+
+<div class="meta">
+
+  <h1><span class="title">Modern Git for Modern Times</span></h1>
+  <h3>October 17, 2025</h3>
+
+</div>
+
+<main>
+<p>Git has been around for a long time — since April 2005. That’s 20 years!
+Fun fact — <a href="https://en.wikipedia.org/wiki/GNU_Bazaar">Bazaar</a> and
+<a href="https://en.wikipedia.org/wiki/Mercurial">Mercurial</a> were released around the same time as Git.
+Not so fun facts — during this time
+<a href="https://www.atlassian.com/blog/bitbucket/sunsetting-mercurial-support-in-bitbucket">Atlassian removed the Mercurial support from Bitbucket</a>
+and <a href="https://discourse.ubuntu.com/t/phasing-out-bazaar-code-hosting/62189">Canonical retired Bazaar altogether</a>.
+Meanwhile, GitHub and GitLab are alive and well — safe to say, Git is here to stay.
+In fact, we might see <a href="https://git-scm.com/docs/BreakingChanges#_git_3_0">Git 3.0</a> soon — a new version for the new decade.</p>
+<p>But what about new features? Surely there’s something useful for day-to-day workflows, right?</p>
+<h1 id="switch-branches">Switch Branches</h1>
+<p><code>git checkout</code> does the trick — but it’s much more than a branch switching tool.
+Take a look at <a href="https://git-scm.com/docs/git-checkout">the <code>man</code> page</a>:</p>
+<blockquote>
+<p>Updates files in the working tree to match the version in the index or the specified tree.
+If no pathspec was given, <code>git checkout</code> will also update <code>HEAD</code> to set the specified branch as the current branch.</p></blockquote>
+<p>Kinda a mouthful, right?
+<code>git switch</code> is an alternative with a more focused scope.
+Take a look at <a href="https://git-scm.com/docs/git-switch">the <code>man</code> page</a>:</p>
+<blockquote>
+<p>Switch to a specified branch. The working tree and the index are updated to match the branch.
+All new commits will be added to the tip of this branch.</p></blockquote>
+<p>Simple and straightforward! To switch a branch (FYI — it auto-tracks remote branches):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git switch BRANCH
+</span></span></code></pre></div><p>To create and switch a branch in one go:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git switch --create BRANCH
+</span></span></code></pre></div><blockquote>
+<p>&#x2139;&#xfe0f; <code>git switch</code> is experimental from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc">v2.23</a> (August 2019),
+stable from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.0.adoc">v2.51</a> (August 2025).</p></blockquote>
+<h1 id="push-branches">Push Branches</h1>
+<p>Attempting to push a local branch results in a helpful message:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git push BRANCH
+</span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">fatal: The current branch BRANCH has no upstream branch.
+</span></span></span><span class="line"><span class="cl"><span class="go">To push the current branch and set the remote as upstream, use
+</span></span></span><span class="line"><span class="cl"><span class="go"></span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">    git push --set-upstream origin BRANCH
+</span></span></span><span class="line"><span class="cl"><span class="go"></span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">To have this happen automatically for branches without a tracking
+</span></span></span><span class="line"><span class="cl"><span class="go">upstream, see &#39;push.autoSetupRemote&#39; in &#39;git help config&#39;.
+</span></span></span></code></pre></div><p>Git advertising <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushautoSetupRemote">a new feature</a>? Amazing!
+Unfortunately, with all the noise these days, it&rsquo;s easy to miss.
+It does work though — changing the config instructs Git to set upstream on its own:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git config --global push.autoSetupRemote <span class="nb">true</span>
+</span></span></code></pre></div><blockquote>
+<p>&#x2139;&#xfe0f; <code>push.autoSetupRemote</code> is available from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.37.0.adoc">v2.37</a> (June 2022).</p></blockquote>
+<h1 id="compare-changes">Compare Changes</h1>
+<p><code>git diff</code> is good, but it can be better — especilly when it comes to the <em>move</em> kind of changes.</p>
+<p>There is <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-diffcolorMoved">a diff option</a> for this, disabled by default:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git config --global diff.colorMoved <span class="nb">true</span>
+</span></span></code></pre></div><p>When configured, the diff output uses different colors to highlight moved content —
+magenta (<code>tput</code> color #5) instead of red (#1) and cyan (#6) instead of green (#2).
+Additions and deletions keep their usual red and green colors.</p>
+<p>The option accepts <a href="https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-movedmode">multiple modes</a>.
+<code>dimmed-zebra</code> might be a good one — it dims <em>moves</em>, which might be not super important most of the time.</p>
+<blockquote>
+<p>&#x2139;&#xfe0f; <code>diff.colorMoved</code> is available from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.15.0.adoc">v2.15</a> (October 2017).</p></blockquote>
+<h1 id="restore-changes">Restore Changes</h1>
+<p>Restoring changes can be done with <code>git checkout</code> (as is switching branches and much more).
+Following the same idea behind <code>git switch</code>, <code>git restore</code> is a simpler alternative.
+Take a look at <a href="https://git-scm.com/docs/git-restore">the <code>man</code> page</a>:</p>
+<blockquote>
+<p>Restore specified paths in the working tree with some contents from a restore source.
+If a path is tracked but does not exist in the restore source, it will be removed to match the source.</p></blockquote>
+<p>To restore a file to its committed state:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git restore PATH
+</span></span></code></pre></div><p>Also take a look at <code>--staged</code> and <code>--worktree</code> arguments when dealing with more complex scenarios.</p>
+<blockquote>
+<p>&#x2139;&#xfe0f; <code>git restore</code> is experimental from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc">v2.23</a> (August 2019),
+stable from <a href="https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.0.adoc">v2.51</a> (August 2025).</p></blockquote>
+<h1 id="whats-next">What’s Next?</h1>
+<p><a href="https://blog.gitbutler.com/how-git-core-devs-configure-git">The <em>How Core Git Developers Configure Git</em> article</a>
+from the GitButler folks is a great read — it explores which options might be worth to have enabled by default.</p>
+<p>New commands like <code>git switch</code> and <code>git restore</code> are easier for Git newbies to understand.
+Not everyone has been using Git for 15+ years and is familiar with all <code>git checkout</code> nuances.</p>
+<p>All in all, it’s amazing to see Git continue to grow and evolve. Here’s to the next 20 years!</p>
+
+</main>
+
+
+<hr/>
+
+<footer>
+<nav>
+  <ul>
+    
+    <li class="menu-left"><a href="/">Posts</a></li>
+    
+    
+    <li class="menu-right"><a href="feed://arturdryomov.dev/index.xml">RSS</a></li>
+    
+    <li class="menu-right"><a href="https://github.com/arturdryomov">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+</footer>
+
+
+</body>
+
+</html>
+
