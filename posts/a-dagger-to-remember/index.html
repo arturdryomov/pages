@@ -83,7 +83,8 @@ Increasing <code>kapt</code> processing time for unit tests by a magnitude of <c
 especially if you are running tests more often than the project executable itself.
 I’ve asked myself a million dollar question.</p>
 <blockquote>
-<p>Do you even need <code>kapt</code>?</p></blockquote>
+<p>Do you even need <code>kapt</code>?</p>
+</blockquote>
 <p>Turns out there was only a single annotation-processing dependency in the project.
 I think you already know which one. Yep, it was <a href="https://google.github.io/dagger/">Dagger</a>.
 Down the rabbit hole we go.</p>
@@ -105,7 +106,8 @@ You can observe this naming in different environments, such as
 <a href="https://golang.org/pkg/context/">Go</a> and
 <a href="https://spring.io/understanding/application-context">Spring</a>.
 You can associate it with Google Dagger <code>@Component</code> or
-a Square Dagger <code>ObjectGraph</code>.</p></blockquote>
+a Square Dagger <code>ObjectGraph</code>.</p>
+</blockquote>
 <p>There is a downside though. The Square version had a small but extensive API.
 In my opinion, it covered almost everything you need from a dependency injection.
 The Google version has grown up big and sometimes not in a good way.
@@ -121,7 +123,7 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 </ul>
 <p>Basically, the DI glue is separated from the main codebase.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="c1">// Model
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Repository</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">content</span><span class="p">:</span> <span class="n">Observable</span><span class="p">&lt;</span><span class="n">RepositoryContent</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">
@@ -139,7 +141,7 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// Presentation
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">ViewModel</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="nd">@Inject</span> <span class="k">lateinit</span> <span class="k">var</span> <span class="py">service</span><span class="p">:</span> <span class="n">Service</span>
@@ -150,7 +152,7 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">// Dagger
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="nd">@Module</span>
 </span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">RepositoryModule</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="nd">@Provides</span> <span class="nd">@Singleton</span>
@@ -179,14 +181,16 @@ multibindings, reusable dependencies, components and subcomponents, modules and 
 <h2 id="decisions-decisions">Decisions, Decisions</h2>
 <p>All of the above got me thinking.</p>
 <blockquote>
-<p>Do you need complex tools to solve simple problems?</p></blockquote>
+<p>Do you need complex tools to solve simple problems?</p>
+</blockquote>
 <p>As you can see, the setup is pretty simple.
 Yes, <em>potentially</em> Dagger could give some benefits,
 but is it worth it increasing build time for every developer on the team
 dozens of times per day? And taking into an account the fact
 that this setup worked for years without any change at all?</p>
 <blockquote>
-<p>Do you need to keep using tools designed for different conditions?</p></blockquote>
+<p>Do you need to keep using tools designed for different conditions?</p>
+</blockquote>
 <p>Let’s face it — the annotation processing is a nice idea but meant
 for special environments.
 It is too verbose to declare everything by hand using Java, so here we go,
@@ -195,7 +199,8 @@ Is it a good fit if you are using Kotlin for the entire codebase?
 I have no idea, it is your codebase and your call. I did mine.</p>
 <h2 id="back-to-the-roots">Back to the Roots</h2>
 <blockquote>
-<p>Having a library isn’t cool. You know what’s cool? Not having a library.</p></blockquote>
+<p>Having a library isn’t cool. You know what’s cool? Not having a library.</p>
+</blockquote>
 <p>Let’s go crazy and use Kotlin to make our own
 <a href="https://en.wikipedia.org/wiki/Inversion_of_control">inversion of control</a> implementation.
 Not <a href="https://github.com/Ekito/koin">Koin</a>,
@@ -206,7 +211,8 @@ just some patterns and language features.</p>
 <p>I highly suggest reading
 <a href="https://martinfowler.com/articles/injection.html">a Martin Fowler article</a>
 about inversion of control (IoC) containers.
-It contains almost everything you need to know about IoC, so I’m going to talk about practice only.</p></blockquote>
+It contains almost everything you need to know about IoC, so I’m going to talk about practice only.</p>
+</blockquote>
 <h3 id="modules">Modules</h3>
 <p>What is a module? It is a registry of dependencies.
 What properties a module has? Dependencies on other modules.
@@ -395,14 +401,14 @@ and
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// Error: type mismatch.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>Unfortunately for this to work all child <code>Context</code> variations should be declared
 at the top-level <code>Context</code>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">interface</span> <span class="nc">Context</span> <span class="p">:</span> <span class="n">RepositoryModule</span><span class="p">,</span> <span class="n">ServiceModule</span><span class="p">,</span> <span class="nc">ViewModel</span><span class="p">.</span><span class="n">Context</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">fun</span> <span class="nf">create</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="n">ViewModel</span><span class="p">(</span><span class="n">createGlobalContext</span><span class="p">())</span> <span class="c1">// It works!
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>A more sane approach actually can be just passing all dependencies
 in <code>ViewModel</code> constructors directly, without a <code>Context</code> instance.
 Plus, this requires declaring a module per dependency to be able

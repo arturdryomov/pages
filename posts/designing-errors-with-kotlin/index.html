@@ -97,7 +97,8 @@ Essentially it is like returning a <code>Pair</code> or an <code>Either</code>.<
 <blockquote>
 <p>&#x1f4d6; Technical details are explained in
 <a href="https://www.mikeash.com/pyblog/friday-qa-2017-08-25-swift-error-handling-implementation.html">the excellent article</a>
-by Mike Ash.</p></blockquote>
+by Mike Ash.</p>
+</blockquote>
 <p>At the same time,
 <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0235-add-result.md">there is an accepted proposal</a>
 to introduce the <code>Result</code> type to the standard library as an alternative
@@ -115,9 +116,9 @@ Explicit return values are used instead.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="nx">filename</span><span class="p">:</span><span class="w"> </span><span class="nx">String</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="nx">File</span><span class="p">,</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">file</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div><p>Basically, each function which might result in an error returns a pair
 of a value and an error. That’s it! Looks like a C-style error
 handling, but at least it is explicit and type-safe. The style
@@ -125,7 +126,7 @@ is verbose, but it works surprisingly good due to the universal application.
 Plus, Go 2.0 most likely will introduce
 <a href="https://go.googlesource.com/proposal/+/master/design/go2draft-error-handling.md">syntax sugar for error handling</a>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">handle</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nb">println</span><span class="p">(</span><span class="s">&#34;YARRR!&#34;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nx">file</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">check</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nx">file</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">check</span><span class="w"> </span><span class="nf">open</span><span class="p">(</span><span class="s">&#34;file.txt&#34;</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></div><p>There is a <code>panic</code> function which might look like a Java
 unchecked exception. Using enough hacks makes it possible to catch <code>panic</code> errors
 but it is considered non-idiomatic.
@@ -133,7 +134,8 @@ but it is considered non-idiomatic.
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nb">panic</span><span class="p">(</span><span class="s">&#34;on the streets of London&#34;</span><span class="p">)</span><span class="w">
 </span></span></span></code></pre></div><blockquote>
 <p>&#x1f4d6; There is <a href="https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance">a great article</a>
-on coping with Go error handling by Sergey Alexandrovich.</p></blockquote>
+on coping with Go error handling by Sergey Alexandrovich.</p>
+</blockquote>
 <h1 id="rust">Rust</h1>
 <p>Rust takes what Go has and moves it to the next level, defining
 two error categories
@@ -143,7 +145,8 @@ two error categories
 For a recoverable error, such as a file not found error, it’s reasonable to report
 the problem to the user and retry the operation.
 Unrecoverable errors are always symptoms of bugs,
-like trying to access a location beyond the end of an array.</p></blockquote>
+like trying to access a location beyond the end of an array.</p>
+</blockquote>
 <p>That’s what I like about Rust — the straightforward declaration of principles.</p>
 <ul>
 <li>
@@ -159,7 +162,7 @@ with <a href="https://www.ncameron.org/blog/rust-in-2022/">plans</a> to make it 
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">enum</span> <span class="nb">Result</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Value</span><span class="p">),</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">Err</span><span class="p">(</span><span class="n">Error</span><span class="p">),</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></div></li>
 </ul>
 <h1 id="kotlin">Kotlin</h1>
@@ -220,7 +223,8 @@ about significant system failures that require developer attention.
 <a href="https://en.wikipedia.org/wiki/Fail-fast">Fail-fast</a>, right?</p>
 <blockquote>
 <p>&#x1f4a1; Use <a href="https://github.com/JakeWharton/RxRelay"><code>Relay</code></a>
-instead of <code>Subject</code> to stop thinking about <code>onError</code> and <code>onComplete</code>.</p></blockquote>
+instead of <code>Subject</code> to stop thinking about <code>onError</code> and <code>onComplete</code>.</p>
+</blockquote>
 <h1 id="results"><code>Result</code>s</h1>
 <p>I see a clear benefit in using result-driven error handling and a strict
 recoverable-unrecoverable paradigm.</p>
@@ -236,7 +240,8 @@ as results. That’s it. In a way, it helps to avoid side effects.</li>
 <blockquote>
 <p>&#x1f4d6; Talking side effects and functional programming —
 <a href="http://book.realworldhaskell.org/read/error-handling.html">Haskell follows a similar approach</a>
-to avoid exceptions in favor of result types.</p></blockquote>
+to avoid exceptions in favor of result types.</p>
+</blockquote>
 <p>Exceptions provide an easy way to deal with errors. Not necessary
 <a href="https://www.infoq.com/presentations/Simple-Made-Easy">the simple one</a>.</p>
 <hr>

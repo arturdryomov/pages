@@ -108,7 +108,7 @@ to test file interactions. It’s a fun approach but with its own pros and cons.
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
 </span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">10</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">File</span><span class="p">(</span><span class="n">packagesRoot</span><span class="p">,</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="k">it</span><span class="p">.</span><span class="n">createNewFile</span><span class="p">()</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
@@ -132,7 +132,8 @@ polluting <a href="https://en.wikipedia.org/wiki/Inode">the <code>inode</code> s
 It might feel new but the NIO is available from Java 7 (2011).</p>
 <blockquote>
 <p>&#x1f4a1; Hello there, a curious Android developer.
-<code>java.nio.file.*</code> is available from API 26 (8.0).</p></blockquote>
+<code>java.nio.file.*</code> is available from API 26 (8.0).</p>
+</blockquote>
 <p>Both the interface and the implementation need changes:</p>
 <ul>
 <li><code>java.io.File</code> becomes <code>java.nio.file.Path</code>;</li>
@@ -185,7 +186,7 @@ It means Just In Memory File System. It doesn’t use disk at all.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
 </span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">10</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">getPath</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">)</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="nc">Files</span><span class="p">.</span><span class="n">createFile</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
@@ -254,7 +255,7 @@ Also it’s <a href="https://github.com/square/okio">a separate artifact</a> and
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="nd">@Test</span>
 </span></span><span class="line"><span class="cl">    <span class="k">fun</span> <span class="nf">pack</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">files</span> <span class="p">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..</span><span class="mi">10</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="s2">&#34;</span><span class="si">$it</span><span class="s2">.txt&#34;</span><span class="p">.</span><span class="n">toPath</span><span class="p">()</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">onEach</span> <span class="p">{</span> <span class="n">packagesFileSystem</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">{}</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">

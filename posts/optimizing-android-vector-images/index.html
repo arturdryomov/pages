@@ -67,7 +67,8 @@ in favor of Android Studio.</li>
 </ul>
 <blockquote>
 <p>&#x1f4a1; Zeplin exports SVG assets
-<a href="https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin">using SVGO under the hood</a>.</p></blockquote>
+<a href="https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin">using SVGO under the hood</a>.</p>
+</blockquote>
 <h1 id="images">Images</h1>
 <h2 id="octicons"><a href="https://octicons.github.com/">Octicons</a></h2>
 <p>These are examples of semi-complicated web icons.
@@ -99,7 +100,8 @@ using so-called <a href="https://en.wikipedia.org/wiki/Turtle_graphics">turtle g
 <blockquote>
 <p>&#x1f4d6; <code>android:pathData</code> uses the exact same format as <code>d</code> attribute in SVG files.
 Mozilla provides <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d">great documentation</a>
-for it with neat samples.</p></blockquote>
+for it with neat samples.</p>
+</blockquote>
 <p>Let’s see how it looks in action.</p>
 <ul>
 <li>
@@ -143,7 +145,8 @@ for such cases.</p>
 <blockquote>
 <p>&#x1f4d6; The maximum instructions count for Lint is <code>800</code>.
 See <a href="https://android.googlesource.com/platform/tools/base/+/studio-master-dev/lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/VectorPathDetector.java">the source code</a>
-for details.</p></blockquote>
+for details.</p>
+</blockquote>
 <p>Do not forget that <code>#apksizematters</code>! Less instructions → less text → less file size.</p>
 <p>Besides <code>pathData</code> differences, there are some minor deviations as well.</p>
 <ul>
@@ -161,7 +164,7 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 <details>
   <summary>_Click to expand the benchmark code._</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">companion</span> <span class="k">object</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS</span><span class="n">_COUNT</span> <span class="p">=</span> <span class="m">10</span><span class="n">_000</span>
+</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="k">const</span> <span class="k">val</span> <span class="py">ITERATIONS</span><span class="n">_COUNT</span> <span class="p">=</span> <span class="mi">10_000</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">private</span> <span class="k">val</span> <span class="py">random</span> <span class="p">=</span> <span class="n">Random</span><span class="p">()</span>
@@ -177,7 +180,7 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">drawableName</span> <span class="p">=</span> <span class="n">resources</span><span class="p">.</span><span class="n">getResourceEntryName</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">measurements</span> <span class="p">=</span> <span class="p">(</span><span class="m">0</span> <span class="n">until</span> <span class="n">ITERATIONS_COUNT</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">measurements</span> <span class="p">=</span> <span class="p">(</span><span class="mi">0</span> <span class="n">until</span> <span class="n">ITERATIONS_COUNT</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">measure</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">val</span> <span class="py">averageParseMillis</span> <span class="p">=</span> <span class="n">measurements</span>
@@ -198,7 +201,7 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">parseTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">// Unfortunately it seems to be impossible to disable internal caching.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
+</span></span></span><span class="line"><span class="cl">        <span class="n">drawable</span> <span class="p">=</span> <span class="n">getDrawable</span><span class="p">(</span><span class="n">drawableRes</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">drawable</span> <span class="o">!is</span> <span class="n">VectorDrawable</span><span class="p">)</span> <span class="p">{</span>
@@ -206,12 +209,12 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">// Change tint to prevent internal render internal caching.
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">drawable</span><span class="p">.</span><span class="n">setTint</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">nextInt</span><span class="p">())</span>
+</span></span></span><span class="line"><span class="cl">    <span class="n">drawable</span><span class="p">.</span><span class="n">setTint</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">nextInt</span><span class="p">())</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">bitmap</span> <span class="p">=</span> <span class="nc">Bitmap</span><span class="p">.</span><span class="n">createBitmap</span><span class="p">(</span><span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicWidth</span><span class="p">,</span> <span class="n">drawable</span><span class="p">.</span><span class="n">intrinsicHeight</span><span class="p">,</span> <span class="nc">Bitmap</span><span class="p">.</span><span class="nc">Config</span><span class="p">.</span><span class="n">ARGB_8888</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">canvas</span> <span class="p">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">bitmap</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">drawable</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">height</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">drawable</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">canvas</span><span class="p">.</span><span class="n">height</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">renderTime</span> <span class="p">=</span> <span class="n">measureTimeMillis</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">drawable</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">canvas</span><span class="p">)</span>
@@ -231,7 +234,8 @@ The benchmark code measures <code>VectorDrawable#draw</code> calls instead.</p>
 <p>&#x1f4d6; Seems like in Android 7.0 <code>VectorDrawable</code>
 <a href="https://android.googlesource.com/platform/frameworks/base/+/804618d0863a5d8ad1b08a846bd5319be864a1cb">was re-implemented to use native rendering</a>.
 Relative numbers remain the same, but be advised that absolute performance
-might differ between API versions.</p></blockquote>
+might differ between API versions.</p>
+</blockquote>
 <h3 id="results">Results</h3>
 <h4 id="octicon-octoface"><code>octicon-octoface</code></h4>
 <table>

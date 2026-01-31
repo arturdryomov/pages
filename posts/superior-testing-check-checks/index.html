@@ -102,8 +102,8 @@ intercepting invocations and a bit of salt. It works though and works well.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">:</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;)</span> <span class="p">:</span> <span class="n">Calculator</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">onPlus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -111,9 +111,9 @@ intercepting invocations and a bit of salt. It works though and works well.</p>
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">onPlus</span> <span class="p">=</span> <span class="n">mock</span><span class="p">&lt;</span><span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;&gt;()</span>
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">calculator</span> <span class="p">=</span> <span class="nc">Calculator</span><span class="p">.</span><span class="n">Impl</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">verify</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">verify</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><pre tabindex="0"><code>TEST PASSED
 </code></pre><p>Not exactly an expected result. <code>Calculator.Impl.plus</code> invokes <code>onPlus</code> two times.
@@ -127,7 +127,7 @@ to find out that the message was changed again, to another text we don’t want 
 <p>The good news is — Mockito has <a href="https://static.javadoc.io/org.mockito/mockito-core/2.25.1/org/mockito/Mockito.html#only--">a verification mode</a>
 which checks exactly what we need.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- verify(onPlus).accept(2)
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ verify(onPlus, only()).accept(2)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+ verify(onPlus, only()).accept(2)
 </span></span></span></code></pre></div><pre tabindex="0"><code>TEST FAILED
 
 org.mockito.exceptions.verification.NoInteractionsWanted:
@@ -150,11 +150,11 @@ For your reference, here is the list of all invocations ([?] - means unverified)
 It is useful for tests where there is an interest in checking behavior
 after a particular state and all interactions before this state are irrelevant.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="nd">@Test</span> <span class="k">fun</span> <span class="nf">testCalculate</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">repeat</span><span class="p">(</span><span class="m">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">repeat</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="p">{</span> <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="k">it</span><span class="p">)</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="n">clearInvocations</span><span class="p">(</span><span class="n">onPlus</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="n">verifyOnly</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">verifyOnly</span><span class="p">(</span><span class="n">onPlus</span><span class="p">).</span><span class="n">accept</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div></li>
 </ul>
@@ -171,7 +171,7 @@ Observe!</p>
 </span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">value</span> <span class="p">=</span> <span class="nc">BehaviorSubject</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;().</span><span class="n">toSerialized</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">val</span> <span class="py">plus</span> <span class="p">=</span> <span class="n">Consumer</span><span class="p">&lt;</span><span class="n">Int</span><span class="p">&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">value</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">value</span><span class="p">.</span><span class="n">onNext</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">value</span><span class="p">.</span><span class="n">onError</span><span class="p">(</span><span class="n">RuntimeException</span><span class="p">())</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
@@ -182,9 +182,9 @@ Observe!</p>
 </span></span><span class="line"><span class="cl">        <span class="k">value</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">valueObserver</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">calculator</span><span class="p">.</span><span class="n">plus</span><span class="p">.</span><span class="n">accept</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="n">valueObserver</span><span class="p">.</span><span class="n">assertValue</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">valueObserver</span><span class="p">.</span><span class="n">assertValue</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><pre tabindex="0"><code>TEST PASSED
 </code></pre><p>Not expected, right? <code>Calculator.Impl.plus</code> emits the value event and the terminal error event.
@@ -201,7 +201,7 @@ will check for values and for no terminal events.</li>
 will check for the value and for completion event. Useful for testing <code>Single</code>.</li>
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- valueObserver.assertValue(2)
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ valueObserver.assertValuesOnly(2)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+ valueObserver.assertValuesOnly(2)
 </span></span></span></code></pre></div><pre tabindex="0"><code>TEST FAILED
 
 Error(s) present: (latch = 0, values = 1, errors = 1, completions = 0)

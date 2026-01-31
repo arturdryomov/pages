@@ -53,7 +53,7 @@ you can boil, grill and fry them&hellip; Wait, that’s not food, right?</p>
 There is a Git command for that!</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git shortlog --summary --numbered
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">  2  Bender Rodriguez
+</span></span></span><span class="line"><span class="cl"><span class="go">  2  Bender Rodriguez
 </span></span></span><span class="line"><span class="cl"><span class="go">  2  Philip J. Fry
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Bending Unit 22
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Turanga Leela
@@ -61,7 +61,7 @@ There is a Git command for that!</p>
 Git makes it look like there are four. It gets worse with emails.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git shortlog --summary --numbered --email
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">  2  Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;
+</span></span></span><span class="line"><span class="cl"><span class="go">  2  Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Bender Rodriguez &lt;bending-unit-22@mom.corp&gt;
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Bending Unit 22 &lt;bender.rodriguez@planet-express.earth&gt;
@@ -107,20 +107,20 @@ Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt; &lt;bending-unit-
 aliasing secondary email to the primary identity. Let’s check.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git shortlog --summary --numbered
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">  3  Bender Rodriguez
+</span></span></span><span class="line"><span class="cl"><span class="go">  3  Bender Rodriguez
 </span></span></span><span class="line"><span class="cl"><span class="go">  2  Philip J. Fry
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Turanga Leela
-</span></span></span><span class="line"><span class="cl"><span class="go"></span><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="gp">$</span> git shortlog --summary --numbered --email
+</span></span></span><span class="line"><span class="cl"><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="gp">$</span> git shortlog --summary --numbered --email
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">  3  Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
+</span></span></span><span class="line"><span class="cl"><span class="go">  3  Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;
 </span></span></span><span class="line"><span class="cl"><span class="go">  2  Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;
 </span></span></span><span class="line"><span class="cl"><span class="go">  1  Turanga Leela &lt;turanga.leela@planet-express.earth&gt;
 </span></span></span></code></pre></div><h1 id="git-log"><code>git log</code></h1>
 <p>There is a catch. Log will not show mail-mapped values.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git log --format<span class="o">=</span><span class="s2">&#34;%an &lt;%ae&gt;: %s&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">Bender Rodriguez &lt;bending-unit-22@mom.corp&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
+</span></span></span><span class="line"><span class="cl"><span class="go">Bender Rodriguez &lt;bending-unit-22@mom.corp&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
 </span></span></span><span class="line"><span class="cl"><span class="go">Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to D. Frosted Wang.
 </span></span></span><span class="line"><span class="cl"><span class="go">Bending Unit 22 &lt;bender.rodriguez@planet-express.earth&gt;: 01100001 01101100 01101100
 </span></span></span><span class="line"><span class="cl"><span class="go">Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101011 01101001 01101100 01101100
@@ -137,7 +137,7 @@ Not <code>git log</code> though.</p>
 <p>Yeah, that’s complicated. It works though!</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> git log --format<span class="o">=</span><span class="s2">&#34;%aN &lt;%aE&gt;: %s&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="err">
-</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="go">Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
+</span></span></span><span class="line"><span class="cl"><span class="go">Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101000 01110101 01101101 01100001 01101110 01110011
 </span></span></span><span class="line"><span class="cl"><span class="go">Philip J. Fry &lt;philip.j.fry@planet-express.earth&gt;: Delivering pizza to D. Frosted Wang.
 </span></span></span><span class="line"><span class="cl"><span class="go">Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01100001 01101100 01101100
 </span></span></span><span class="line"><span class="cl"><span class="go">Bender Rodriguez &lt;bender.rodriguez@planet-express.earth&gt;: 01101011 01101001 01101100 01101100

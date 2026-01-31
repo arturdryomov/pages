@@ -103,7 +103,7 @@ use everything anyway.</p>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TestBluetooth</span> <span class="p">:</span> <span class="n">Bluetooth</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="k">val</span> <span class="py">supportsLeResult</span> <span class="p">=</span> <span class="nc">PublishRelay</span><span class="p">.</span><span class="n">create</span><span class="p">&lt;</span><span class="n">Boolean</span><span class="p">&gt;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">supportsLeResult</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">).</span><span class="n">singleOrError</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">override</span> <span class="k">val</span> <span class="py">supportsLe</span> <span class="p">=</span> <span class="n">supportsLeResult</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">singleOrError</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>The <code>Bluetooth</code> instance should be provided via the Inversion of Control
 implementation. <code>AndroidBluetooth</code> is for the real use and <code>TestBluetooth</code> is for tests.</p>
@@ -156,7 +156,8 @@ UI testing exercises your app&rsquo;s UI in the same way that users do without a
 to your app&rsquo;s internal methods, functions, and variables.
 This enables your tests to see the app the same way a user does,
 exposing UI problems that users encounter.</p>
-<p>&ndash; <a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html"><em>Apple documentation</em></a></p></blockquote>
+<p>&ndash; <a href="https://developer.apple.com/library/content/documentation/DeveloperTools/Conceptual/testing_with_xcode/chapters/09-ui_testing.html"><em>Apple documentation</em></a></p>
+</blockquote>
 <p>Sounds like a dream come true, right? Manual QA processes can be completely automated!</p>
 <p>The difference from manual procedures is in a programmatic-ish approach.
 Test scenarios are getting described as a regular test suite.
@@ -219,7 +220,8 @@ an <code>IdlingResource</code> for the animation or disable animations in the ap
 altogether, which leads to far less intrusion in the main codebase.</p>
 <blockquote>
 <p>&#x26a0;&#xfe0f; Disabling animations makes tests more stable but less honest —
-they do not check how animations work and to which events they might lead.</p></blockquote>
+they do not check how animations work and to which events they might lead.</p>
+</blockquote>
 <h3 id="backend-communication">Backend Communication</h3>
 <h4 id="real-backend">Real Backend</h4>
 <p>This is <a href="https://www.youtube.com/watch?v=siwpn14IE7E">the danger zone</a> of End-to-End tests.</p>
@@ -261,7 +263,8 @@ The same can be achieved with a clever blocking OkHttp <code>Interceptor</code>.
 </ul>
 <blockquote>
 <p>&#x26a0;&#xfe0f; Replacing network-related code makes tests less honest
-from the integration standpoint.</p></blockquote>
+from the integration standpoint.</p>
+</blockquote>
 <p>Any attempt to have a separate backend implementation brings
 a significant downside though — following the contract.</p>
 <p>In ideal world, the backend team follows a shared documented contract
@@ -341,7 +344,8 @@ People think it can’t be that old and it can’t be that big for so many peopl
 <p>The more the person invests, the less chance they will turn back.
 Eventually, when one is challenged or questioned, it means its investment
 and thus intelligence is questioned. No one can accept that. Not even to themselves.</p>
-<p>&ndash; <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p></blockquote>
+<p>&ndash; <a href="https://en.wikipedia.org/wiki/Revolver_(2005_film)"><em>Revolver (2005)</em></a></p>
+</blockquote>
 <h1 id="automation-is-a-lie">Automation is a Lie?</h1>
 <p>There is nothing wrong with the concept of UI testing. In theory, it sounds great.
 Unfortunately, the practice breaks it easily. Taking a look at a bigger picture
@@ -420,7 +424,8 @@ of risky code was caught by an extensive unit tests suite.</p>
 Attack ships on fire off the shoulder of Orion.
 I watched C-beams glitter in the dark near the Tannhäuser Gate.
 All those moments will be lost in time, like tears in rain.</p>
-<p>&ndash; <a href="https://en.wikipedia.org/wiki/Tears_in_rain_monologue"><em>Roy Batty</em></a></p></blockquote>
+<p>&ndash; <a href="https://en.wikipedia.org/wiki/Tears_in_rain_monologue"><em>Roy Batty</em></a></p>
+</blockquote>
 <p>It is always hard to let go. A lot of effort was put into writing
 <a href="https://github.com/gojuno/composer">a custom test runner</a>,
 <a href="https://github.com/gojuno/swarmer">a custom emulators manager</a>,

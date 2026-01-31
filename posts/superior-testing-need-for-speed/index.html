@@ -60,7 +60,7 @@ It takes time and I think <a href="https://www.youtube.com/watch?v=SLILjDx0SO0">
 It will execute Gradle tasks in parallel, not much else.
 <a href="https://docs.gradle.org/current/dsl/org.gradle.api.tasks.testing.Test.html#org.gradle.api.tasks.testing.Test:maxParallelForks">We can do the same with tests</a>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">tasks</span><span class="p">.</span><span class="n">withType</span><span class="p">&lt;</span><span class="n">Test</span><span class="p">&gt;</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">maxParallelForks</span> <span class="p">=</span> <span class="nc">Runtime</span><span class="p">.</span><span class="n">getRuntime</span><span class="p">().</span><span class="n">availableProcessors</span><span class="p">()</span> <span class="p">/</span> <span class="m">2</span>
+</span></span><span class="line"><span class="cl">    <span class="n">maxParallelForks</span> <span class="p">=</span> <span class="nc">Runtime</span><span class="p">.</span><span class="n">getRuntime</span><span class="p">().</span><span class="n">availableProcessors</span><span class="p">()</span> <span class="p">/</span> <span class="mi">2</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>The <code>maxParallelForks</code> default value is <code>1</code>. Give it a bigger number and Gradle
 will execute test classes (not methods) in parallel. The snippet above
@@ -175,7 +175,8 @@ since it is a matter of choice. There is the command though:</p>
 excluding the <code>lintDebug</code> with similar motivation.</p>
 <blockquote>
 <p>You’re probably only shipping your release variant,
-so you could limit yourself to just running <code>lintRelease</code> and you’re not going to miss much.</p></blockquote>
+so you could limit yourself to just running <code>lintRelease</code> and you’re not going to miss much.</p>
+</blockquote>
 <h1 id="math">Math</h1>
 <p>Let’s iterate over what can be done to make tests execution faster, without changing the source code.</p>
 <ul>

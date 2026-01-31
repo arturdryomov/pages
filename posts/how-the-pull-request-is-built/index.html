@@ -86,7 +86,7 @@ especially for non-enterprise-level-complicated scenarios.</p>
 </span></span></code></pre></div><p>I create a Git branch, commit changes and open a pull request. But! When the PR
 was being prepared someone had merged the following change.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">- &lt;color name=&#34;white&#34;&gt;#fffafa&lt;/white&gt;
-</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+ &lt;color name=&#34;snow_white&#34;&gt;#fffafa&lt;/white&gt;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+ &lt;color name=&#34;snow_white&#34;&gt;#fffafa&lt;/white&gt;
 </span></span></span></code></pre></div><p>It actually makes sense — <code>#fffafa</code> isn’t a white per se,
 but <a href="https://en.wikipedia.org/wiki/Shades_of_white#Snow">a shade of white</a>.</p>
 <p>Merging the PR with the new screen can break the target branch at this point,
@@ -121,7 +121,8 @@ This situation might happen because Travis (and CI platforms in general)
 <a href="https://docs.travis-ci.com/user/pull-requests/#my-pull-request-isnt-being-built">does not merge source branches to target branches on its own</a>:</p>
 <blockquote>
 <p>We rely on the merge commit that GitHub transparently creates between the changes
-in the source branch and the upstream branch the pull request is sent against.</p></blockquote>
+in the source branch and the upstream branch the pull request is sent against.</p>
+</blockquote>
 <p>This special reference has a format of <code>refs/pull/PR_NUMBER/merge</code>
 and can be fetched by anyone. This is great since
 CI platforms can use this reference instead of merging branches on their own.</p>
@@ -132,17 +133,20 @@ CI platforms can use this reference instead of merging branches on their own.</p
 you shouldn’t be relying on them. Because it’s undocumented –
 the behavior might change at any time and those refs might completely go away without warning.
 My recommendation is that if you need a merge commit between the base and head refs,
-you create that merge commit yourself in the local clone instead of relying on merge commits from GitHub.</p></blockquote>
+you create that merge commit yourself in the local clone instead of relying on merge commits from GitHub.</p>
+</blockquote>
 <p>Just to be sure I’ve contacted GitHub support and received a direct confirmation:</p>
 <blockquote>
-<p>This remains an undocumented feature and shouldn’t be relied on since it is subject to change at anytime.</p></blockquote>
+<p>This remains an undocumented feature and shouldn’t be relied on since it is subject to change at anytime.</p>
+</blockquote>
 <p>Moreover, <a href="https://developer.github.com/v3/pulls/#get-a-single-pull-request">merge references are created in an async manner</a>
 and can be unavailable when a CI platform needs it:</p>
 <blockquote>
 <p>The value of the <code>mergeable</code> attribute can be <code>true</code>, <code>false</code>, or <code>null</code>.
 If the value is <code>null</code>, then GitHub has started a background job to compute the mergeability.
 After giving the job time to complete, resubmit the request. When the job finishes,
-you will see a non-<code>null</code> value for the <code>mergeable</code> attribute in the response.</p></blockquote>
+you will see a non-<code>null</code> value for the <code>mergeable</code> attribute in the response.</p>
+</blockquote>
 <p>Since Travis directly mentions these references in the documentation but, at the same time,
 GitHub declares those as unsupported and unreliable I’ve decided to contact Travis:</p>
 <blockquote>
@@ -150,13 +154,15 @@ GitHub declares those as unsupported and unreliable I’ve decided to contact Tr
 you are quite right to notice an implication in the discrepancy between GitHub’s response to you,
 and the needs of the Travis-CI architecture. I would like to assure you
 that Travis-CI and GitHub do have a close relationship with respect to these topics,
-and will continue to work together in the future.</p></blockquote>
+and will continue to work together in the future.</p>
+</blockquote>
 <p>BTW Bitbucket has similar references which
 <a href="https://community.atlassian.com/t5/Bitbucket-questions/Difference-of-refs-pull-requests-lt-ID-gt-merge-and-refs-pull/qaq-p/772142">are also undocumented</a>:</p>
 <blockquote>
 <p>I want to point out that this is an internal implementation detail,
 and not part of our API. Anything you build that depends on these files
-may stop working after an upgrade to Bitbucket Server without warning.</p></blockquote>
+may stop working after an upgrade to Bitbucket Server without warning.</p>
+</blockquote>
 <h1 id="this-is-confusing">This is Confusing</h1>
 <p>Yes, it is.</p>
 <ul>

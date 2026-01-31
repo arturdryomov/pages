@@ -73,7 +73,8 @@ Imagine a weird code issue which takes hour after hour and multiply
 it by a factor of uncontrolled external tools and environments.</p>
 <blockquote>
 <p>&#x26a0;&#xfe0f; I have to note this explicitly — I’m describing a situation related to small teams.
-Big companies have dedicated units to manage all of this and not a single person.</p></blockquote>
+Big companies have dedicated units to manage all of this and not a single person.</p>
+</blockquote>
 <p>Some people might think it is cool to be that person — the only one who knows
 how the toolchain works. Well, it is really not.</p>
 <ul>
@@ -126,7 +127,8 @@ at the same time.</p>
 <blockquote>
 <p>Human beings are generally not capable of managing more than six to ten people,
 particularly when things go sideways and inevitable contingencies arise.</p>
-<p>— <em><a href="https://www.amazon.com/dp/B00VE4Y0Z2">Extreme Ownership</a></em></p></blockquote>
+<p>— <em><a href="https://www.amazon.com/dp/B00VE4Y0Z2">Extreme Ownership</a></em></p>
+</blockquote>
 <p>The same can be applied to the tools we use. There is a limit on how many
 things a small development team can manage on its own without losing
 the primary goal — to improve the business value of a product.</p>
@@ -171,10 +173,10 @@ be adapted to include Gradle build cache, dependencies — you name it.</p>
 <p>Of course the configuration is declarative and understandable.
 There is no need to be a DevOps to read it.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">trigger_map</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v*&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl">- <span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v*&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow</span><span class="p">:</span><span class="w"> </span><span class="l">release</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">workflows</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">workflows</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="nt">release</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">git-clone</span><span class="p">:</span><span class="w">

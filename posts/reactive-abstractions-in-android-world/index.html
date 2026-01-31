@@ -48,7 +48,8 @@
 <main>
 <p>Who knows how many test suites were not created because of a classic parry.</p>
 <blockquote>
-<p>It cannot be tested — it uses a platform call!</p></blockquote>
+<p>It cannot be tested — it uses a platform call!</p>
+</blockquote>
 <p>Well, it is not actually true all the time.
 Unit testing something that only a human eye and neural networks
 can catch — like animations — doesn’t make sense.
@@ -95,7 +96,8 @@ to a network access point. In fact,
 was there for centuries:</p>
 <blockquote>
 <p>The primary responsibilities of this class are to:
-monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p></blockquote>
+monitor network connections (Wi-Fi, GPRS, UMTS, etc)&hellip;</p>
+</blockquote>
 <p>The usage of the potential abstraction looks like this.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-kotlin" data-lang="kotlin"><span class="line"><span class="cl"><span class="n">disposable</span> <span class="o">+=</span> <span class="n">connectivity</span><span class="p">.</span><span class="n">available</span><span class="p">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">refresh</span><span class="p">)</span>
 </span></span></code></pre></div><p>Seems like a single stream will be enough. Let’s do it!</p>
@@ -176,7 +178,7 @@ of the same <code>Intent</code> building over and over again.</p>
 </span></span><span class="line"><span class="cl">    <span class="p">)</span> <span class="p">:</span> <span class="n">Launcher</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">override</span> <span class="k">fun</span> <span class="nf">launch</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">)</span> <span class="p">=</span> <span class="n">application</span><span class="p">.</span><span class="n">currentActivity</span>
-</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="n">singleOrError</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                <span class="p">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">activity</span> <span class="o">-&gt;</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">try</span> <span class="p">{</span>
