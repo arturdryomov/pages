@@ -9,6 +9,23 @@ params:
   author: "Artur Dryomov"
   description: "Artur Dryomov on software design, development and deployment"
 
+disableHugoGeneratorInject: true
+
+disableKinds:
+  - "section"
+  - "taxonomy"
+  - "term"
+
+enableEmoji: true
+footnoteReturnLinkContents: "↩"
+
+markup:
+  highlight:
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
+
 menu:
   left:
     - name: "Posts"
@@ -22,20 +39,3 @@ menu:
       weight: 1
 
 theme: "barebones"
-
-disableHugoGeneratorInject: true
-enableEmoji: true
-footnoteReturnLinkContents: "↩"
-
-disableKinds:
-  - taxonomy
-  - taxonomyTerm
-  - section
-
-pygmentsCodeFences: true
-pygmentsUseClasses: true
-
-markup:
-  goldmark:
-    renderer:
-      unsafe: true
