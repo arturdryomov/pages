@@ -6,8 +6,15 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 17 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 30 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Bus Factor of Zero</title>
+      <link>https://arturdryomov.dev/posts/bus-factor-of-zero/</link>
+      <pubDate>Fri, 30 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://arturdryomov.dev/posts/bus-factor-of-zero/</guid>
+      <description>&lt;p&gt;Onboarding new developers to a team is an opportunity for introspection.&#xA;It’s one thing to share tribal knowledge, and another to realize&#xA;that the mere existence of such knowledge can be counterproductive.&lt;/p&gt;&#xA;&lt;p&gt;Recently, I had an opportunity to onboard a new developer to one of our projects.&#xA;Fortunately, almost everything went right. In a couple of days, the developer&#xA;was able to contribute minor changes to the project, within a couple of weeks, major ones.&#xA;Of course, a good portion of this rapid involvement can be attributed to the developer,&#xA;but I believe the approaches described below helped a lot.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Modern Git for Modern Times</title>
       <link>https://arturdryomov.dev/posts/modern-git/</link>
