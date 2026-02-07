@@ -1,45 +1,24 @@
 :root {
-  /* Base16 Tomorrow */
+  /* Base16 Tomorrow and Base16 Tomorrow Night */
+  /* https://github.com/tinted-theming/home/blob/main/styling.md */
   /* https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/tomorrow.yaml */
-  --color-base00: #ffffff;
-  --color-base01: #e0e0e0;
-  --color-base02: #c5c8c6;
-  --color-base03: #b4b7b4;
-  --color-base04: #969896;
-  --color-base05: #373b41;
-  --color-base06: #282a2e;
-  --color-base07: #1d1f21;
-  --color-base08: #c82829;
-  --color-base09: #f5871f;
-  --color-base0a: #eab700;
-  --color-base0b: #718c00;
-  --color-base0c: #3e999f;
-  --color-base0d: #4271ae;
-  --color-base0e: #8959a8;
-  --color-base0f: #a3685a;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Base16 Tomorrow Night */
-    /* https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/tomorrow-night.yaml */
-    --color-base00: #1d1f21;
-    --color-base01: #282a2e;
-    --color-base02: #373b41;
-    --color-base03: #969896;
-    --color-base04: #b4b7b4;
-    --color-base05: #c5c8c6;
-    --color-base06: #e0e0e0;
-    --color-base07: #ffffff;
-    --color-base08: #cc6666;
-    --color-base09: #de935f;
-    --color-base0a: #f0c674;
-    --color-base0b: #b5bd68;
-    --color-base0c: #8abeb7;
-    --color-base0d: #81a2be;
-    --color-base0e: #b294bb;
-    --color-base0f: #a3685a;
-  }
+  /* https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/tomorrow-night.yaml */
+  --color-base00: light-dark(#ffffff, #1d1f21);
+  --color-base01: light-dark(#e0e0e0, #282a2e);
+  --color-base02: light-dark(#c5c8c6, #373b41);
+  --color-base03: light-dark(#b4b7b4, #969896);
+  --color-base04: light-dark(#969896, #b4b7b4);
+  --color-base05: light-dark(#373b41, #c5c8c6);
+  --color-base06: light-dark(#282a2e, #e0e0e0);
+  --color-base07: light-dark(#1d1f21, #ffffff);
+  --color-base08: light-dark(#c82829, #cc6666);
+  --color-base09: light-dark(#f5871f, #de935f);
+  --color-base0a: light-dark(#eab700, #f0c674);
+  --color-base0b: light-dark(#718c00, #b5bd68);
+  --color-base0c: light-dark(#3e999f, #8abeb7);
+  --color-base0d: light-dark(#4271ae, #81a2be);
+  --color-base0e: light-dark(#8959a8, #b294bb);
+  --color-base0f: light-dark(#a3685a, #a3685a);
 }
 
 /* Background */ .bg { color: var(--color-base05); background-color: var(--color-block-background); }

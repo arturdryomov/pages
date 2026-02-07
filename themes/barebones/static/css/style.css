@@ -1,19 +1,11 @@
 :root {
-  --color-background: #ffffff;
-  --color-text: #000000;
-  --color-link: #006bbd;
-  --color-block-background: #f8f8f8;
-  --color-block-border: #ddd;
-}
+  color-scheme: light dark;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #1d1f21;
-    --color-text: #c5c8c6;
-    --color-link: #81a2be;
-    --color-block-background: #282a2e;
-    --color-block-border: #373b41;
-  }
+  --color-background: light-dark(#ffffff, #1d1f21);
+  --color-text: light-dark(#000000, #c5c8c6);
+  --color-link: light-dark(#006bbd, #81a2be);
+  --color-block-background: light-dark(#f8f8f8, #282a2e);
+  --color-block-border: light-dark(#ddd, #373b41);
 }
 
 body, nav {
