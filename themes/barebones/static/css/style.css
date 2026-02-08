@@ -74,26 +74,26 @@ body {
   hanging-punctuation: first last;
 }
 
-.menu-left {
-  float: left;
-  padding-right: 1em;
-}
-
-.menu-right {
-  float: right;
-  padding-left: 1em;
-}
-
 nav {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  align-items: center;
+  display: flex;
   font-size: 90%;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
-nav ul, nav ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.nav-start,
+.nav-end {
+  gap: 1em;
+  display: flex;
+}
+
+.nav-start {
+  margin-inline-end: auto;
+}
+
+.nav-end {
+  margin-inline-start: auto;
 }
 
 .meta {

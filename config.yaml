@@ -33,9 +33,9 @@ menu:
   right:
     - name: "GitHub"
       url: "https://github.com/arturdryomov"
-      weight: 2
+      weight: 1
     - name: "RSS"
       url: "feed://arturdryomov.dev/index.xml"
-      weight: 1
+      weight: 2
 
 theme: "barebones"
