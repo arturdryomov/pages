@@ -8,7 +8,7 @@
   --color-block-border: light-dark(#ddd, #373b41);
 }
 
-body, nav {
+body {
   font-family:
     /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
     "ui-sans-serif",
