@@ -142,8 +142,15 @@ pre code {
 
 blockquote {
   background: var(--color-block-background);
-  border-left: 5px solid var(--color-block-border);
-  padding: 3px 1em 3px;
+  border-inline-start: 0.25em solid var(--color-block-border);
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 1.5em;
+  margin-inline-end: 1.5em;
+  padding-block-start: 0.10em;
+  padding-block-end: 0.10em;
+  padding-inline-start: 1em;
+  padding-inline-end: 0.75em;
 }
 
 table, th, td {
