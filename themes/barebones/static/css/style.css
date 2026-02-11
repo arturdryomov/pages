@@ -2,10 +2,11 @@
   color-scheme: light dark;
 
   --color-background: light-dark(#ffffff, #1d1f21);
+  --color-background-mask: light-dark(#000000, #ffffff);
   --color-text: light-dark(#000000, #c5c8c6);
   --color-link: light-dark(#006bbd, #81a2be);
-  --color-block-background: light-dark(#f8f8f8, #282a2e);
-  --color-block-border: light-dark(#ddd, #373b41);
+  --color-block-background: color-mix(in srgb, var(--color-background), var(--color-background-mask) 3%);
+  --color-block-border: color-mix(in srgb, var(--color-background), var(--color-background-mask) 12%);
 }
 
 body {
