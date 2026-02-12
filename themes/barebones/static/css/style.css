@@ -1,10 +1,31 @@
 :root {
   color-scheme: light dark;
 
-  --color-background: light-dark(#ffffff, #1d1f21);
+  /* Base16 Tomorrow and Base16 Tomorrow Night */
+  /* https://github.com/tinted-theming/home/blob/main/styling.md */
+  /* https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/tomorrow.yaml */
+  /* https://github.com/tinted-theming/schemes/blob/spec-0.11/base16/tomorrow-night.yaml */
+  --color-base00: light-dark(#ffffff, #1d1f21);
+  --color-base01: light-dark(#e0e0e0, #282a2e);
+  --color-base02: light-dark(#c5c8c6, #373b41);
+  --color-base03: light-dark(#b4b7b4, #969896);
+  --color-base04: light-dark(#969896, #b4b7b4);
+  --color-base05: light-dark(#373b41, #c5c8c6);
+  --color-base06: light-dark(#282a2e, #e0e0e0);
+  --color-base07: light-dark(#1d1f21, #ffffff);
+  --color-base08: light-dark(#c82829, #cc6666);
+  --color-base09: light-dark(#f5871f, #de935f);
+  --color-base0a: light-dark(#eab700, #f0c674);
+  --color-base0b: light-dark(#718c00, #b5bd68);
+  --color-base0c: light-dark(#3e999f, #8abeb7);
+  --color-base0d: light-dark(#4271ae, #81a2be);
+  --color-base0e: light-dark(#8959a8, #b294bb);
+  --color-base0f: light-dark(#a3685a, #a3685a);
+
+  --color-background: var(--color-base00);
   --color-background-mask: light-dark(#000000, #ffffff);
-  --color-text: light-dark(#000000, #c5c8c6);
-  --color-link: light-dark(#006bbd, #81a2be);
+  --color-text: var(--color-base05);
+  --color-link: var(--color-base0d);
   --color-block-background: color-mix(in srgb, var(--color-background), var(--color-background-mask) 3%);
   --color-block-border: color-mix(in srgb, var(--color-background), var(--color-background-mask) 12%);
 }
