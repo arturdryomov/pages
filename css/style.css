@@ -162,29 +162,27 @@ pre code {
   padding: 0;
 }
 
+/* Quotes */
+
 blockquote {
   background: var(--color-block-background);
-  border-inline-start: 0.25em solid var(--color-block-border);
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 1.5em;
-  margin-inline-end: 1.5em;
-  padding-block-start: 0.10em;
-  padding-block-end: 0.10em;
-  padding-inline-start: 1em;
-  padding-inline-end: 0.75em;
+  border-inline-start: 4px solid var(--color-block-border);
+  margin-block: 1em 1em;
+  margin-inline: 1.5em 1.5em;
+  padding-block: 0.10em 0.10em;
+  padding-inline: 1em 0.75em;
 }
 
-table, th, td {
+/* Tables */
+
+table {
   border-collapse: collapse;
-  border: 1px solid var(--color-block-border);
 }
 
 th, td {
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  border: 1px solid var(--color-block-border);
+  padding-block: 0.5em 0.5em;
+  padding-inline: 1em 1em;
 }
 
 tr:nth-child(even) {
