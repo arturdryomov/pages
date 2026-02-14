@@ -128,6 +128,8 @@ nav {
   font-size: 110%;
 }
 
+/* Links */
+
 a {
   color: var(--color-link);
   text-decoration: none;
@@ -137,23 +139,22 @@ a:hover {
   text-decoration: underline;
 }
 
-pre, code {
+/* Code */
+
+code, pre {
   background: var(--color-block-background);
   border: 1px solid var(--color-block-border);
-}
-
-pre {
   border-radius: 4px;
-  padding: 1em;
-  overflow-x: auto;
 }
 
 code {
-  border-radius: 3px;
-  padding-right: 4px;
-  padding-left: 4px;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-block: 0.10em 0.10em;
+  padding-inline: 0.25em 0.25em;
+}
+
+pre {
+  overflow: auto;
+  padding: 1em;
 }
 
 pre code {
