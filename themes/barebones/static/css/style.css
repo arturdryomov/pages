@@ -96,18 +96,18 @@ body {
   hanging-punctuation: first last;
 }
 
+/* Navigation */
+
 nav {
   align-items: center;
   display: flex;
   font-size: 90%;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin-block: 1em 1em;
 }
 
-.nav-start,
-.nav-end {
-  gap: 1em;
+.nav-start, .nav-end {
   display: flex;
+  gap: 1em;
 }
 
 .nav-start {
