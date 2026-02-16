@@ -189,7 +189,3 @@ th, td {
 tr:nth-child(even) {
   background: var(--color-block-background);
 }
-
-footer {
-  margin-bottom: 64px;
-}
