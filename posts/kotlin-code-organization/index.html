@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta charset="utf-8"/>
+   <meta charset="utf-8"/>
 
-  <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" content="#1e2327"/>
+ <title>Kotlin Code Organization</title>
+ <meta name="description" content="Kotlin and Gradle source sets in action"/>
+ <meta name="author" content="Artur Dryomov"/>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="color-scheme" content="light dark"/>
+ <meta name="theme-color" content="#1e2327"/>
 
-  <title>Kotlin Code Organization</title>
-  <meta name="description" content="Kotlin and Gradle source sets in action"/>
-  <meta name="author" content="Artur Dryomov"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <link rel="stylesheet" href="/css/style.css"/>
-  <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
+ <link rel="stylesheet" href="/css/style.css"/>
+ <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
 
-  </head>
+ 
 
+</head>
 <body>
-
-<header>
-<nav>
+  <header>
+    <nav>
   <div class="nav-start">
+    
     <a href="/">Posts</a>
+    
   </div>
 
   <div class="nav-end" ->
-    <a href="https://github.com/arturdryomov">GitHub</a><a href="feed://arturdryomov.dev/index.xml">RSS</a>
+    
+    <a href="https://github.com/arturdryomov">GitHub</a>
+    
+    <a href="feed://arturdryomov.dev/index.xml">RSS</a>
+    
   </div>
 </nav>
 
-</header>
-
-
+  </header>
+  <main>
+    
 <div class="meta">
-
   <h1><span class="title">Kotlin Code Organization</span></h1>
   <h3>January 27, 2020</h3>
-
 </div>
 
-<main>
+<article>
 <p>What’s the motivation behind organizing the code? Two points come to mind.</p>
 <ul>
 <li>Help humans. Consistent environments are easier to understand and adapt.
@@ -282,8 +286,8 @@ configurations described above.</p>
 and adapt. The Gradle API might be not intuitive at first glance —
 especially when Kotlin and Android are brought in the mix — but almost everything can be achieved.</p>
 
-</main>
+</article>
 
+  </main>
 </body>
 </html>
-

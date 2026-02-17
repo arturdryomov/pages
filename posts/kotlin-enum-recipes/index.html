@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta charset="utf-8"/>
+   <meta charset="utf-8"/>
 
-  <meta name="color-scheme" content="light dark" />
-  <meta name="theme-color" content="#1e2327"/>
+ <title>Kotlin Enum Recipes</title>
+ <meta name="description" content="Is this... a sealed class?"/>
+ <meta name="author" content="Artur Dryomov"/>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="color-scheme" content="light dark"/>
+ <meta name="theme-color" content="#1e2327"/>
 
-  <title>Kotlin Enum Recipes</title>
-  <meta name="description" content="Is this... a sealed class?"/>
-  <meta name="author" content="Artur Dryomov"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <link rel="stylesheet" href="/css/style.css"/>
-  <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
+ <link rel="stylesheet" href="/css/style.css"/>
+ <link rel="stylesheet" href="/css/syntax-highlighting.css"/>
 
-  </head>
+ 
 
+</head>
 <body>
-
-<header>
-<nav>
+  <header>
+    <nav>
   <div class="nav-start">
+    
     <a href="/">Posts</a>
+    
   </div>
 
   <div class="nav-end" ->
-    <a href="https://github.com/arturdryomov">GitHub</a><a href="feed://arturdryomov.dev/index.xml">RSS</a>
+    
+    <a href="https://github.com/arturdryomov">GitHub</a>
+    
+    <a href="feed://arturdryomov.dev/index.xml">RSS</a>
+    
   </div>
 </nav>
 
-</header>
-
-
+  </header>
+  <main>
+    
 <div class="meta">
-
   <h1><span class="title">Kotlin Enum Recipes</span></h1>
   <h3>October 8, 2019</h3>
-
 </div>
 
-<main>
+<article>
 <p>Enumerations, in a form of <code>enum class</code> declarations, got a bad rep on Android.
 In fact, the official documentation straight out
 <a href="https://developer.android.com/topic/performance/reduce-apk-size#remove-enums">recommends to avoid them</a>.
@@ -313,8 +317,8 @@ In fact, the code became more declarative!</p>
 <p>I think this example shows that there are good enumeration use cases.
 Don’t be afraid to use them. Not everything needs a <code>sealed class</code>.</p>
 
-</main>
+</article>
 
+  </main>
 </body>
 </html>
-
