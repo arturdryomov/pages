@@ -1,13 +1,13 @@
 <nav>
   <div class="nav-start">
-    {{ range .Site.Menus.left -}}
+    {{ range .Site.Menus.left }}
     <a href="{{ .URL | safeURL }}">{{ .Name }}</a>
-    {{- end }}
+    {{ end }}
   </div>
 
   <div class="nav-end" ->
-    {{ range .Site.Menus.right -}}
+    {{ range .Site.Menus.right }}
     <a href="{{ .URL | safeURL }}">{{ .Name }}</a>
-    {{- end }}
+    {{ end }}
   </div>
 </nav>

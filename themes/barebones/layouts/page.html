@@ -1,14 +1,10 @@
-{{ partial "header.html" . }}
-
+{{ define "main" }}
 <div class="meta">
-
   <h1><span class="title">{{ .Title | markdownify }}</span></h1>
   <h3>{{ .Date.Format "January 2, 2006" }}</h3>
-
 </div>
 
-<main>
+<article>
 {{ .Content }}
-</main>
-
-{{ partial "footer.html" . }}
+</article>
+{{ end }}
