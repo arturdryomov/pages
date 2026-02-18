@@ -93,7 +93,6 @@ body {
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 20px;
-  hanging-punctuation: first last;
 }
 
 /* Navigation */
@@ -118,14 +117,25 @@ nav {
   margin-inline-start: auto;
 }
 
-.meta {
-  margin-top: 30px;
-  margin-bottom: 30px;
+/* Articles */
+
+article {
+  hanging-punctuation: first last;
+}
+
+.article-header {
+  margin-block: 2em 2em;
   text-align: center;
 }
 
-.title {
-  font-size: 110%;
+.article-title {
+  font-size: 2em;
+  font-weight: bold;
+  margin-block: 0.25em 0.25em;
+}
+
+.article-subtitle {
+  font-weight: bolder;
 }
 
 /* Links */
