@@ -1,8 +1,8 @@
 {{ define "main" }}
-<div class="meta">
-  <h1><span class="title">{{ .Title | markdownify }}</span></h1>
-  <h3>{{ .Date.Format "January 2, 2006" }}</h3>
-</div>
+<header class="article-header">
+  <h1 class="article-title">{{ .Title | markdownify }}</h1>
+  <time datetime="{{ .Date.Format "2006-01-02" }}" class="article-subtitle">{{ .Date.Format "January 2, 2006" }}</time>
+</header>
 
 <article>
 {{ .Content }}
