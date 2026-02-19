@@ -83,16 +83,12 @@ code {
 }
 
 body {
-  color: var(--color-text);
   background-color: var(--color-background);
-  /* Maintain typography measure: https://en.wikipedia.org/wiki/Line_length */
-  max-width: 50em;
-  margin: auto;
+  color: var(--color-text);
   line-height: 1.5;
-  /* Provide spacing for width lesser than maximum width. */
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 20px;
+  margin-inline: auto;
+  max-inline-size: 50em;
+  padding: 1em;
 }
 
 /* Navigation */
@@ -101,7 +97,6 @@ nav {
   align-items: center;
   display: flex;
   font-size: 90%;
-  margin-block: 1em 1em;
 }
 
 .nav-start, .nav-end {
