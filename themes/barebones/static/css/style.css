@@ -97,19 +97,12 @@ nav {
   align-items: center;
   display: flex;
   font-size: 90%;
+  justify-content: space-between;
 }
 
-.nav-start, .nav-end {
+.nav-section {
   display: flex;
   gap: 1em;
-}
-
-.nav-start {
-  margin-inline-end: auto;
-}
-
-.nav-end {
-  margin-inline-start: auto;
 }
 
 /* Articles */
