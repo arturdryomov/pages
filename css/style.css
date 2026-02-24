@@ -33,7 +33,7 @@
 body {
   font-family:
     /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
-    "ui-sans-serif",
+    ui-sans-serif,
     /* macOS 10.11+ */
     "SF Pro",
     /* macOS 10.8+ */
@@ -50,7 +50,7 @@ body {
     /* Android */
     "Roboto",
     /* Fallback */
-    "sans-serif";
+    sans-serif;
 
   font-size: 1rem;
 }
@@ -58,7 +58,7 @@ body {
 code {
   font-family:
     /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
-    "ui-monospace",
+    ui-monospace,
     /* macOS 10.11+ */
     "SF Mono",
     /* macOS 10.6+ */
@@ -77,7 +77,7 @@ code {
     /* Android */
     "Roboto Mono",
     /* Fallback */
-    "monospace";
+    monospace;
 
   font-size: 85%;
 }
