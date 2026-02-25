@@ -120,6 +120,7 @@ article {
   font-size: 2em;
   font-weight: bold;
   margin-block: 0.25em 0.25em;
+  text-wrap: balance;
 }
 
 .article-subtitle {
