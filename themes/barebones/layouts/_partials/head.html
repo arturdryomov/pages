@@ -6,8 +6,10 @@
 
  <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
- <link rel="stylesheet" href="{{ "/css/style.css" | relURL }}"/>
- <link rel="stylesheet" href="{{ "/css/syntax-highlighting.css" | relURL }}"/>
+ {{ $styleCSS := resources.Get "/css/style.css" }}
+ <link rel="stylesheet" href="{{ $styleCSS.RelPermalink }}"/>
+ {{ $syntaxCSS := resources.Get "/css/syntax.css" }}
+ <link rel="stylesheet" href="{{ $syntaxCSS.RelPermalink }}"/>
 
  {{ range .AlternativeOutputFormats }}
  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ $.Site.Title }}"/>
