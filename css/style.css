@@ -112,14 +112,14 @@ article {
 }
 
 .article-header {
-  margin-block: 2em 2em;
+  margin-block: 2em;
   text-align: center;
 }
 
 .article-title {
   font-size: 2em;
   font-weight: bold;
-  margin-block: 0.25em 0.25em;
+  margin-block: 0.25em;
   text-wrap: balance;
 }
 
@@ -147,8 +147,8 @@ code, pre {
 }
 
 code {
-  padding-block: 0.10em 0.10em;
-  padding-inline: 0.25em 0.25em;
+  padding-block: 0.10em;
+  padding-inline: 0.25em;
 }
 
 pre {
@@ -166,10 +166,10 @@ pre code {
 
 blockquote {
   background: var(--color-block-background);
-  border-inline-start: 4px solid var(--color-block-border);
-  margin-block: 1em 1em;
-  margin-inline: 1.5em 1.5em;
-  padding-block: 0.10em 0.10em;
+  border-inline-start: 0.25em solid var(--color-block-border);
+  margin-block: 1em;
+  margin-inline: 1.5em;
+  padding-block: 0.10em;
   padding-inline: 1em 0.75em;
 }
 
@@ -179,10 +179,10 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+td, th {
   border: 1px solid var(--color-block-border);
-  padding-block: 0.5em 0.5em;
-  padding-inline: 1em 1em;
+  padding-block: 0.5em;
+  padding-inline: 1em;
 }
 
 tr:nth-child(even) {
