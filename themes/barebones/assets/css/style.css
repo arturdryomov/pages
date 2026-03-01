@@ -109,6 +109,7 @@ nav {
 
 article {
   hanging-punctuation: first last;
+  text-wrap: pretty;
 }
 
 .article-header {
