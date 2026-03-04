@@ -6,8 +6,15 @@
     <description>Recent content on Artur Dryomov</description>
     <generator>Hugo</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 30 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://arturdryomov.dev/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Amazon S3 Paper Cuts</title>
+      <link>https://arturdryomov.dev/posts/amazon-s3-paper-cuts/</link>
+      <pubDate>Sat, 28 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://arturdryomov.dev/posts/amazon-s3-paper-cuts/</guid>
+      <description>&lt;p&gt;Amazon Simple Storage Service became not so simple over time.&#xA;Not surprising at all — a lot has happened since 2006.&#xA;&lt;a href=&#34;https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html&#34;&gt;The API reference&lt;/a&gt;&#xA;has more than 100 actions and Amazon itself&#xA;&lt;a href=&#34;https://aws.amazon.com/s3/features/&#34;&gt;puts S3 features into a couple dozen of categories&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;It’s a good tool for countless applications — naturally, it has caveats.&#xA;Fortunately or not, it’s also a product. As such, caveats become problems&#xA;and problems become unpleasant and surprising bills.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The Bus Factor of Zero</title>
       <link>https://arturdryomov.dev/posts/bus-factor-of-zero/</link>

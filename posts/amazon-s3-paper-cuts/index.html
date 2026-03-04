@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8"/>
+
+ <title>Amazon S3 Paper Cuts</title>
+ <meta name="description" content="S3 caveats and corresponding workarounds"/>
+ <meta name="author" content="Artur Dryomov"/>
+
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+ 
+ <link rel="stylesheet" href="/css/style.css"/>
+ 
+ <link rel="stylesheet" href="/css/syntax.css"/>
+
+ 
+
+</head>
+<body>
+  <header>
+    <nav>
+  <div class="nav-section">
+    
+    <a href="/">Posts</a>
+    
+  </div>
+
+  <div class="nav-section">
+    
+    <a href="https://github.com/arturdryomov">GitHub</a>
+    
+    <a href="feed://arturdryomov.dev/index.xml">RSS</a>
+    
+  </div>
+</nav>
+
+  </header>
+  <main>
+    
+<header class="article-header">
+  <h1 class="article-title">Amazon S3 Paper Cuts</h1>
+  <time datetime="2026-02-28" class="article-subtitle">February 28, 2026</time>
+</header>
+
+<article>
+<p>Amazon Simple Storage Service became not so simple over time.
+Not surprising at all — a lot has happened since 2006.
+<a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_Operations_Amazon_Simple_Storage_Service.html">The API reference</a>
+has more than 100 actions and Amazon itself
+<a href="https://aws.amazon.com/s3/features/">puts S3 features into a couple dozen of categories</a>.</p>
+<p>It’s a good tool for countless applications — naturally, it has caveats.
+Fortunately or not, it’s also a product. As such, caveats become problems
+and problems become unpleasant and surprising bills.</p>
+<h1 id="versions"><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning-workflows.html">Versions</a></h1>
+<p>The good thing about versions is that enabling them is explicit.
+This should prompt questions about the versioning itself.
+How many versions need to be maintained at the same time?
+What is the purpose of versions — a safeguard against destructive actions,
+maintaining full object history or something else?
+Such questions and corresponding answers narrow down the volume and the cost.</p>
+<p>The bad thing about versions — their usage metrics are mostly implicit.
+Versions will be included in the bucket reporting for the total used storage but
+to find out the total size of versions one needs to use
+<a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-inventory.html">the inventory</a>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="k">size</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">size_bytes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">FROM</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">inventory</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">WHERE</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">is_latest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">FALSE</span><span class="w">
+</span></span></span></code></pre></div><p>Since this setup needs to be established and monitored on a regular basis,
+it’s trivial to overlook. Preventive measures might be a better idea.
+For example, if versions are used as a safeguard and it’s known that in case of problems
+the on-call person will react in a timely manner, it’s reasonable to keep versions
+for a limited time.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-terraform" data-lang="terraform"><span class="line"><span class="cl"><span class="kr">resource</span> <span class="s2">&#34;aws_s3_bucket_lifecycle_configuration&#34;</span> <span class="s2">&#34;lifecycle_versions&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket_versions</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">rule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">id</span> <span class="o">=</span> <span class="s2">&#34;rule_remove_versions&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">status</span> <span class="o">=</span> <span class="s2">&#34;Enabled&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">noncurrent_version_expiration</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">newer_noncurrent_versions</span> <span class="o">=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">noncurrent_days</span> <span class="o">=</span> <span class="m">7</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="parts"><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html">Parts</a></h1>
+<p>Unlike versions, multipart uploads are not configurable — if a client decides
+to use the multipart API, it can be done without limitations.
+As such, if the client author is not aware of multipart caveats,
+unexpected expenses are almost guaranteed due to unseen data.</p>
+<p>The problem with multipart uploads is that individual parts don’t expire by default.
+This means that if an upload is initiated but not completed
+(due to network or storage failures), individual parts remain indefinitely
+(but of course, not for free).
+The problem is in the conceptual conflict — parts are presented as temporary
+but the default behavior makes them permanent.</p>
+<p>Since parts are not objects, the UI will not show them. The reporting will include parts
+as a portion of the overall storage size but this is an implicit metric.
+It appears that even the inventory does not include individual parts.
+The single option is to use the CLI but it’s impractical at scale.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-console" data-lang="console"><span class="line"><span class="cl"><span class="gp">$</span> aws s3api list_multipart_uploads --bucket bucket_parts
+</span></span></code></pre></div><p>Since measuring (and monitoring) the impact is almost impossible,
+the remaining option is to configure the expiration:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-terraform" data-lang="terraform"><span class="line"><span class="cl"><span class="kr">resource</span> <span class="s2">&#34;aws_s3_bucket_lifecycle_configuration&#34;</span> <span class="s2">&#34;lifecycle_parts&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket_parts</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">rule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">id</span> <span class="o">=</span> <span class="s2">&#34;rule_remove_parts&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">status</span> <span class="o">=</span> <span class="s2">&#34;Enabled&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">abort_incomplete_multipart_upload</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">days_after_initiation</span> <span class="o">=</span> <span class="m">7</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="storage-classes"><a href="https://aws.amazon.com/s3/storage-classes/">Storage Classes</a></h1>
+<p>Intelligent-Tiering, Glacier, and friends are great but a simple fact might
+make them troublesome. The fact is — storage classes are associated with objects,
+not with buckets. It’s impossible to set a default storage class for a bucket.
+It’s possible, however, to use a transition:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-terraform" data-lang="terraform"><span class="line"><span class="cl"><span class="kr">resource</span> <span class="s2">&#34;aws_s3_bucket_lifecycle_configuration&#34;</span> <span class="s2">&#34;lifecycle_class&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket_class</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">rule</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">id</span> <span class="o">=</span> <span class="s2">&#34;rule_change_class&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">status</span> <span class="o">=</span> <span class="s2">&#34;Enabled&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">transition</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">days</span> <span class="o">=</span> <span class="m">0</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">storage_class</span> <span class="o">=</span> <span class="s2">&#34;INTELLIGENT_TIERING&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>It works. There is a nuance though.
+Since life cycle rules and transitions execute on a schedule rather than instantly,
+if a client uses the standard class for an upload, the object will remain
+in the standard class for some time.
+This happens because the storage class is the client’s choice.
+It might be useful to communicate to clients to use the Intelligent-Tiering class
+instead of the default standard class.</p>
+<p>The standard class costs the same as the Intelligent-Tiering Frequent Access tier,
+but there is lost time before the object transitions
+to the Intelligent-Tiering Infrequent Access and following tiers.</p>
+<p>There is an option to enforce the class for uploads:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-terraform" data-lang="terraform"><span class="line"><span class="cl"><span class="kr">resource</span> <span class="s2">&#34;aws_s3_bucket_policy&#34;</span> <span class="s2">&#34;policy_class&#34;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">bucket</span> <span class="o">=</span> <span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket_class</span><span class="p">.</span><span class="nx">id</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">policy</span> <span class="o">=</span><span class="nb"> jsonencode</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Version</span> <span class="o">=</span> <span class="s2">&#34;2012-10-17&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Statement</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Sid</span> <span class="o">=</span> <span class="s2">&#34;EnforceClass&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Effect</span> <span class="o">=</span> <span class="s2">&#34;Deny&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Principal</span> <span class="o">=</span> <span class="s2">&#34;*&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Action</span> <span class="o">=</span> <span class="s2">&#34;s3:PutObject&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Resource</span> <span class="o">=</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nx">aws_s3_bucket</span><span class="p">.</span><span class="nx">bucket_class</span><span class="p">.</span><span class="nx">arn</span><span class="si">}</span><span class="s2">/*&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Condition</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">StringNotEquals</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s2">&#34;s3:x-amz-storage-class&#34;</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;INTELLIGENT_TIERING&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="die-cut">Die Cut</h1>
+<p>Not gonna lie — S3 could use a bit of guidance and alerting about such issues.
+Regardless, it’s a tool. Tools change and evolve over time.
+What is irreplaceable is the attention to detail and retrospective analysis.
+It’s not easy to keep everything in check but it’s always important in the long run.</p>
+
+</article>
+
+  </main>
+</body>
+</html>
