@@ -128,7 +128,6 @@ It works. There is a nuance though.
 Since life cycle rules and transitions execute on a schedule rather than instantly,
 if a client uses the standard class for an upload, the object will remain
 in the standard class for some time.
-
 This happens because the storage class is the client’s choice.
 It might be useful to communicate to clients to use the Intelligent-Tiering class
 instead of the default standard class.
@@ -167,5 +166,5 @@ resource "aws_s3_bucket_policy" "policy_class" {
 
 Not gonna lie — S3 could use a bit of guidance and alerting about such issues.
 Regardless, it’s a tool. Tools change and evolve over time.
-What is irreplaceable is the attention to details and retrospective analysis.
+What is irreplaceable is the attention to detail and retrospective analysis.
 It’s not easy to keep everything in check but it’s always important in the long run.
