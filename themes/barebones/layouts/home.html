@@ -4,8 +4,14 @@
 <ul>
   {{ range .Site.RegularPages }}
   <li>
-    <a href="{{ .RelPermalink}}">{{ .Title | markdownify }}</a>,
-    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+    <div class="home-article">
+      <div class="home-article-title">
+        <a href="{{ .RelPermalink}}">{{ .Title | markdownify }}</a>
+      </div>
+      <div class="home-article-time">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      </div>
+    </div>
   </li>
   {{ end }}
 </ul>
