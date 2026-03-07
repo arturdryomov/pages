@@ -133,24 +133,15 @@ article {
 
 .home-article {
   display: grid;
-  grid-template-areas: "article-title article-time";
   grid-template-columns: auto 1fr;
-}
-
-.home-article-title {
-  grid-area: article-title;
 }
 
 .home-article-time {
   color: var(--color-text-mute);
-  grid-area: article-time;
 }
 
 @media (max-width: 600px) {
   .home-article {
-    grid-template-areas:
-      "article-title"
-      "article-time";
     grid-template-columns: 1fr;
   }
 }
