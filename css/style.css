@@ -29,35 +29,8 @@
   --color-link: var(--color-base0d);
   --color-block-background: color-mix(in srgb, var(--color-background), var(--color-background-mask) 3%);
   --color-block-border: color-mix(in srgb, var(--color-background), var(--color-background-mask) 12%);
-}
 
-body {
-  font-family:
-    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
-    ui-sans-serif,
-    /* macOS 10.11+ */
-    "SF Pro",
-    /* macOS 10.8+ */
-    "Helvetica Neue",
-    /* Windows Vista+ */
-    "Segoe UI",
-    /* Linux: GNOME */
-    "Adwaita Sans",
-    /* Linux: KDE */
-    "Noto Sans",
-    /* Linux */
-    "Liberation Sans",
-    "DejaVu Sans",
-    /* Android */
-    "Roboto",
-    /* Fallback */
-    sans-serif;
-
-  font-size: 1rem;
-}
-
-code {
-  font-family:
+  --font-monospace:
     /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
     ui-monospace,
     /* macOS 10.11+ */
@@ -80,12 +53,33 @@ code {
     /* Fallback */
     monospace;
 
-  font-size: 85%;
+  --font-sans-serif:
+    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
+    ui-sans-serif,
+    /* macOS 10.11+ */
+    "SF Pro",
+    /* macOS 10.8+ */
+    "Helvetica Neue",
+    /* Windows Vista+ */
+    "Segoe UI",
+    /* Linux: GNOME */
+    "Adwaita Sans",
+    /* Linux: KDE */
+    "Noto Sans",
+    /* Linux */
+    "Liberation Sans",
+    "DejaVu Sans",
+    /* Android */
+    "Roboto",
+    /* Fallback */
+    sans-serif;
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-text);
+  font-family: var(--font-sans-serif);
+  font-size: 1rem;
   line-height: 1.5;
   margin-inline: auto;
   max-inline-size: 50em;
@@ -168,6 +162,8 @@ code, pre {
 }
 
 code {
+  font-family: var(--font-monospace);
+  font-size: 85%;
   padding-block: 0.10em;
   padding-inline: 0.25em;
 }
