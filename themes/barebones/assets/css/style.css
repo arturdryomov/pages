@@ -79,11 +79,10 @@ body {
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-sans-serif);
-  font-size: 1rem;
   line-height: 1.5;
   margin-inline: auto;
   max-inline-size: 82ch;
-  padding: 1em;
+  padding: 1rem;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -93,13 +92,13 @@ body {
 nav {
   align-items: center;
   display: flex;
-  font-size: 90%;
+  font-size: 0.9rem;
   justify-content: space-between;
 }
 
 .nav-section {
   display: flex;
-  gap: 1em;
+  gap: 1rem;
 }
 
 /* Articles */
@@ -110,14 +109,14 @@ article {
 }
 
 .article-header {
-  margin-block: 2em;
+  margin-block: 2rem;
   text-align: center;
 }
 
 .article-title {
-  font-size: 2em;
+  font-size: 2rem;
   font-weight: bold;
-  margin-block: 0.25em;
+  margin-block: 0.25rem;
   text-wrap: balance;
 }
 
@@ -164,13 +163,13 @@ code, pre {
 code {
   font-family: var(--font-monospace);
   font-size: 85%;
-  padding-block: 0.10em;
-  padding-inline: 0.25em;
+  padding-block: 0.10rem;
+  padding-inline: 0.25rem;
 }
 
 pre {
   overflow: auto;
-  padding: 1em;
+  padding: 1rem;
 }
 
 pre code {
@@ -183,11 +182,11 @@ pre code {
 
 blockquote {
   background: var(--color-block-background);
-  border-inline-start: 0.25em solid var(--color-block-border);
-  margin-block: 1em;
-  margin-inline: 1.5em;
-  padding-block: 0.10em;
-  padding-inline: 1em 0.75em;
+  border-inline-start: 0.25rem solid var(--color-block-border);
+  margin-block: 1rem;
+  margin-inline: 1.5rem;
+  padding-block: 0.10rem;
+  padding-inline: 1rem 0.75rem;
 }
 
 /* Tables */
@@ -198,8 +197,8 @@ table {
 
 td, th {
   border: 1px solid var(--color-block-border);
-  padding-block: 0.5em;
-  padding-inline: 1em;
+  padding-block: 0.5rem;
+  padding-inline: 1rem;
 }
 
 tr:nth-child(even) {
