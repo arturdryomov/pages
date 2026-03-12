@@ -93,6 +93,7 @@ nav {
   align-items: center;
   display: flex;
   font-size: 0.9rem;
+  font-weight: bolder;
   justify-content: space-between;
 }
 
