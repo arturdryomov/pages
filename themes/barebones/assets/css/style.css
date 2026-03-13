@@ -128,8 +128,8 @@ article {
 /* Home */
 
 .home-article {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  flex-direction: row;
 }
 
 .home-article-time {
@@ -138,7 +138,7 @@ article {
 
 @media (max-width: 600px) {
   .home-article {
-    grid-template-columns: 1fr;
+    flex-direction: column;
   }
 }
 
