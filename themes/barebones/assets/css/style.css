@@ -93,7 +93,7 @@ nav {
   align-items: center;
   display: flex;
   font-size: 0.9rem;
-  font-weight: bolder;
+  font-weight: 500;
   justify-content: space-between;
 }
 
@@ -116,13 +116,13 @@ article {
 
 .article-title {
   font-size: 2rem;
-  font-weight: bold;
+  font-weight: 700;
   margin-block: 0.25rem;
   text-wrap: balance;
 }
 
 .article-subtitle {
-  font-weight: bolder;
+  font-weight: 500;
 }
 
 /* Home */
