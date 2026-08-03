@@ -130,16 +130,18 @@ article {
 .home-article {
   display: flex;
   flex-direction: row;
-}
-
-.home-article-time {
-  color: var(--color-text-mute);
+  gap: 0.5rem;
 }
 
 @media (max-width: 600px) {
   .home-article {
     flex-direction: column;
+    gap: 0;
   }
+}
+
+.home-article-time {
+  color: var(--color-text-mute);
 }
 
 /* Links */
