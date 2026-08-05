@@ -109,34 +109,34 @@ tests improve confidence in the ability to not break things.</p>
 <p>Short-term benefits are arguable, but let’s do the math with hypothetical numbers
 for Android platform.</p>
 <table>
-  <thead>
-      <tr>
-          <th>Step</th>
-          <th>Application</th>
-          <th>Test</th>
-          <th>Description</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Assemble</td>
-          <td>1 minute</td>
-          <td>40 seconds</td>
-          <td>Tests don’t need DEX files.</td>
-      </tr>
-      <tr>
-          <td>Install</td>
-          <td>10 seconds</td>
-          <td>1 second</td>
-          <td>Tests don’t need APK transfer and installation.</td>
-      </tr>
-      <tr>
-          <td>Check</td>
-          <td>30 seconds</td>
-          <td>1 second</td>
-          <td>Tests don’t need manual clicking and comparison.</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Step</th>
+					<th>Application</th>
+					<th>Test</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Assemble</td>
+					<td>1 minute</td>
+					<td>40 seconds</td>
+					<td>Tests don’t need DEX files.</td>
+			</tr>
+			<tr>
+					<td>Install</td>
+					<td>10 seconds</td>
+					<td>1 second</td>
+					<td>Tests don’t need APK transfer and installation.</td>
+			</tr>
+			<tr>
+					<td>Check</td>
+					<td>30 seconds</td>
+					<td>1 second</td>
+					<td>Tests don’t need manual clicking and comparison.</td>
+			</tr>
+	</tbody>
 </table>
 <p>100 vs. 42 seconds. I. e. manual checks consume ×2.3 more time than tests.
 Let’s multiply it by an approximate number of changes a developer makes daily — like, 50.
