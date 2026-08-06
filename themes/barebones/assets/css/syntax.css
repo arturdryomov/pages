@@ -48,7 +48,7 @@
 /* LiteralNumberIntegerLong */ .chroma .il { color: var(--color-base09); }
 /* LiteralNumberOct */ .chroma .mo { color: var(--color-base09); }
 
-/* Literal */ .chroma .n { color: var(--color-base05); }
+/* Literal */ .chroma .l { color: var(--color-base05); }
 /* LiteralDate */ .chroma .ld { color: var(--color-base05); }
 /* LiteralString */ .chroma .s { color: var(--color-base0b); }
 /* LiteralStringAffix */ .chroma .sa { color: var(--color-base0b); }
