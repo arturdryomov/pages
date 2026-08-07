@@ -1,8 +1,5 @@
-title: "Artur Dryomov"
-
 baseUrl: "https://arturdryomov.dev"
-permalinks:
-  post: ":slug"
+title: "Artur Dryomov"
 
 params:
   author: "Artur Dryomov"
