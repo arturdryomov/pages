@@ -80,13 +80,13 @@
 
 /* Generic */ .chroma .g { color: var(--color-base05); }
 /* GenericDeleted */ .chroma .gd { color: var(--color-base08); }
-/* GenericEmph */ .chroma .ge { text-decoration: underline; }
+/* GenericEmph */ .chroma .ge { font-style: italic; }
 /* GenericError */ .chroma .gr { color: var(--color-base08); }
 /* GenericHeading */ .chroma .gh { font-weight: bold; }
 /* GenericInserted */ .chroma .gi { color: var(--color-base0b); }
 /* GenericOutput */ .chroma .go { color: var(--color-base03); }
 /* GenericPrompt */ .chroma .gp { color: var(--color-base05); }
-/* GenericStrong */ .chroma .gs { font-style: italic; }
+/* GenericStrong */ .chroma .gs { font-weight: bold; }
 /* GenericSubheading */ .chroma .gu { font-weight: bold; }
 /* GenericTraceback */ .chroma .gt { color: var(--color-base05); }
 /* GenericUnderline */ .chroma .gl { text-decoration: underline; }
