@@ -4,7 +4,7 @@
 /* Other */ .chroma .x { color: var(--color-base05); }
 
 /* Line */ .chroma .line { display: flex; }
-/* LineHighlight */ .chroma .hl { background-color: var(--color-base03); }
+/* LineHighlight */ .chroma .hl { background-color: var(--color-base02); }
 /* LineLink */ .chroma .lnlinks { outline: none; text-decoration: none; color: inherit; }
 /* LineNumbers */ .chroma .ln { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: var(--color-base03); }
 /* LineNumbersTable */ .chroma .lnt { white-space: pre; -webkit-user-select: none; user-select: none; margin-right: 0.4em; padding: 0 0.4em 0 0.4em; color: var(--color-base03); }
@@ -13,11 +13,11 @@
 
 /* Keyword */ .chroma .k { color: var(--color-base0e); }
 /* KeywordConstant */ .chroma .kc { color: var(--color-base09); }
-/* KeywordDeclaration */ .chroma .kd { color: var(--color-base08); }
+/* KeywordDeclaration */ .chroma .kd { color: var(--color-base0e); }
 /* KeywordNamespace */ .chroma .kn { color: var(--color-base0e); }
 /* KeywordPseudo */ .chroma .kp { color: var(--color-base0e); }
 /* KeywordReserved */ .chroma .kr { color: var(--color-base0e); }
-/* KeywordType */ .chroma .kt { color: var(--color-base0c); }
+/* KeywordType */ .chroma .kt { color: var(--color-base0a); }
 
 /* Name */ .chroma .n { color: var(--color-base05); }
 /* NameAttribute */ .chroma .na { color: var(--color-base09); }
@@ -33,8 +33,8 @@
 /* NameLabel */ .chroma .nl { color: var(--color-base08); }
 /* NameNamespace */ .chroma .nn { color: var(--color-base05); }
 /* NameOther */ .chroma .nx { color: var(--color-base05); }
-/* NameTag */ .chroma .nt { color: var(--color-base0e); }
-/* NameVariable */ .chroma .nv { color: var(--color-base05); }
+/* NameTag */ .chroma .nt { color: var(--color-base08); }
+/* NameVariable */ .chroma .nv { color: var(--color-base08); }
 /* NameVariableClass */ .chroma .vc { color: var(--color-base08); }
 /* NameVariableGlobal */ .chroma .vg { color: var(--color-base08); }
 /* NameVariableInstance */ .chroma .vi { color: var(--color-base08); }
@@ -57,7 +57,7 @@
 /* LiteralStringDelimiter */ .chroma .dl { color: var(--color-base0b); }
 /* LiteralStringDoc */ .chroma .sd { color: var(--color-base0b); }
 /* LiteralStringDouble */ .chroma .s2 { color: var(--color-base0b); }
-/* LiteralStringEscape */ .chroma .se { color: var(--color-base0b); }
+/* LiteralStringEscape */ .chroma .se { color: var(--color-base0c); }
 /* LiteralStringHeredoc */ .chroma .sh { color: var(--color-base0b); }
 /* LiteralStringInterpol */ .chroma .si { color: var(--color-base0b); }
 /* LiteralStringOther */ .chroma .sx { color: var(--color-base0b); }
