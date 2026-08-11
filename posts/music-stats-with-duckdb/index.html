@@ -1,126 +1,48 @@
-<!doctype html>
-<html lang="en">
-<head>
-   <meta charset="utf-8"/>
-
- <title>Music Stats with DuckDB</title>
- <meta name="description" content="Using DuckDB for ad-hoc SQL"/>
- <meta name="author" content="Artur Dryomov"/>
-
- <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
- 
- <link rel="stylesheet" href="/css/style.css"/>
- 
- <link rel="stylesheet" href="/css/syntax.css"/>
-
- 
-
-</head>
-<body>
-  <header>
-    <nav>
-  <div class="nav-section">
-    
-    <a href="/">Posts</a>
-    
-  </div>
-
-  <div class="nav-section">
-    
-    <a href="https://github.com/arturdryomov">GitHub</a>
-    
-    <a href="feed://arturdryomov.dev/index.xml">RSS</a>
-    
-  </div>
-</nav>
-
-  </header>
-  <main>
-    
-<article>
-  <header class="article-header">
-    <h1 class="article-title">Music Stats with DuckDB</h1>
-    <time datetime="2023-06-05" class="article-subtitle">June 5, 2023</time>
-  </header>
-
-<p>Music! Everyone likes music. Well, I certainly hope so.
-Stats! Well, not everyone likes stats but I certainly do.</p>
-<p>In this article I’ll describe an approach to work with
-<a href="https://en.wikipedia.org/wiki/Last.fm#Scrobbling">music scrobbles</a>
-from different sources and in different formats using <a href="https://duckdb.org/">DuckDB</a>.
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Music Stats with DuckDB</title><meta name=description content="Using DuckDB for ad-hoc SQL"><meta name=author content="Artur Dryomov"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/bundle.min.css></head><body><header><nav><div class=nav-section><a href=/>Posts</a></div><div class=nav-section><a href=https://github.com/arturdryomov>GitHub</a>
+<a href=feed://arturdryomov.dev/index.xml>RSS</a></div></nav></header><main><article><header class=article-header><h1 class=article-title>Music Stats with DuckDB</h1><time datetime=2023-06-05 class=article-subtitle>June 5, 2023</time></header><p>Music! Everyone likes music. Well, I certainly hope so.
+Stats! Well, not everyone likes stats but I certainly do.</p><p>In this article I’ll describe an approach to work with
+<a href=https://en.wikipedia.org/wiki/Last.fm#Scrobbling>music scrobbles</a>
+from different sources and in different formats using <a href=https://duckdb.org/>DuckDB</a>.
 DuckDB is a perfect match for such ad-hoc scenarios — it has a minimal
-footprint, great performance and useful features.</p>
-<h1 id="scrobbles">Scrobbles</h1>
-<p>I’ve been using multiple music sources over the past decade.
-Fortunately, I had a <a href="https://en.wikipedia.org/wiki/Last.fm">Last.fm</a> account from the beginning.
+footprint, great performance and useful features.</p><h1 id=scrobbles>Scrobbles</h1><p>I’ve been using multiple music sources over the past decade.
+Fortunately, I had a <a href=https://en.wikipedia.org/wiki/Last.fm>Last.fm</a> account from the beginning.
 It allowed me to track almost everything I’ve listened — resulting in almost 110+ thousands of scrobbles.
-Unfortunately, I haven’t used it all the time.</p>
-<ul>
-<li>07.2008 — 03.2014: local music files
-<ul>
-<li>I’ve used various Linux music players with the Last.fm scrobbling enabled.</li>
-</ul>
-</li>
-<li>04.2014 — 09.2022: Spotify
-<ul>
-<li><a href="https://support.last.fm/t/spotify-scrobbling/189">It is supported as a Last.fm scrobbling source</a> but it wasn’t enabled for me until 04.2019.</li>
-</ul>
-</li>
-<li>10.2022 — now: <a href="https://bandcamp.com/">Bandcamp</a>, CDs
-<ul>
-<li>At this point I don’t track scrobbles but attempt to create a local music collection instead.</li>
-</ul>
-</li>
-</ul>
-<p>Last.fm seems to be a good source of truth for scrobbles but
+Unfortunately, I haven’t used it all the time.</p><ul><li>07.2008 — 03.2014: local music files<ul><li>I’ve used various Linux music players with the Last.fm scrobbling enabled.</li></ul></li><li>04.2014 — 09.2022: Spotify<ul><li><a href=https://support.last.fm/t/spotify-scrobbling/189>It is supported as a Last.fm scrobbling source</a> but it wasn’t enabled for me until 04.2019.</li></ul></li><li>10.2022 — now: <a href=https://bandcamp.com/>Bandcamp</a>, CDs<ul><li>At this point I don’t track scrobbles but attempt to create a local music collection instead.</li></ul></li></ul><p>Last.fm seems to be a good source of truth for scrobbles but
 its data is inconsistent due to the lack of scrobbling from Spotify for a period of time.
-However, the complete data still can be assembled.</p>
-<ul>
-<li>Thanks to GDPR it’s possible to request the listening history from streaming services.
-See <a href="https://support.stats.fm/docs/import/spotify-import/">steps for Spotify</a> and <a href="https://support.apple.com/en-us/HT208502">for Apple Music</a>.</li>
-<li>The Last.fm data retrieval is much easier — there is <a href="https://www.last.fm/api/show/user.getRecentTracks">a public API</a>.
-There are multiple online tools which call the API and prepare a combined report — that’s what I’ve used.</li>
-</ul>
-<h1 id="duckdb-import">DuckDB Import</h1>
-<h2 id="spotify">Spotify</h2>
-<p>There are 50+ files in the Spotify data export.
+However, the complete data still can be assembled.</p><ul><li>Thanks to GDPR it’s possible to request the listening history from streaming services.
+See <a href=https://support.stats.fm/docs/import/spotify-import/>steps for Spotify</a> and <a href=https://support.apple.com/en-us/HT208502>for Apple Music</a>.</li><li>The Last.fm data retrieval is much easier — there is <a href=https://www.last.fm/api/show/user.getRecentTracks>a public API</a>.
+There are multiple online tools which call the API and prepare a combined report — that’s what I’ve used.</li></ul><h1 id=duckdb-import>DuckDB Import</h1><h2 id=spotify>Spotify</h2><p>There are 50+ files in the Spotify data export.
 There is even a couple of documentation files — a welcome surprise.
 The listening history is available at multiple <code>MyData/endsong_*.json</code> files.
-Each JSON file has the following format.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">[</span>
-</span></span><span class="line"><span class="cl">    <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;ts&#34;</span><span class="p">:</span> <span class="s2">&#34;2017-04-08T06:48:15Z&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;username&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;platform&#34;</span><span class="p">:</span> <span class="s2">&#34;unknown&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;ms_played&#34;</span><span class="p">:</span> <span class="mi">223646</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;conn_country&#34;</span><span class="p">:</span> <span class="s2">&#34;PL&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;ip_addr_decrypted&#34;</span><span class="p">:</span> <span class="s2">&#34;1.1.1.1&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;user_agent_decrypted&#34;</span><span class="p">:</span> <span class="s2">&#34;unknown&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;master_metadata_track_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Good Man&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;master_metadata_album_artist_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Raphael Saadiq&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;master_metadata_album_album_name&#34;</span><span class="p">:</span> <span class="s2">&#34;Stone Rollin&#39;&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;spotify_track_uri&#34;</span><span class="p">:</span> <span class="s2">&#34;spotify:track:5jJOShacQWvCDHZgMhl8Zu&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;episode_name&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;episode_show_name&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;spotify_episode_uri&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;reason_start&#34;</span><span class="p">:</span> <span class="s2">&#34;clickrow&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;reason_end&#34;</span><span class="p">:</span> <span class="s2">&#34;unknown&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;shuffle&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;skipped&#34;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;offline&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;offline_timestamp&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;incognito_mode&#34;</span><span class="p">:</span> <span class="kc">false</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">]</span>
+Each JSON file has the following format.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;ts&#34;</span><span class=p>:</span> <span class=s2>&#34;2017-04-08T06:48:15Z&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;username&#34;</span><span class=p>:</span> <span class=s2>&#34;username&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=s2>&#34;unknown&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;ms_played&#34;</span><span class=p>:</span> <span class=mi>223646</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;conn_country&#34;</span><span class=p>:</span> <span class=s2>&#34;PL&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;ip_addr_decrypted&#34;</span><span class=p>:</span> <span class=s2>&#34;1.1.1.1&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;user_agent_decrypted&#34;</span><span class=p>:</span> <span class=s2>&#34;unknown&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;master_metadata_track_name&#34;</span><span class=p>:</span> <span class=s2>&#34;Good Man&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;master_metadata_album_artist_name&#34;</span><span class=p>:</span> <span class=s2>&#34;Raphael Saadiq&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;master_metadata_album_album_name&#34;</span><span class=p>:</span> <span class=s2>&#34;Stone Rollin&#39;&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;spotify_track_uri&#34;</span><span class=p>:</span> <span class=s2>&#34;spotify:track:5jJOShacQWvCDHZgMhl8Zu&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;episode_name&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;episode_show_name&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;spotify_episode_uri&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;reason_start&#34;</span><span class=p>:</span> <span class=s2>&#34;clickrow&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;reason_end&#34;</span><span class=p>:</span> <span class=s2>&#34;unknown&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;shuffle&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;skipped&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;offline&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;offline_timestamp&#34;</span><span class=p>:</span> <span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;incognito_mode&#34;</span><span class=p>:</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
 </span></span></code></pre></div><p>Besides merging podcasts and music in the same enumeration, the format is good.
-It’s great for DuckDB since it can recognize JSON array items as rows and repeating JSON fields as columns.</p>
-<blockquote>
-<p>&#x1f4a1; Note that it’s possible to import multiple files using a file name mask.</p>
-</blockquote>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">scrobbles_spotify</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_json_auto</span><span class="p">(</span><span class="s1">&#39;MyData/endsong_*.json&#39;</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">scrobbles_spotify</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></div><pre tabindex="0"><code>┌───────────────────────────────────┬─────────────┬─────────┬─────────┬─────────┬───────┐
+It’s great for DuckDB since it can recognize JSON array items as rows and repeating JSON fields as columns.</p><blockquote><p>&#x1f4a1; Note that it’s possible to import multiple files using a file name mask.</p></blockquote><div class=highlight><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=k>CREATE</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>scrobbles_spotify</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>FROM</span><span class=w> </span><span class=n>read_json_auto</span><span class=p>(</span><span class=s1>&#39;MyData/endsong_*.json&#39;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>DESCRIBE</span><span class=w> </span><span class=n>scrobbles_spotify</span><span class=p>;</span><span class=w>
+</span></span></span></code></pre></div><pre tabindex=0><code>┌───────────────────────────────────┬─────────────┬─────────┬─────────┬─────────┬───────┐
 │            column_name            │ column_type │  null   │   key   │ default │ extra │
 │              varchar              │   varchar   │ varchar │ varchar │ varchar │ int32 │
 ├───────────────────────────────────┼─────────────┼─────────┼─────────┼─────────┼───────┤
@@ -148,18 +70,11 @@ It’s great for DuckDB since it can recognize JSON array items as rows and repe
 ├───────────────────────────────────┴─────────────┴─────────┴─────────┴─────────┴───────┤
 │ 21 rows                                                                     6 columns │
 └───────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre><p>Neat! Column types were recognized — even <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> time strings were recognized as <code>TIMESTAMP</code>.</p>
-<h2 id="lastfm">Last.fm</h2>
-<p>There is a single CSV file and its as simple as it gets.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-csv" data-lang="csv"><span class="line"><span class="cl"><span class="s">uts</span><span class="p">,</span><span class="s">utc_time</span><span class="p">,</span><span class="s">artist</span><span class="p">,</span><span class="s">artist_mbid</span><span class="p">,</span><span class="s">album</span><span class="p">,</span><span class="s">album_mbid</span><span class="p">,</span><span class="s">track</span><span class="p">,</span><span class="s">track_mbid</span><span class="p">
-</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;1667306723&#34;</span><span class="p">,</span><span class="s2">&#34;01 Nov 2022, 12:45&#34;</span><span class="p">,</span><span class="s2">&#34;How to Destroy Angels&#34;</span><span class="p">,</span><span class="s2">&#34;143b396d-a678-43aa-8c74-628fea8e381f&#34;</span><span class="p">,</span><span class="s2">&#34;How to Destroy Angels&#34;</span><span class="p">,</span><span class="s2">&#34;4617ac46-8e11-4a14-9133-b00ecbae7069&#34;</span><span class="p">,</span><span class="s2">&#34;Parasite&#34;</span><span class="p">,</span><span class="s2">&#34;5aa91266-1d8b-3ede-bd97-ef4d5e921d4f&#34;</span><span class="p">
-</span></span></span></code></pre></div><blockquote>
-<p>&#x1f4a1; <code>*_mbid</code> fields are <a href="https://musicbrainz.org/">MusicBrainz</a> IDs.</p>
-</blockquote>
-<p>A CSV file is essentially a table so there are no issues with the DuckDB import.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">scrobbles_lastfm</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv_auto</span><span class="p">(</span><span class="s1">&#39;recenttracks.csv&#39;</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">DESCRIBE</span><span class="w"> </span><span class="n">scrobbles_lastfm</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></div><pre tabindex="0"><code>┌─────────────┬─────────────┬─────────┬─────────┬─────────┬───────┐
+</code></pre><p>Neat! Column types were recognized — even <a href=https://en.wikipedia.org/wiki/ISO_8601>ISO 8601</a> time strings were recognized as <code>TIMESTAMP</code>.</p><h2 id=lastfm>Last.fm</h2><p>There is a single CSV file and its as simple as it gets.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-csv data-lang=csv><span class=line><span class=cl><span class=s>uts</span><span class=p>,</span><span class=s>utc_time</span><span class=p>,</span><span class=s>artist</span><span class=p>,</span><span class=s>artist_mbid</span><span class=p>,</span><span class=s>album</span><span class=p>,</span><span class=s>album_mbid</span><span class=p>,</span><span class=s>track</span><span class=p>,</span><span class=s>track_mbid</span><span class=p>
+</span></span></span><span class=line><span class=cl><span class=s2>&#34;1667306723&#34;</span><span class=p>,</span><span class=s2>&#34;01 Nov 2022, 12:45&#34;</span><span class=p>,</span><span class=s2>&#34;How to Destroy Angels&#34;</span><span class=p>,</span><span class=s2>&#34;143b396d-a678-43aa-8c74-628fea8e381f&#34;</span><span class=p>,</span><span class=s2>&#34;How to Destroy Angels&#34;</span><span class=p>,</span><span class=s2>&#34;4617ac46-8e11-4a14-9133-b00ecbae7069&#34;</span><span class=p>,</span><span class=s2>&#34;Parasite&#34;</span><span class=p>,</span><span class=s2>&#34;5aa91266-1d8b-3ede-bd97-ef4d5e921d4f&#34;</span><span class=p>
+</span></span></span></code></pre></div><blockquote><p>&#x1f4a1; <code>*_mbid</code> fields are <a href=https://musicbrainz.org/>MusicBrainz</a> IDs.</p></blockquote><p>A CSV file is essentially a table so there are no issues with the DuckDB import.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=k>CREATE</span><span class=w> </span><span class=k>TABLE</span><span class=w> </span><span class=n>scrobbles_lastfm</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=k>SELECT</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=k>FROM</span><span class=w> </span><span class=n>read_csv_auto</span><span class=p>(</span><span class=s1>&#39;recenttracks.csv&#39;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>DESCRIBE</span><span class=w> </span><span class=n>scrobbles_lastfm</span><span class=p>;</span><span class=w>
+</span></span></span></code></pre></div><pre tabindex=0><code>┌─────────────┬─────────────┬─────────┬─────────┬─────────┬───────┐
 │ column_name │ column_type │  null   │   key   │ default │ extra │
 │   varchar   │   varchar   │ varchar │ varchar │ varchar │ int32 │
 ├─────────────┼─────────────┼─────────┼─────────┼─────────┼───────┤
@@ -173,9 +88,8 @@ It’s great for DuckDB since it can recognize JSON array items as rows and repe
 │ track_mbid  │ VARCHAR     │ YES     │         │         │       │
 └─────────────┴─────────────┴─────────┴─────────┴─────────┴───────┘
 </code></pre><p>Unlike the Spotify import, the timestamp is not recognized out of the box.
-This is not needed for steps below but it’s possible to specify the time format for a proper <code>TIMESTAMP</code> conversion.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">utc_time</span><span class="p">,</span><span class="w"> </span><span class="n">artist</span><span class="p">,</span><span class="w"> </span><span class="n">track</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">read_csv_auto</span><span class="p">(</span><span class="s1">&#39;recenttracks.csv&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">timestampformat</span><span class="o">=</span><span class="s1">&#39;%d %b %Y, %H:%M&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></div><pre tabindex="0"><code>┌─────────────────────┬───────────────────────┬──────────────────────┐
+This is not needed for steps below but it’s possible to specify the time format for a proper <code>TIMESTAMP</code> conversion.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=k>SELECT</span><span class=w> </span><span class=n>utc_time</span><span class=p>,</span><span class=w> </span><span class=n>artist</span><span class=p>,</span><span class=w> </span><span class=n>track</span><span class=w> </span><span class=k>FROM</span><span class=w> </span><span class=n>read_csv_auto</span><span class=p>(</span><span class=s1>&#39;recenttracks.csv&#39;</span><span class=p>,</span><span class=w> </span><span class=n>timestampformat</span><span class=o>=</span><span class=s1>&#39;%d %b %Y, %H:%M&#39;</span><span class=p>)</span><span class=w> </span><span class=k>LIMIT</span><span class=w> </span><span class=mi>5</span><span class=p>;</span><span class=w>
+</span></span></span></code></pre></div><pre tabindex=0><code>┌─────────────────────┬───────────────────────┬──────────────────────┐
 │      utc_time       │        artist         │        track         │
 │      timestamp      │        varchar        │       varchar        │
 ├─────────────────────┼───────────────────────┼──────────────────────┤
@@ -185,54 +99,42 @@ This is not needed for steps below but it’s possible to specify the time forma
 │ 2021-11-01 12:33:00 │ Karen Elson           │ Dancing On My Own    │
 │ 2021-11-01 12:29:00 │ Karen Elson           │ Sacrifice            │
 └─────────────────────┴───────────────────────┴──────────────────────┘
-</code></pre><h1 id="duckdb-queries">DuckDB Queries</h1>
-<p>As a result of the successful import, there are two tables:</p>
-<ul>
-<li><code>scrobbles_lastfm</code> — scrobbles from the Last.fm data export;</li>
-<li><code>scrobbles_spotify</code> — scrobbles from the Spotify data export.</li>
-</ul>
-<p>For a unified combined picture tables need to be merged with some adjustments:</p>
-<ul>
-<li><code>scrobbles_lastfm</code> — nothing since <a href="https://www.last.fm/api/scrobbling#when-is-a-scrobble-a-scrobble">Last.fm is strict</a> with incoming scrobbles;</li>
-<li><code>scrobbles_spotify</code> — filter out doublicate scrobbles from Last.fm, incomplete and short scrobbles.</li>
-</ul>
-<p>The resulting SQL is straightforward. This one in particular outputs scrobbles per album.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sql" data-lang="sql"><span class="line"><span class="cl"><span class="k">WITH</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">scrobbles_spotify_</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">SELECT</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">master_metadata_track_name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">track</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">master_metadata_album_artist_name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">artist</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">master_metadata_album_album_name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">album</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">FROM</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">scrobbles_spotify</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">WHERE</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="c1">-- Avoid scrobbles available at Last.fm
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="n">ts</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="s1">&#39;2014-04-01&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="s1">&#39;2019-03-31&#39;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="c1">-- Avoid short scrobbles
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">ms_played</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="c1">-- Avoid incomplete scrobbles
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">master_metadata_track_name</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">master_metadata_album_artist_name</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">master_metadata_album_album_name</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">),</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">scrobbles</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">track</span><span class="p">,</span><span class="w"> </span><span class="n">artist</span><span class="p">,</span><span class="w"> </span><span class="n">album</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">scrobbles_lastfm</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">UNION</span><span class="w"> </span><span class="k">ALL</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">track</span><span class="p">,</span><span class="w"> </span><span class="n">artist</span><span class="p">,</span><span class="w"> </span><span class="n">album</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">scrobbles_spotify_</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="p">)</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">artist</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">album</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">scrobbles_count</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">FROM</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">scrobbles</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">artist</span><span class="p">,</span><span class="w"> </span><span class="n">album</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="n">scrobbles_count</span><span class="w"> </span><span class="k">DESC</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="w">
-</span></span></span></code></pre></div><pre tabindex="0"><code>┌───────────────────────────────┬───────────────────────────────┬─────────────────┐
+</code></pre><h1 id=duckdb-queries>DuckDB Queries</h1><p>As a result of the successful import, there are two tables:</p><ul><li><code>scrobbles_lastfm</code> — scrobbles from the Last.fm data export;</li><li><code>scrobbles_spotify</code> — scrobbles from the Spotify data export.</li></ul><p>For a unified combined picture tables need to be merged with some adjustments:</p><ul><li><code>scrobbles_lastfm</code> — nothing since <a href=https://www.last.fm/api/scrobbling#when-is-a-scrobble-a-scrobble>Last.fm is strict</a> with incoming scrobbles;</li><li><code>scrobbles_spotify</code> — filter out doublicate scrobbles from Last.fm, incomplete and short scrobbles.</li></ul><p>The resulting SQL is straightforward. This one in particular outputs scrobbles per album.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-sql data-lang=sql><span class=line><span class=cl><span class=k>WITH</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>scrobbles_spotify_</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>SELECT</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=n>master_metadata_track_name</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=n>track</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=n>master_metadata_album_artist_name</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=n>artist</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=n>master_metadata_album_album_name</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=n>album</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>FROM</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=n>scrobbles_spotify</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>WHERE</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=c1>-- Avoid scrobbles available at Last.fm
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=n>ts</span><span class=w> </span><span class=k>BETWEEN</span><span class=w> </span><span class=k>TIMESTAMP</span><span class=w> </span><span class=s1>&#39;2014-04-01&#39;</span><span class=w> </span><span class=k>AND</span><span class=w> </span><span class=k>TIMESTAMP</span><span class=w> </span><span class=s1>&#39;2019-03-31&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=c1>-- Avoid short scrobbles
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=k>AND</span><span class=w> </span><span class=n>ms_played</span><span class=w> </span><span class=o>&gt;</span><span class=w> </span><span class=mi>30</span><span class=w> </span><span class=o>*</span><span class=w> </span><span class=mi>1000</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=c1>-- Avoid incomplete scrobbles
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=k>AND</span><span class=w> </span><span class=n>master_metadata_track_name</span><span class=w> </span><span class=k>IS</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=k>AND</span><span class=w> </span><span class=n>master_metadata_album_artist_name</span><span class=w> </span><span class=k>IS</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=k>AND</span><span class=w> </span><span class=n>master_metadata_album_album_name</span><span class=w> </span><span class=k>IS</span><span class=w> </span><span class=k>NOT</span><span class=w> </span><span class=k>NULL</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>scrobbles</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>SELECT</span><span class=w> </span><span class=n>track</span><span class=p>,</span><span class=w> </span><span class=n>artist</span><span class=p>,</span><span class=w> </span><span class=n>album</span><span class=w> </span><span class=k>FROM</span><span class=w> </span><span class=n>scrobbles_lastfm</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>UNION</span><span class=w> </span><span class=k>ALL</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>SELECT</span><span class=w> </span><span class=n>track</span><span class=p>,</span><span class=w> </span><span class=n>artist</span><span class=p>,</span><span class=w> </span><span class=n>album</span><span class=w> </span><span class=k>FROM</span><span class=w> </span><span class=n>scrobbles_spotify_</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>SELECT</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>artist</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>album</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=k>COUNT</span><span class=p>(</span><span class=o>*</span><span class=p>)</span><span class=w> </span><span class=k>AS</span><span class=w> </span><span class=n>scrobbles_count</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>FROM</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>scrobbles</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>GROUP</span><span class=w> </span><span class=k>BY</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>artist</span><span class=p>,</span><span class=w> </span><span class=n>album</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>ORDER</span><span class=w> </span><span class=k>BY</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>scrobbles_count</span><span class=w> </span><span class=k>DESC</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=k>LIMIT</span><span class=w> </span><span class=mi>5</span><span class=w>
+</span></span></span></code></pre></div><pre tabindex=0><code>┌───────────────────────────────┬───────────────────────────────┬─────────────────┐
 │            artist             │             album             │ scrobbles_count │
 │            varchar            │            varchar            │      int64      │
 ├───────────────────────────────┼───────────────────────────────┼─────────────────┤
@@ -245,22 +147,9 @@ This is not needed for steps below but it’s possible to specify the time forma
 │ 5 rows                                                                3 columns │
 └─────────────────────────────────────────────────────────────────────────────────┘
 </code></pre><p>Since the resulting database can be treated as a regular SQL-compliant database,
-it’s possible to do lots of things. For example:</p>
-<ul>
-<li>calculate stats per time interval, per artist, per album, per track and so on;</li>
-<li>export resulting stats <a href="https://duckdb.org/docs/guides/import/json_export.html">to JSON</a> or
-<a href="https://duckdb.org/docs/guides/import/csv_export.html">to CSV</a> and visualize them;</li>
-<li>combine stats with external data sources and create streaming / local playlists.</li>
-</ul>
-<h1 id="results">Results</h1>
-<p>Doing this experiment was a fun excersize. I think that DuckDB might be a perfect tool
+it’s possible to do lots of things. For example:</p><ul><li>calculate stats per time interval, per artist, per album, per track and so on;</li><li>export resulting stats <a href=https://duckdb.org/docs/guides/import/json_export.html>to JSON</a> or
+<a href=https://duckdb.org/docs/guides/import/csv_export.html>to CSV</a> and visualize them;</li><li>combine stats with external data sources and create streaming / local playlists.</li></ul><h1 id=results>Results</h1><p>Doing this experiment was a fun excersize. I think that DuckDB might be a perfect tool
 for ad-hoc analysis, especially when it comes to different data sources.
 There is no need to set up a Trino cluster, pre-process data for a PostgreSQL import
 or even to write a code at all — including pre-processing for Pandas / Polars.
-Just import and run SQL, no strings attached.</p>
-
-</article>
-
-  </main>
-</body>
-</html>
+Just import and run SQL, no strings attached.</p></article></main></body></html>
