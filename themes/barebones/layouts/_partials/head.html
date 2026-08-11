@@ -1,16 +1,19 @@
- <meta charset="utf-8"/>
+<meta charset="utf-8"/>
 
- <title>{{ .Title }}</title>
- <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Description }}{{ end }}"/>
- <meta name="author" content="{{ .Site.Params.author }}"/>
+<title>{{ .Title }}</title>
+<meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Description }}{{ end }}"/>
+<meta name="author" content="{{ .Site.Params.author }}"/>
 
- <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
- {{ $styleCSS := resources.Get "/css/style.css" }}
- <link rel="stylesheet" href="{{ $styleCSS.RelPermalink }}"/>
- {{ $syntaxCSS := resources.Get "/css/syntax.css" }}
- <link rel="stylesheet" href="{{ $syntaxCSS.RelPermalink }}"/>
+{{ $css := slice (resources.Get "css/style.css") (resources.Get "css/syntax.css") | resources.Concat "css/bundle.css" }}
 
- {{ range .AlternativeOutputFormats }}
- <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ $.Site.Title }}"/>
- {{ end }}
+{{ if hugo.IsProduction }}
+  {{ $css = $css | resources.Minify }}
+{{ end }}
+
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+
+{{ range .AlternativeOutputFormats }}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ $.Site.Title }}"/>
+{{ end }}

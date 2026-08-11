@@ -30,49 +30,28 @@
   --color-block-background: color-mix(in srgb, var(--color-background), var(--color-background-mask) 3%);
   --color-block-border: color-mix(in srgb, var(--color-background), var(--color-background-mask) 12%);
 
-  --font-monospace:
-    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
-    ui-monospace,
-    /* macOS 10.11+ */
-    "SF Mono",
-    /* macOS 10.6+ */
-    "Menlo",
-    /* Windows 10+ */
-    "Cascadia Code",
-    /* Windows Vista+ */
-    "Consolas",
-    /* Linux: GNOME */
-    "Adwaita Mono",
-    /* Linux: KDE */
-    "Hack",
-    /* Linux */
-    "Liberation Mono",
-    "DejaVu Sans Mono",
-    /* Android */
-    "Roboto Mono",
-    /* Fallback */
-    monospace;
+  /*
+  * macOS 10.11+: "SF Mono"
+  * macOS 10.6+: "Menlo"
+  * Windows 10+: "Cascadia Code"
+  * Windows Vista+: "Consolas"
+  * Linux: (KDE): "Hack"
+  * Linux (GNOME): "Adwaita Mono"
+  * Linux: "Liberation Mono", "DejaVu Sans Mono"
+  * Android: "Roboto Mono",
+  */
+  --font-monospace: ui-monospace, "SF Mono", "Menlo", "Cascadia Code", "Consolas", "Hack", "Adwaita Mono", "Liberation Mono", "DejaVu Sans Mono", "Roboto Mono", monospace;
 
-  --font-sans-serif:
-    /* Might be enough in the future: https://caniuse.com/extended-system-fonts */
-    ui-sans-serif,
-    /* macOS 10.11+ */
-    "SF Pro",
-    /* macOS 10.8+ */
-    "Helvetica Neue",
-    /* Windows Vista+ */
-    "Segoe UI",
-    /* Linux: GNOME */
-    "Adwaita Sans",
-    /* Linux: KDE */
-    "Noto Sans",
-    /* Linux */
-    "Liberation Sans",
-    "DejaVu Sans",
-    /* Android */
-    "Roboto",
-    /* Fallback */
-    sans-serif;
+  /*
+  * macOS 10.11+: "SF Pro"
+  * macOS 10.8+: "Helvetica Neue"
+  * Windows Vista+: "Segoe UI"
+  * Linux (KDEA): "Noto Sans"
+  * Linux (GNOME): "Adwaita Sans"
+  * Linux: "Liberation Sans", "DejaVu Sans"
+  * Android: "Roboto"
+  */
+  --font-sans-serif: ui-sans-serif, "SF Pro", "Helvetica Neue", "Segoe UI", "Noto Sans", "Adwaita Sans", "Liberation Sans", "DejaVu Sans", "Roboto", sans-serif;
 }
 
 body {
