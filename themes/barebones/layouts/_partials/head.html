@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-{{ $css := slice (resources.Get "css/style.css") (resources.Get "css/syntax.css") | resources.Concat "css/bundle.css" }}
+{{ $css := collections.Slice (resources.Get "css/style.css") (resources.Get "css/syntax.css") | resources.Concat "css/bundle.css" }}
 
 {{ if hugo.IsProduction }}
   {{ $css = $css | resources.Minify }}
@@ -15,5 +15,5 @@
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
 
 {{ range .AlternativeOutputFormats }}
-<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}" title="{{ $.Site.Title }}"/>
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safe.URL }}" title="{{ $.Site.Title }}"/>
 {{ end }}
