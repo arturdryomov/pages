@@ -6,7 +6,7 @@
   <li>
     <div class="home-article">
       <div class="home-article-title">
-        <a href="{{ .RelPermalink}}">{{ .Title | transform.Markdownify }}</a>
+        <a href="{{ .RelPermalink }}">{{ .Title | transform.Markdownify }}</a>
       </div>
       <div class="home-article-time">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
