@@ -27,11 +27,14 @@ menu:
     - name: "Posts"
       url: "/"
   right:
+    - name: "LinkedIn"
+      url: "https://www.linkedin.com/in/arturdryomov"
+      weight: 1
     - name: "GitHub"
       url: "https://github.com/arturdryomov"
-      weight: 1
+      weight: 2
     - name: "RSS"
       url: "feed://arturdryomov.dev/index.xml"
-      weight: 2
+      weight: 3
 
 theme: "barebones"
