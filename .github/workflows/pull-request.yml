@@ -6,7 +6,7 @@ on:
 jobs:
   checks:
     name: "Run checks"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: "Checkout the source code"
         uses: actions/checkout@v6.0.2
