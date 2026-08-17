@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eou pipefail
 
-readonly HUGO_VERSION="0.164.0"
+readonly HUGO_VERSION="0.165.0"
 
 readonly HUGO_PACKAGE_NAME="hugo.tar.gz"
 readonly HUGO_PACKAGE_PATH="hugo"
