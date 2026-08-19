@@ -5,15 +5,34 @@ on:
     branches:
       - "master"
 
-jobs:
-  publish:
-    name: "Publish"
-    runs-on: ubuntu-slim
-    steps:
-      - name: "Checkout the source code"
-        uses: actions/checkout@v6.0.2
-        with:
-          fetch-depth: 0
+permissions:
+  contents: "read"
+  id-token: "write"
+  pages: "write"
 
-      - name: "Publish content"
-        run: bash scripts/publish.sh "bash scripts/generate.sh" "${{ secrets.USER_GITHUB_TOKEN }}" "${GITHUB_REPOSITORY}"
+jobs:
+  generate:
+    name: "Generate"
+    runs-on: "ubuntu-slim"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v6.0.2"
+
+      - name: "Generate"
+        run: "bash scripts/generate.sh"
+
+      - name: "Package"
+        uses: "actions/upload-pages-artifact@v5.0.0"
+        with:
+          path: "public"
+
+  ship:
+    name: "Ship"
+    runs-on: "ubuntu-slim"
+    needs: "generate"
+    environment:
+      name: "github-pages"
+      url: "${{ steps.deployment.outputs.page_url }}"
+    steps:
+      - name: "Push"
+        uses: "actions/deploy-pages@v5.0.0"
