@@ -140,7 +140,7 @@ is kind of tedious, especially if there are going to be thousands of passes.
 The benchmark code measures `VectorDrawable#draw` calls instead.
 
 <details>
-  <summary>_Click to expand the benchmark code._</summary>
+  <summary><em>Click to expand the benchmark code.</em></summary>
 
 ```kotlin
 companion object {
