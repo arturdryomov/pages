@@ -6,13 +6,13 @@ on:
 jobs:
   checks:
     name: "Run checks"
-    runs-on: ubuntu-slim
+    runs-on: "ubuntu-slim"
     steps:
       - name: "Checkout the source code"
-        uses: actions/checkout@v6.0.2
+        uses: "actions/checkout@v7.0.1"
 
       - name: "Check scripts"
-        run: shellcheck scripts/*.sh
+        run: "shellcheck scripts/*.sh"
 
       - name: "Generate content"
-        run: bash scripts/generate.sh
+        run: "bash scripts/generate.sh"
