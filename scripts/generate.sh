@@ -20,7 +20,11 @@ curl \
 
 echo ":: Extracting Hugo..."
 
-tar --extract --gzip --file "${HUGO_PACKAGE_PATH}" --directory "${HUGO_PATH}"
+tar \
+  --extract \
+  --gzip \
+  --file "${HUGO_PACKAGE_PATH}" \
+  --directory "${HUGO_PATH}"
 
 echo ":: Running Hugo..."
 
