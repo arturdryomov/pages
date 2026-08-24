@@ -15,4 +15,4 @@ jobs:
         run: "shellcheck scripts/*.sh"
 
       - name: "Generate content"
-        run: "bash scripts/generate.sh"
+        run: "bash .github/scripts/generate.sh"
