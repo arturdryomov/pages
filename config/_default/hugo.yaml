@@ -13,7 +13,6 @@ disableKinds:
   - "term"
 
 enableEmoji: true
-footnoteReturnLinkContents: "↩"
 
 markup:
   highlight:
