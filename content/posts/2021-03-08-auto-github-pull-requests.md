@@ -94,9 +94,7 @@ GitHub Actions doesn’t but it can be done via
 
 The following script does that.
 
-<details>
-  <summary><code>.github/workflows/pull-request-cancel-concurrent.sh</code></summary>
-
+{{<details summary="`.github/workflows/pull-request-cancel-concurrent.sh`">}}
 ```bash
 #!/bin/bash
 set -eou pipefail
@@ -137,8 +135,7 @@ for WORKFLOW_RUN_ID in $(jq ".workflow_runs[] | .id" runs.json); do
 
 done
 ```
-
-</details>
+{{</details>}}
 
 The script should be called from a PR workflow.
 
@@ -173,9 +170,7 @@ jobs:
 Merging itself is straightforward —
 it’s [a single API call](https://docs.github.com/en/rest/reference/pulls#merge-a-pull-request).
 
-<details>
-  <summary><code>.github/workflows/pull-request-merge.sh</code></summary>
-
+{{<details summary="`.github/workflows/pull-request-merge.sh`">}}
 ```bash
 #!/bin/bash
 set -eou pipefail
@@ -198,7 +193,7 @@ curl \
     \"commit_message\": \"\"
   }"
 ```
-</details>
+{{</details>}}
 
 Updating is a bit more interesting and consists of multiple steps:
 
@@ -206,9 +201,7 @@ Updating is a bit more interesting and consists of multiple steps:
 1. [find PRs with the same target branch](https://docs.github.com/en/rest/reference/pulls#list-pull-requests);
 1. [update found PRs](https://docs.github.com/en/rest/reference/pulls#update-a-pull-request-branch).
 
-<details>
-  <summary><code>.github/workflows/pull-request-update.sh</code></summary>
-
+{{<details summary="`.github/workflows/pull-request-update.sh`">}}
 ```bash
 #!/bin/bash
 set -eou pipefail
@@ -238,7 +231,7 @@ for PULL_REQUEST_NUMBER in $(jq ".[] | .number" pull-requests.json); do
 
 done
 ```
-</details>
+{{</details>}}
 
 > :triangular_flag_on_post: Notice that the update script uses a user-provided GitHub token
 > in addition to the GitHub-provided one. The latter

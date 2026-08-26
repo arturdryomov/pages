@@ -139,9 +139,7 @@ Restarting application over and over to get necessary numbers
 is kind of tedious, especially if there are going to be thousands of passes.
 The benchmark code measures `VectorDrawable#draw` calls instead.
 
-<details>
-  <summary><em>Click to expand the benchmark code.</em></summary>
-
+{{<details summary="_Click to expand the benchmark code._">}}
 ```kotlin
 companion object {
     private const val ITERATIONS_COUNT = 10_000
@@ -203,7 +201,7 @@ private fun measure(@DrawableRes drawableRes: Int): Measurement {
     return Measurement(parseTime, renderTime)
 }
 ```
-</details>
+{{</details>}}
 
 ### Environment
 
