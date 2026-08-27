@@ -262,11 +262,7 @@ especially when it comes to ARGB colors with defined alpha channel.
 
 The solution here is the color subtraction. To get a color for `elevationOverlayColor`
 subtract `S` from `ES`. For example, using the surface color
-`#000000` <span style="color: #000000">■</span>
-and the elevated surface color
-`#5b5f65` <span style="color: #5b5f65">■</span>
-we’ll get
-`#e6f0ff` <span style="color: #e6f0ff">■</span>.
+`#000000` and the elevated surface color `#5b5f65` we’ll get `#e6f0ff`.
 Using the resulting color is usually close enough to the design vision without compromising
 the ability to automatically change surface color depending on the current elevation.
 Oh, please don’t subtract colors manually,
@@ -379,4 +375,3 @@ to make universal decisions. This is a good thing. Ah, yes, it looks nice!
 ---
 
 The title is a reference to the [Midnight in a Perfect World](https://open.spotify.com/track/1z6zJqayfsAiiYtQ3minb7) track.
-

@@ -17,9 +17,6 @@ enableEmoji: true
 markup:
   highlight:
     noClasses: false
-  goldmark:
-    renderer:
-      unsafe: true
 
 menu:
   left:
