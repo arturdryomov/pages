@@ -1,8 +1,8 @@
 ---
 title: "Kotlin Enum Recipes"
 description: "Is this... a sealed class?"
-date: 2019-10-08
-slug: kotlin-enum-recipes
+date: "2019-10-08"
+slug: "kotlin-enum-recipes"
 ---
 
 Enumerations, in a form of `enum class` declarations, got a bad rep on Android.

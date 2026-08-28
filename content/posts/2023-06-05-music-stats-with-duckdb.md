@@ -1,8 +1,8 @@
 ---
 title: "Music Stats with DuckDB"
 description: "Using DuckDB for ad-hoc SQL"
-date: 2023-06-05
-slug: music-stats-with-duckdb
+date: "2023-06-05"
+slug: "music-stats-with-duckdb"
 ---
 
 Music! Everyone likes music. Well, I certainly hope so.

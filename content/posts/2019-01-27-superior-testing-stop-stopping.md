@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Stop Stopping"
 description: "The introduction to the series of articles about testing. Unfortunately, the required one."
-date: 2019-01-27
-slug: superior-testing-stop-stopping
+date: "2019-01-27"
+slug: "superior-testing-stop-stopping"
 ---
 
 Let’s start with confessions. The initial idea to kick-off a series of articles

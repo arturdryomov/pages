@@ -1,8 +1,8 @@
 ---
 title: "A Dagger to Remember"
 description: "Replacing Dagger with Kotlin. Wait, what?"
-date: 2018-04-22
-slug: a-dagger-to-remember
+date: "2018-04-22"
+slug: "a-dagger-to-remember"
 ---
 
 # Story Time!

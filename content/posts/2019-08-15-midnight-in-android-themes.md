@@ -1,8 +1,8 @@
 ---
 title: "Midnight in Android Themes"
 description: "The dark theme: colors, animations, elevations, HTML, Maps and moar."
-date: 2019-08-15
-slug: midnight-in-android-themes
+date: "2019-08-15"
+slug: "midnight-in-android-themes"
 ---
 
 Android Q introduces [dark themes](https://developer.android.com/preview/features/darktheme).

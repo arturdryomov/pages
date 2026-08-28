@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Check Your Checks"
 description: "Testing tests is useless for sure but correct checks are important!"
-date: 2019-03-27
-slug: superior-testing-check-checks
+date: "2019-03-27"
+slug: "superior-testing-check-checks"
 ---
 
 [False positives](https://en.wikipedia.org/wiki/False_positives_and_false_negatives#False_positive_error).

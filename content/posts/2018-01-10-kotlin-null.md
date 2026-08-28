@@ -1,8 +1,8 @@
 ---
 title: "Kotlin: The Problem with `null`"
 description: "A story about Kotlin. And null. And Java. And kind of about Swift."
-date: 2018-01-10
-slug: kotlin-the-problem-with-null
+date: "2018-01-10"
+slug: "kotlin-the-problem-with-null"
 ---
 
 I think almost everybody in the CS world knows about the

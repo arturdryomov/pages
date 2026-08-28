@@ -1,8 +1,8 @@
 ---
 title: "Acceptance Criteria Bureaucracy"
 description: "Organizing the development process with a sweet boring documentation."
-date: 2019-01-20
-slug: acceptance-criteria-bureaucracy
+date: "2019-01-20"
+slug: "acceptance-criteria-bureaucracy"
 ---
 
 Cooperation! It sure sounds better than bureaucracy.

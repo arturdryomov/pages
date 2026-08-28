@@ -1,8 +1,8 @@
 ---
 title: "Do Androids Dream of UI Testing?"
 description: "Fear and Loathing in mobile QA"
-date: 2018-05-26
-slug: do-androids-dream-of-ui-testing
+date: "2018-05-26"
+slug: "do-androids-dream-of-ui-testing"
 ---
 
 Automation is a foundation stone of the software development.

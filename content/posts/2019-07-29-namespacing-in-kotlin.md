@@ -1,8 +1,8 @@
 ---
 title: "Namespacing in Kotlin"
 description: "Well, the lack of."
-date: 2019-07-29
-slug: namespacing-in-kotlin
+date: "2019-07-29"
+slug: "namespacing-in-kotlin"
 ---
 
 The development process is a research. Find the state machine,

@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Managing Production"
 description: "Testing never sleeps."
-date: 2019-07-30
-slug: superior-testing-managing-production
+date: "2019-07-30"
+slug: "superior-testing-managing-production"
 ---
 
 The testing process does not magically stop after deploying an artifact.

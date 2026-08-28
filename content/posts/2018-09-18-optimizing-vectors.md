@@ -1,8 +1,8 @@
 ---
 title: "Optimizing Android Vector Images. Or Not?"
 description: "Measuring VectorDrawable drawing times with various tools applied."
-date: 2018-09-18
-slug: optimizing-android-vector-images
+date: "2018-09-18"
+slug: "optimizing-android-vector-images"
 ---
 
 An average working day of an Android developer involves doing something with UI.

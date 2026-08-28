@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Need for Speed"
 description: "I feel the need — the need for speed!"
-date: 2019-04-30
-slug: superior-testing-need-for-speed
+date: "2019-04-30"
+slug: "superior-testing-need-for-speed"
 ---
 
 Everybody wants to have a faster development cycle.

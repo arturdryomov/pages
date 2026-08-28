@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Make Fakes not Mocks"
 description: "To mock, or not to mock, that is the question."
-date: 2019-02-28
-slug: superior-testing-make-fakes-not-mocks
+date: "2019-02-28"
+slug: "superior-testing-make-fakes-not-mocks"
 ---
 
 After years of writing and reading tests I’ve discovered that mocking
@@ -217,4 +217,3 @@ on the scale of the entire codebase? Is it understandable and maintainable?
 Does it help to make universal and effective tests?
 It depends on the exact use-case of course. But please, avoid using a microscope
 as a hammer.
-

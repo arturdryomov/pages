@@ -1,8 +1,8 @@
 ---
 title: "Merge Git Authors"
 description: "In Soviet Russia Git merges you!"
-date: 2019-03-19
-slug: merge-git-authors
+date: "2019-03-19"
+slug: "merge-git-authors"
 ---
 
 Stats! Stats are awesome. You can collect them, you can analyze and visualize them,

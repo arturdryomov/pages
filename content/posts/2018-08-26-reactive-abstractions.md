@@ -1,8 +1,8 @@
 ---
 title: "Reactive Abstractions in Android World"
 description: "Abstracting and testing platform interactions."
-date: 2018-08-26
-slug: reactive-abstractions-in-android-world
+date: "2018-08-26"
+slug: "reactive-abstractions-in-android-world"
 ---
 
 Who knows how many test suites were not created because of a classic parry.

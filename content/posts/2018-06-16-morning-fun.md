@@ -1,8 +1,8 @@
 ---
 title: "Mobile Developer Morning Fun"
 description: "You build it — you run it! Mobile version."
-date: 2018-06-16
-slug: mobile-developer-morning-fun
+date: "2018-06-16"
+slug: "mobile-developer-morning-fun"
 ---
 
 Do you read this article on a phone? No? Well, I’m pretty sure you have a phone.

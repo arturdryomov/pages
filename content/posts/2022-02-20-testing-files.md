@@ -1,8 +1,8 @@
 ---
 title: "Testing Files without Files"
 description: "Overview of fake VFS on JVM"
-date: 2022-02-21
-slug: testing-files-without-files
+date: "2022-02-21"
+slug: "testing-files-without-files"
 ---
 
 File operations become less and less common. As users, we store more and more

@@ -1,8 +1,8 @@
 ---
 title: "Designing Errors with Kotlin"
 description: "Checked and unchecked, recoverable and unrecoverable — what to pick?"
-date: 2018-12-18
-slug: designing-errors-with-kotlin
+date: "2018-12-18"
+slug: "designing-errors-with-kotlin"
 ---
 
 Fun fact — the area of

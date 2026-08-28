@@ -1,8 +1,8 @@
 ---
 title: "Reactive Pipelines in Action"
 description: "The beauty of Functional Reactive Programming."
-date: 2018-11-07
-slug: reactive-pipelines
+date: "2018-11-07"
+slug: "reactive-pipelines"
 ---
 
 Human beings are reactive by nature — fortunately or not.

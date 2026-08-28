@@ -1,8 +1,8 @@
 ---
 title: "Filling Android Autofill Gaps"
 description: "Google Smart Lock, Android Autofill, OpenYOLO, Google Credentials, passwords.txt — what else?"
-date: 2019-02-13
-slug: filling-android-autofill-gaps
+date: "2019-02-13"
+slug: "filling-android-autofill-gaps"
 ---
 
 We can have different opinions but should be able to agree on one thing — we are humans.

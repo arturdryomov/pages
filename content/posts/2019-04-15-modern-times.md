@@ -1,8 +1,8 @@
 ---
 title: "Modern DateTimes on Android"
 description: "Are we... out of time?"
-date: 2019-04-15
-slug: modern-times
+date: "2019-04-15"
+slug: "modern-times"
 ---
 
 Java 8 gave us a great gift — the `java.time` package, known as

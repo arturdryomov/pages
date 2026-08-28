@@ -1,8 +1,8 @@
 ---
 title: "Kotlin Code Organization"
 description: "Kotlin and Gradle source sets in action"
-date: 2020-01-27
-slug: kotlin-code-organization
+date: "2020-01-27"
+slug: "kotlin-code-organization"
 ---
 
 What’s the motivation behind organizing the code? Two points come to mind.

@@ -1,8 +1,8 @@
 ---
 title: "Reactive State Mutations via CQRS"
 description: "Managing state, the safe way. Without event sourcing (for now)."
-date: 2018-10-21
-slug: reactive-state-mutations
+date: "2018-10-21"
+slug: "reactive-state-mutations"
 ---
 
 State-state-state. It surrounds us. Think hard enough and everything around

@@ -1,8 +1,8 @@
 ---
 title: "Autonomous GitHub Pull Requests"
 description: "Less actions via more Actions"
-date: 2021-03-08
-slug: auto-github-pull-requests
+date: "2021-03-08"
+slug: "auto-github-pull-requests"
 ---
 
 In general, people are lazy. This is our nature — we want to achieve more by doing less.

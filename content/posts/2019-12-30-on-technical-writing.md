@@ -1,8 +1,8 @@
 ---
 title: "On Technical Writing"
 description: "How I make it work (or not)"
-date: 2019-12-30
-slug: on-technical-writing
+date: "2019-12-30"
+slug: "on-technical-writing"
 ---
 
 Books were the internet for me before the real one became accessible.

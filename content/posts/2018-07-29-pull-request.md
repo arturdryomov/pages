@@ -1,8 +1,8 @@
 ---
 title: "How the Pull Request is Built"
 description: "Not breaking the master branch with your changes."
-date: 2018-07-29
-slug: how-the-pull-request-is-built
+date: "2018-07-29"
+slug: "how-the-pull-request-is-built"
 ---
 
 Contact information of a friend of mine mentions that he doesn’t have Facebook or Twitter accounts,

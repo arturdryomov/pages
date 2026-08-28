@@ -1,8 +1,8 @@
 ---
 title: "Abstracting Kotlin Sealed Classes"
 description: "Making things same-same, but different, but still same!"
-date: 2019-06-04
-slug: abstracting-kotlin-sealed-classes
+date: "2019-06-04"
+slug: "abstracting-kotlin-sealed-classes"
 ---
 
 Things tend to be similar. Cars and bikes are different

@@ -1,8 +1,8 @@
 ---
 title: "Superior Testing: Cleaning Up"
 description: "Making the world a better place, one byte at a time."
-date: 2019-06-06
-slug: superior-testing-cleaning-up
+date: "2019-06-06"
+slug: "superior-testing-cleaning-up"
 ---
 
 There is a game called [Viscera Cleanup Detail](https://en.wikipedia.org/wiki/Viscera_Cleanup_Detail).

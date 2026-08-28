@@ -1,8 +1,8 @@
 ---
 title: "The Art of a Dependency Upgrade"
 description: "A walk to a technical marvel without breaking a leg or two."
-date: 2018-03-18
-slug: art-of-a-dependency-upgrade
+date: "2018-03-18"
+slug: "art-of-a-dependency-upgrade"
 ---
 
 [RxJava](https://github.com/ReactiveX/RxJava) `1.x` reaches EOL on March 31, 2018,
