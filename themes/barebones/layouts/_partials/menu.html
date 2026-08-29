@@ -1,12 +1,12 @@
 <nav>
   <div class="nav-section">
-    {{ range .Site.Menus.left }}
+    {{ range .Site.Menus.internal }}
     <a href="{{ .URL | safe.URL }}">{{ .Name }}</a>
     {{ end }}
   </div>
 
   <div class="nav-section">
-    {{ range .Site.Menus.right }}
+    {{ range .Site.Menus.external }}
     <a href="{{ .URL | safe.URL }}">{{ .Name }}</a>
     {{ end }}
   </div>

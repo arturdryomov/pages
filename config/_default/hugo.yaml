@@ -18,11 +18,11 @@ markup:
   highlight:
     noClasses: false
 
-menu:
-  left:
+menus:
+  internal:
     - name: "Posts"
-      url: "/"
-  right:
+      pageRef: "/"
+  external:
     - name: "LinkedIn"
       url: "https://www.linkedin.com/in/arturdryomov"
       weight: 1
