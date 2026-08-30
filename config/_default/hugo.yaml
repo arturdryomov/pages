@@ -1,4 +1,5 @@
-baseUrl: "https://arturdryomov.dev"
+baseURL: "https://arturdryomov.dev"
+
 title: "Artur Dryomov"
 
 params:
