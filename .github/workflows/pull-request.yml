@@ -12,7 +12,7 @@ jobs:
         uses: "actions/checkout@v7.0.1"
 
       - name: "Check scripts"
-        run: "shellcheck scripts/*.sh"
+        run: "shellcheck .github/scripts/*.sh"
 
       - name: "Generate content"
         run: "bash .github/scripts/generate.sh"
