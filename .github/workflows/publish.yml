@@ -5,15 +5,14 @@ on:
     branches:
       - "master"
 
-permissions:
-  contents: "read"
-  id-token: "write"
-  pages: "write"
-
 jobs:
   generate:
     name: "Generate"
     runs-on: "ubuntu-slim"
+
+    permissions:
+      contents: "read"
+
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v7.0.1"
@@ -30,9 +29,15 @@ jobs:
     name: "Ship"
     runs-on: "ubuntu-slim"
     needs: "generate"
+
     environment:
       name: "github-pages"
       url: "${{ steps.deployment.outputs.page_url }}"
+
+    permissions:
+      id-token: "write"
+      pages: "write"
+
     steps:
       - name: "Push"
         uses: "actions/deploy-pages@v5.0.0"
