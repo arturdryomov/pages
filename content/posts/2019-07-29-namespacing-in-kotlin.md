@@ -191,10 +191,9 @@ public final class Component {
 
 Let’s take a deeper look using the disassembler.
 
-```
+```console
 $ javap -C Component.java && javap -c -verbose Component.class
-```
-```
+
   Size 194 bytes
   MD5 checksum 3a2a9141881597581908528a19f7d993
   Compiled from "Component.java"
@@ -252,10 +251,9 @@ interface Component {
 
 The disassembler shows that it is much lighter than the `class`.
 
-```
+```console
 $ javap -C Component.java && javap -c -verbose Component.class
-```
-```
+
   Size 101 bytes
   MD5 checksum 574e4f61d4b3e17ccd964289678c7ae2
   Compiled from "Component.java"
@@ -269,9 +267,7 @@ Constant pool:
   #3 = Utf8               SourceFile
   #4 = Utf8               Component.java
   #5 = Utf8               Component
-  #6 = Utf8               java/lang/Object
-{
-}
+  #6 = Utf8               java/lang/Object{}
 ```
 
 :heavy_plus_sign: Impossible to create an object.

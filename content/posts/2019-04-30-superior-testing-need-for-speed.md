@@ -60,7 +60,7 @@ tasks.withType<Test> {
 Well, this is kind of disappointing... However, there is an interesting
 side effect.
 
-```
+```console
 $ find build/reports/tests/testDebugUnitTest -name "*.html" | wc -l
 ```
 
@@ -94,7 +94,7 @@ But do we even care about the debug variant? We are shipping the release code, r
 I’m not gonna suggest excluding the `testDebugUnitTest` as universal advice
 since it is a matter of choice. There is the command though:
 
-```
+```console
 $ ./gradlew build --exclude-task testDebugUnitTest
 ```
 
