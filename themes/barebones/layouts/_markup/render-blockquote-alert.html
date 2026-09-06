@@ -1,0 +1,13 @@
+{{
+$AlertIcons := collections.Dictionary
+  "note" ":book:"
+  "tip" ":bulb:"
+  "warning" ":warning:"
+}}
+
+<blockquote>
+  <p>
+  {{ collections.Index $AlertIcons .AlertType | transform.Emojify }}
+  {{ .Text | strings.TrimPrefix "<p>" | strings.TrimSuffix "</p>" | safeHTML }}
+  </p>
+</blockquote>
