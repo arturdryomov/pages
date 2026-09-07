@@ -214,7 +214,8 @@ animation for an undefined time interval. It is possible to provide
 an `IdlingResource` for the animation or disable animations in the application
 altogether, which leads to far less intrusion in the main codebase.
 
-> :warning: Disabling animations makes tests more stable but less honest —
+> [!WARNING]
+> Disabling animations makes tests more stable but less honest —
 > they do not check how animations work and to which events they might lead.
 
 ### Backend Communication
@@ -264,7 +265,8 @@ And we have options.
   The same can be achieved with a clever blocking OkHttp `Interceptor`.
 * Replace network communication code with a mocked one.
 
-> :warning: Replacing network-related code makes tests less honest
+> [!WARNING]
+> Replacing network-related code makes tests less honest
 > from the integration standpoint.
 
 Any attempt to have a separate backend implementation brings

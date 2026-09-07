@@ -43,7 +43,8 @@ To create and switch a branch in one go:
 $ git switch --create BRANCH
 ```
 
-> :information_source: `git switch` is experimental from [v2.23](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc) (August 2019),
+> [!TIP]
+> `git switch` is experimental from [v2.23](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc) (August 2019),
 > stable from [v2.51](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.0.adoc) (August 2025).
 
 # Push Branches
@@ -70,7 +71,8 @@ It does work though — changing the config instructs Git to set upstream on its
 $ git config --global push.autoSetupRemote true
 ```
 
-> :information_source: `push.autoSetupRemote` is available from [v2.37](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.37.0.adoc) (June 2022).
+> [!TIP]
+> `push.autoSetupRemote` is available from [v2.37](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.37.0.adoc) (June 2022).
 
 # Compare Changes
 
@@ -89,7 +91,8 @@ Additions and deletions keep their usual red and green colors.
 The option accepts [multiple modes](https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---color-movedmode).
 `dimmed-zebra` might be a good one — it dims _moves_, which might be not super important most of the time.
 
-> :information_source: `diff.colorMoved` is available from [v2.15](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.15.0.adoc) (October 2017).
+> [!TIP]
+> `diff.colorMoved` is available from [v2.15](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.15.0.adoc) (October 2017).
 
 # Restore Changes
 
@@ -108,7 +111,8 @@ $ git restore PATH
 
 Also take a look at `--staged` and `--worktree` arguments when dealing with more complex scenarios.
 
-> :information_source: `git restore` is experimental from [v2.23](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc) (August 2019),
+> [!TIP]
+> `git restore` is experimental from [v2.23](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.23.0.adoc) (August 2019),
 > stable from [v2.51](https://raw.githubusercontent.com/git/git/master/Documentation/RelNotes/2.51.0.adoc) (August 2025).
 
 # What’s Next?

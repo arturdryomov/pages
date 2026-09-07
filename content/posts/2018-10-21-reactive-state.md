@@ -123,7 +123,8 @@ CQRS stands for Command Query Responsibility Segregation.
 It is a variety of CQS — Command-Query Separation.
 Usually, it is connected to Event Sourcing, but it is a different story.
 
-> :book: This article will narrow down the concept.
+> [!NOTE]
+> This article will narrow down the concept.
 > For further explanation I suggest reading [the Martin Fowler peace](https://martinfowler.com/bliki/CQRS.html)
 > and [the Microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs).
 

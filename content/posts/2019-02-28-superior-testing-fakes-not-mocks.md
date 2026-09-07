@@ -114,7 +114,8 @@ The relevant test needs to be modified as well.
 
 Instead of mocking let’s produce reusable fakes using language instruments and nothing else.
 
-> :book: Fakes might be called stubs or dummies —
+> [!NOTE]
+> Fakes might be called stubs or dummies —
 > [depends on the material](http://xunitpatterns.com/Mocks,%20Fakes,%20Stubs%20and%20Dummies.html).
 > I suggest calling them _test implementations_.
 

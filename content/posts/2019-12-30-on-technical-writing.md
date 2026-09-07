@@ -31,7 +31,8 @@ of stories to teachers and ask for advice on the text rhythm and structure.
 As I remember this, the experience feels like a bright stark of empathy.
 Such a wonderful feeling.
 
-> :bulb: Don’t hesitate to ask for advice and opinion. That’s how we evolve.
+> [!TIP]
+> Don’t hesitate to ask for advice and opinion. That’s how we evolve.
 
 Being a dumb youngling, at a certain point, I’ve decided to stop this
 enterprise and delete everything I wrote. I don’t even remember the motivation
@@ -67,7 +68,8 @@ At the same time, I’ve understood that giving a public talk to 100 people
 is extremely ineffective when we have the internet. So I’ve decided to write again.
 See, you are reading these words, so it worked.
 
-> :book: BTW — [conferences and events are dead](https://marco.org/2018/01/17/end-of-conference-era).
+> [!NOTE]
+> BTW — [conferences and events are dead](https://marco.org/2018/01/17/end-of-conference-era).
 
 The following books inspired me and I can recommend them to everyone — with or without writing ambitions.
 
@@ -97,7 +99,8 @@ it forced me to start working on a piece, at the same time leaving me
 enough space for freedom. The scheduling might sound boring but it serves
 as a good push for learning more and advancing the skill forward.
 
-> :movie_camera: [Deadlines make you creative](https://www.youtube.com/watch?v=MckHLBWuz7E).
+> [!NOTE]
+> [Deadlines make you creative](https://www.youtube.com/watch?v=MckHLBWuz7E).
 
 In 2019 I’ve made a mistake of demanding two articles per month from myself —
 one short one and one long one. That’s why I’ve started the Superior Testing
@@ -137,7 +140,8 @@ The Vim built-in spellchecker is enough.
 
 ### Publishing
 
-> :book: [Medium is a poor choice for blogging](https://tonsky.me/blog/medium/).
+> [!NOTE]
+> [Medium is a poor choice for blogging](https://tonsky.me/blog/medium/).
 
 As I’ve mentioned, I use Hugo and [GitHub Pages](https://pages.github.com/).
 I’ve built a Hugo theme from scratch using pure HTML / CSS and automated the workflow

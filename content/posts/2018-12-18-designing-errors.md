@@ -70,7 +70,8 @@ is very careful to not even mention exceptions and uses the Error term instead.
 value. `throw` writes an error to a register and `try` reads it.
 Essentially it is like returning a `Pair` or an `Either`.
 
-> :book: Technical details are explained in
+> [!NOTE]
+> Technical details are explained in
 > [the excellent article](https://www.mikeash.com/pyblog/friday-qa-2017-08-25-swift-error-handling-implementation.html)
 > by Mike Ash.
 
@@ -125,7 +126,8 @@ but it is considered non-idiomatic.
 panic("on the streets of London")
 ```
 
-> :book: There is [a great article](https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance)
+> [!NOTE]
+> There is [a great article](https://evilmartians.com/chronicles/errors-in-go-from-denial-to-acceptance)
 > on coping with Go error handling by Sergey Alexandrovich.
 
 # Rust
@@ -239,7 +241,8 @@ This approach simplifies interactions by a huge margin.
 about significant system failures that require developer attention.
 [Fail-fast](https://en.wikipedia.org/wiki/Fail-fast), right?
 
-> :bulb: Use [`Relay`](https://github.com/JakeWharton/RxRelay)
+> [!TIP]
+> Use [`Relay`](https://github.com/JakeWharton/RxRelay)
 > instead of `Subject` to stop thinking about `onError` and `onComplete`.
 
 # `Result`s
@@ -255,7 +258,8 @@ recoverable-unrecoverable paradigm.
   A function receives input as arguments and returns output
   as results. That’s it. In a way, it helps to avoid side effects.
 
-> :book: Talking side effects and functional programming —
+> [!NOTE]
+> Talking side effects and functional programming —
 > [Haskell follows a similar approach](http://book.realworldhaskell.org/read/error-handling.html)
 > to avoid exceptions in favor of result types.
 

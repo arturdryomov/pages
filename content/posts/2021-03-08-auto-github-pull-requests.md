@@ -31,7 +31,8 @@ Developers provide changes and reviews, the automation handles everything else.
 There is no need to choose people for review, track checks and review statuses,
 merge and update remaining PRs.
 
-> :book: The [How the Pull Request is Built]({{< relref "2018-07-29-pull-request.md" >}}) article
+> [!NOTE]
+> The [How the Pull Request is Built]({{< relref "2018-07-29-pull-request.md" >}}) article
 > explains the importance of keeping pull request branches up to date with the target one.
 
 The workflow can be brought to life via GitHub and GitHub Actions with a bit of help
@@ -39,7 +40,8 @@ from [`curl`](https://curl.se/) and [`jq`](https://stedolan.github.io/jq/).
 
 # Implementation
 
-> :triangular_flag_on_post: This article is not a tutorial for GitHub Actions.
+> [!WARNING]
+> This article is not a tutorial for GitHub Actions.
 > GitHub [has a great one](https://docs.github.com/en/actions/learn-github-actions).
 
 ## Assign Reviewers
@@ -155,14 +157,16 @@ jobs:
       run: bash .github/workflows/pull-request-cancel-concurrent.sh "${{ secrets.GITHUB_TOKEN }}"
 ```
 
-> :book: The script uses
+> [!NOTE]
+> The script uses
 > [the GitHub-provided authentication token](https://docs.github.com/en/actions/reference/authentication-in-a-workflow)
 > via `secrets.GITHUB_TOKEN` and a good amount of GitHub-provided
 > [environment variables](https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables).
 
 ## Merge and Update
 
-> :eight_spoked_asterisk: GitHub has a feature called
+> [!TIP]
+> GitHub has a feature called
 > [Auto-Merge](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/automatically-merging-a-pull-request)
 > but its automation part is... partial. It requires using a dedicated button
 > for each opened PR making it easy to forget or even miss.
@@ -233,7 +237,8 @@ done
 ```
 {{</details>}}
 
-> :triangular_flag_on_post: Notice that the update script uses a user-provided GitHub token
+> [!WARNING]
+> Notice that the update script uses a user-provided GitHub token
 > in addition to the GitHub-provided one. The latter
 > [does not trigger consecutive workflows](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#using-the-github_token-in-a-workflow).
 > This means that PRs will be updated but there will be no runs due to new changes.

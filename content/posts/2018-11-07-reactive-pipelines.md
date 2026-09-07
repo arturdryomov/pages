@@ -35,7 +35,8 @@ The success of our enterprise
 depends on providing enough abstractions to connect producers and consumers,
 forming Pipelines.
 
-> :book: Suggestions about abstractions are available in
+> [!NOTE]
+> Suggestions about abstractions are available in
 > [Reactive Abstractions in Android World]({{< ref "2018-08-26-reactive-abstractions.md" >}}).
 
 Honestly saying, I find reactive pipelines beautiful. There is something deeply
@@ -57,7 +58,8 @@ These actions are done without ad-hoc solutions and concepts. The flow is consis
 
 # Structure
 
-> :book: We’ll use Data-Domain-Presentation
+> [!NOTE]
+> We’ll use Data-Domain-Presentation
 > [multitier architecture](https://en.wikipedia.org/wiki/Multitier_architecture).
 > Please refer to Martin Fowler
 > [for details](https://martinfowler.com/bliki/PresentationDomainDataLayering.html).
@@ -134,7 +136,8 @@ It is done this way for two reasons.
 We’ll use a stateful example, but essentially this level is a mediator
 between the data and the presentation. Business-related decisions are done here.
 
-> :book: Suggestions about state mutations are available in
+> [!NOTE]
+> Suggestions about state mutations are available in
 > [Reactive State Mutations via CQRS]({{< ref "2018-10-21-reactive-state.md" >}}).
 
 ```kotlin

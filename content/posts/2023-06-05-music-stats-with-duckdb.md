@@ -77,7 +77,8 @@ Each JSON file has the following format.
 Besides merging podcasts and music in the same enumeration, the format is good.
 It’s great for DuckDB since it can recognize JSON array items as rows and repeating JSON fields as columns.
 
-> :bulb: Note that it’s possible to import multiple files using a file name mask.
+> [!TIP]
+> Note that it’s possible to import multiple files using a file name mask.
 
 ```sql
 CREATE TABLE scrobbles_spotify AS SELECT * FROM read_json_auto('MyData/endsong_*.json');
@@ -125,7 +126,8 @@ uts,utc_time,artist,artist_mbid,album,album_mbid,track,track_mbid
 "1667306723","01 Nov 2022, 12:45","How to Destroy Angels","143b396d-a678-43aa-8c74-628fea8e381f","How to Destroy Angels","4617ac46-8e11-4a14-9133-b00ecbae7069","Parasite","5aa91266-1d8b-3ede-bd97-ef4d5e921d4f"
 ```
 
-> :bulb: `*_mbid` fields are [MusicBrainz](https://musicbrainz.org/) IDs.
+> [!TIP]
+> `*_mbid` fields are [MusicBrainz](https://musicbrainz.org/) IDs.
 
 A CSV file is essentially a table so there are no issues with the DuckDB import.
 

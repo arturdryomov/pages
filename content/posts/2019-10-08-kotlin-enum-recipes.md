@@ -152,7 +152,8 @@ enum class ErrorCode(val value: String) {
 data class ErrorResponse(@SerializedName("code") val code: ErrorCode?)
 ```
 
-> :warning: Gson will write unknown `enum` values as `null` —
+> [!WARNING]
+> Gson will write unknown `enum` values as `null` —
 > ignoring the Kotlin nullability — since the Java reflection doesn’t know about Kotlin.
 > Make such values nullable and handle them as deserialization errors or use
 > Moshi which will do it automatically.

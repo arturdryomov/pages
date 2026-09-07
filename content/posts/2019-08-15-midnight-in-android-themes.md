@@ -35,7 +35,8 @@ That’s it! From now on it is possible to use resources with the `night` modifi
 (`values-night`, `drawable-night`, etc). Unfortunately switching recreates
 activities, like a regular configuration change.
 
-> :warning: I ignore `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
+> [!WARNING]
+> I ignore `AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY`
 > and go against [Google suggestions](https://developer.android.com/preview/features/darktheme#changing_themes_in-app)
 > of showing a gazillion of switches.
 > At least macOS and Windows work without ad-hoc switches.
@@ -96,7 +97,8 @@ so we’ll use a known trick with `Base.*` themes.
 <style name="Theme.Local" parent="Base.Theme.Local"/>
 ```
 
-> :bulb: Notice that I’m not using `Theme.AppCompat.DayNight`.
+> [!TIP]
+> Notice that I’m not using `Theme.AppCompat.DayNight`.
 > `DayNight` switches `Theme.AppCompat` attributes between themes but it might be
 > useless if attributes are already re-declared in the application-level theme.
 
@@ -238,7 +240,8 @@ class Surface(context: Context, attributes: AttributeSet) : FrameLayout(context,
 }
 ```
 
-> :book: Take a look at the `ShapeAppearanceModel` to make cards with rounded corners,
+> [!NOTE]
+> Take a look at the `ShapeAppearanceModel` to make cards with rounded corners,
 > triangle edges and more via custom `EdgeTreatment` and `CornerTreatment` implementations.
 
 What about gradients and color transitions on elevated surfaces?
@@ -268,7 +271,8 @@ the ability to automatically change surface color depending on the current eleva
 Oh, please don’t subtract colors manually,
 use [the special calculator](https://www.colorhexa.com).
 
-> :book: Since I’m horrible at explaining color math — refer to wonderful
+> [!NOTE]
+> Since I’m horrible at explaining color math — refer to wonderful
 > [Alpha Compositing](https://ciechanow.ski/alpha-compositing/) and
 > [Color Spaces](https://ciechanow.ski/color-spaces/) articles for details.
 
@@ -338,7 +342,8 @@ val css = CssColor.values().fold(cssTemplate) { css, cssColor ->
 fun Int.colorHexRgba() = String.format("%08x", shl(8) + ushr(24))
 ```
 
-> :bulb: Notice the `colorHexRgba` extension. It is not possible to use Android colors as-is
+> [!TIP]
+> Notice the `colorHexRgba` extension. It is not possible to use Android colors as-is
 > since HTML uses the RGBA notation while Android uses the ARGB one.
 
 # Maps
@@ -369,7 +374,8 @@ Having something like a design system definitely helps.
 Is it worth it? I think so. It sheds a light on hacks and forces
 to make universal decisions. This is a good thing. Ah, yes, it looks nice!
 
-> :book: The design team have published [their own view on the process](https://medium.com/design-juno/implementing-dark-mode-e57cccab19f9).
+> [!NOTE]
+> The design team have published [their own view on the process](https://medium.com/design-juno/implementing-dark-mode-e57cccab19f9).
 > Feel free to take a look!
 
 ---

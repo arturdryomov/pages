@@ -86,7 +86,8 @@ to ThreeTenBP ASAP.
 Use [`java.time`](https://developer.android.com/reference/java/time/package-summary),
 forget about Joda-Time and ThreeTenBP.
 
-> :book: Android [uses ICU](https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java)
+> [!NOTE]
+> Android [uses ICU](https://android.googlesource.com/platform/libcore/+/master/ojluni/src/main/java/java/time/zone/IcuZoneRulesProvider.java)
 > to provide time zones data.
 
 The downside of using native `java.time` is updating time zones data.
@@ -105,7 +106,8 @@ operations without initialization will lead to runtime exceptions. It is a good 
 a time abstraction in place which will be an entry point for time-related operations.
 It is a good practice to have it for testing purposes anyway.
 
-> :book: `Duration` is safe to use everywhere since it is basically
+> [!NOTE]
+> `Duration` is safe to use everywhere since it is basically
 > [a pair of seconds and nanoseconds](https://github.com/ThreeTen/threetenbp/blob/31b133c35cbc45b767e0c9392818438f20b80059/src/main/java/org/threeten/bp/Duration.java#L486-L490)
 > with syntax sugar on top.
 

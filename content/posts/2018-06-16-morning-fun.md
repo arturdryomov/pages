@@ -84,7 +84,8 @@ At the same time, [we can do better](https://www.youtube.com/watch?v=SLILjDx0SO0
 
 # On-call
 
-> :book: Reading material on the topic:
+> [!NOTE]
+> Reading material on the topic:
 > [_Testing in Production_](https://medium.com/@copyconstruct/testing-in-production-the-safe-way-18ca102d0ef1) and
 > [_On-call Doesn’t Have to Suck_](https://medium.com/@copyconstruct/on-call-b0bd8c5ea4e0).
 

@@ -108,7 +108,8 @@ Cons:
 A modern approach with [`java.nio.file.Path`](https://devdocs.io/openjdk~17/java.base/java/nio/file/path).
 It might feel new but the NIO is available from Java 7 (2011).
 
-> :bulb: Hello there, a curious Android developer.
+> [!TIP]
+> Hello there, a curious Android developer.
 > `java.nio.file.*` is available from API 26 (8.0).
 
 Both the interface and the implementation need changes:

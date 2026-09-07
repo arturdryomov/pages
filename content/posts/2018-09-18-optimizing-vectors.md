@@ -27,7 +27,8 @@ Optimizers:
 * [Avocado](https://github.com/alexjlockwood/avocado/) (1.0.0) — command line tool, optimizes `VectorDrawable` XML files.
 * [SVGO](https://github.com/svg/svgo) (1.0.5) — command line tool, optimizes SVG files.
 
-> :bulb: Zeplin exports SVG assets
+> [!TIP]
+> Zeplin exports SVG assets
 > [using SVGO under the hood](https://support.zeplin.io/zeplin-101/developing-web-projects-using-zeplin).
 
 # Images
@@ -65,7 +66,8 @@ I’ve used — [Logo](https://en.wikipedia.org/wiki/Logo_(programming_language
 It can be used to teach basic programming concepts
 using so-called [turtle graphics](https://en.wikipedia.org/wiki/Turtle_graphics).
 
-> :book: `android:pathData` uses the exact same format as `d` attribute in SVG files.
+> [!NOTE]
+> `android:pathData` uses the exact same format as `d` attribute in SVG files.
 Mozilla provides [great documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d)
 for it with neat samples.
 
@@ -117,7 +119,8 @@ mean more efficient execution. Actually, Android Lint
 [has a `VectorPath` check](http://tools.android.com/tips/lint-checks)
 for such cases.
 
-> :book: The maximum instructions count for Lint is `800`.
+> [!NOTE]
+> The maximum instructions count for Lint is `800`.
 > See [the source code](https://android.googlesource.com/platform/tools/base/+/studio-master-dev/lint/libs/lint-checks/src/main/java/com/android/tools/lint/checks/VectorPathDetector.java)
 > for details.
 
@@ -210,7 +213,8 @@ private fun measure(@DrawableRes drawableRes: Int): Measurement {
 * Emulator system image: Nexus 4, Android 8.0.
 * Iterations count: 10 000.
 
-> :book: Seems like in Android 7.0 `VectorDrawable`
+> [!NOTE]
+> Seems like in Android 7.0 `VectorDrawable`
 > [was re-implemented to use native rendering](https://android.googlesource.com/platform/frameworks/base/+/804618d0863a5d8ad1b08a846bd5319be864a1cb).
 > Relative numbers remain the same, but be advised that absolute performance
 > might differ between API versions.

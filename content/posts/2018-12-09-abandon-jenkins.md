@@ -34,7 +34,8 @@ Sounds fun, right? Don’t get me started on how much time these things consume.
 Imagine a weird code issue which takes hour after hour and multiply
 it by a factor of uncontrolled external tools and environments.
 
-> :warning: I have to note this explicitly — I’m describing a situation related to small teams.
+> [!WARNING]
+> I have to note this explicitly — I’m describing a situation related to small teams.
 > Big companies have dedicated units to manage all of this and not a single person.
 
 Some people might think it is cool to be that person — the only one who knows
