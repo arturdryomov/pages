@@ -1,4 +1,4 @@
-/* PreWrapper */ .chroma { color: var(--color-base05); background-color: var(--color-block-background); -webkit-text-size-adjust: none; }
+/* PreWrapper */ .chroma { color: var(--color-base05); background-color: var(--color-block-background); tab-size: 4; -webkit-text-size-adjust: none; }
 /* Background */ .bg { color: var(--color-base05); background-color: var(--color-block-background); }
 /* Error */ .chroma .err { color: var(--color-base08); }
 /* Other */ .chroma .x { color: var(--color-base05); }
