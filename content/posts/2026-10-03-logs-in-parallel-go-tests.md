@@ -1,8 +1,8 @@
 ---
 title: "Logs in Parallel Go Tests and Where to Find Them"
 description: "Making sense of the output when Go things go wrong"
-date: "2026-10-01"
-slug: "go-parallel-logs"
+date: "2026-10-03"
+slug: "logs-in-parallel-go-tests"
 ---
 
 Life is too short to avoid parallel tests.
