@@ -136,17 +136,21 @@ a:hover {
 
 /* Code */
 
-code, pre {
+code, kbd, pre {
   background: var(--color-block-background);
   border: 1px solid var(--color-block-border);
   border-radius: 4px;
 }
 
-code {
+code, kbd {
   font-family: var(--font-monospace);
   font-size: 85%;
   padding-block: 0.10rem;
   padding-inline: 0.25rem;
+}
+
+kbd {
+  box-shadow: 0 1px 0 0 var(--color-block-border);
 }
 
 pre {
