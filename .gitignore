@@ -1,1 +1,5 @@
+# Generator lock
+.hugo_build.lock
+
+# Generator output
 public/
